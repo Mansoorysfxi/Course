@@ -1,0 +1,43 @@
+# QuestLog backend -- systemd unit file
+#
+# What this is, and how it's used: this file is a REFERENCE COPY, kept
+# here in version control alongside the application it deploys, exactly
+# the way a real team would keep their deployment artifacts next to the
+# code they deploy. It is NOT read directly by systemd from this
+# location -- per lessons/03-systemd-and-services.md and
+# lessons/07-deploying-questlog-part1-server-and-backend.md, the real
+# deploy step is copying (or symlinking) this exact file to
+# /etc/systemd/system/questlog-backend.service on the actual server,
+# then running `sudo systemctl daemon-reload`.
+#
+# Every directive below is explained in full in
+# lessons/03-systemd-and-services.md (the general systemd mechanism) and
+# lessons/07-deploying-questlog-part1-server-and-backend.md (why this
+# exact service needs After=/Wants=postgresql.service, specifically).
+
+[Unit]
+Description=QuestLog FastAPI backend (Uvicorn)
+After=network.target postgresql.service
+Wants=postgresql.service
+
+[Service]
+Type=simple
+User=questlog
+Group=questlog
+WorkingDirectory=/opt/questlog/backend
+EnvironmentFile=/opt/questlog/backend/.env
+ExecStart=/opt/questlog/backend/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8000
+Restart=on-failure
+RestartSec=3
+
+# Modest hardening -- restricts what this one process can do on the
+# system even if it were somehow compromised, beyond what running as a
+# non-root `questlog` user already provides. Not exhaustive (systemd
+# supports many more sandboxing directives than this), but a reasonable,
+# explainable floor for a course deployment. See this module's Lesson 07
+# for what each line actually restricts.
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

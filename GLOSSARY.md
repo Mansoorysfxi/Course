@@ -52,6 +52,11 @@ exposed over HTTP to any client that can make a request. *Taught in:
 default since Next.js 13), built around React Server Components, that
 replaced its older "Pages Router." *Taught in: [Module 04, Lesson 09](module-04-react/lessons/09-nextjs-ssr-ssg-csr-concepts.md).*
 
+**apt (Advanced Package Tool)** — Ubuntu/Debian's system-level package
+manager, installing whole programs (Nginx, PostgreSQL) for the entire
+machine, as opposed to `pip`/`npm`, which install libraries scoped to
+one project. *Taught in: [Module 09, Lesson 01](module-09-linux-networking-servers/lessons/01-linux-processes-and-permissions.md).*
+
 **`*args`** — A parameter prefixed with a single `*` that collects any
 number of extra positional arguments a function is called with into a
 tuple. *Taught in: [Module 01, Lesson 02](module-01-python-properly/lessons/02-functions-and-scope.md).*
@@ -136,6 +141,11 @@ knows a user's real password and issues tokens (e.g. Google's own
 login/consent infrastructure); distinct from the Resource Server, below,
 which actually holds the protected data. *Taught in: [Module 07, Lesson 05](module-07-auth-security/lessons/05-oauth2-conceptual.md).*
 
+**Authorized_keys file** — A per-user file (`~/.ssh/authorized_keys`)
+listing the public keys an SSH server will accept for that user, one per
+line; only accepted at all if it and its containing `.ssh` folder have
+sufficiently strict permissions. *Taught in: [Module 09, Lesson 02](module-09-linux-networking-servers/lessons/02-ssh-and-key-based-auth.md).*
+
 **Backend framework** — A library (also called a **web framework**) that
 handles the tedious, generic work of turning raw, incoming HTTP requests
 into ordinary function calls with already-parsed, convenient values, and
@@ -148,6 +158,17 @@ reading raw network bytes by hand. FastAPI is this course's choice.
 through the now-unmaintained `passlib`), providing `gensalt()`/
 `hashpw()`/`checkpw()` functions whose output string embeds its own
 random salt and cost factor. *Taught in: [Module 07, Lesson 02](module-07-auth-security/lessons/02-password-hashing.md).*
+
+**Bind address** — The specific network address a running program asks
+the operating system to accept incoming connections on; `127.0.0.1`
+means "only this same machine," while `0.0.0.0` means "every network
+interface this machine has." *Taught in: [Module 09, Lesson 04](module-09-linux-networking-servers/lessons/04-networking-ports-and-ips.md).*
+
+**Bind mount** — A Docker volume type that maps a specific, named folder on
+the host machine directly into a container at a chosen path, keeping both
+in sync live — unlike a named volume, Docker doesn't manage where the data
+actually lives; you already know, because you chose the exact host path.
+*Taught in: [Module 10, Lesson 05](module-10-docker-and-containers/lessons/05-docker-volumes-and-persistence.md).*
 
 **Boolean attribute** — An HTML attribute (e.g. `required`, `disabled`)
 whose mere presence in a tag turns a behavior on, with no value needed.
@@ -172,6 +193,28 @@ another. *Taught in: [Module 03, Lesson 04](module-03-html-css-javascript/lesson
 against a stolen hash (or a login endpoint directly) at high speed; the
 specific attack bcrypt's deliberately slow, tunable cost factor exists to
 make impractical. *Taught in: [Module 07, Lesson 02](module-07-auth-security/lessons/02-password-hashing.md).*
+
+**Cache** — A copy of an expensive-to-produce answer, kept somewhere
+faster to read from than the original source, so a repeated request for
+the same answer can skip redoing the expensive work — QuestLog caches a
+signed-in user's own quest list in Redis rather than re-querying Postgres
+on every page load. *Taught in: [Module 10, Lesson 06](module-10-docker-and-containers/lessons/06-docker-compose-multi-service-apps.md).*
+
+**Cache hit / cache miss** — A "hit" is a request answered directly from a
+cache, without touching the original, slower data source; a "miss" is a
+request the cache couldn't answer (because nothing was cached yet, or a
+cached entry expired), forcing the original source to be queried, with
+the result usually then stored in the cache for next time. *Taught in:
+[Module 10, Lesson 06](module-10-docker-and-containers/lessons/06-docker-compose-multi-service-apps.md).*
+
+**Cache invalidation** — Deliberately removing or discarding a cached
+value the moment the underlying data it represents changes, so a later
+read doesn't return a stale answer; QuestLog does this by deleting a
+user's cached quest list the instant that user creates, updates, or
+deletes a quest. Famously one of the two hardest problems in computer
+science (alongside naming things), because it's easy to invalidate too
+little (stale data lingers) or too much (a cache that's cleared so often
+it stops helping). *Taught in: [Module 10, Lesson 06](module-10-docker-and-containers/lessons/06-docker-compose-multi-service-apps.md).*
 
 **Cache-Control header** — An HTTP response header stating whether, and
 for how long, a response may be cached and reused instead of re-fetched.
@@ -202,6 +245,22 @@ a "not found" page. *Taught in: [Module 04, Lesson 08](module-04-react/lessons/0
 
 **`cd`** — Shell command to change your current/working directory.
 *Taught in: [Module 00, Lesson 01](module-00-developer-environment-and-tooling/lessons/01-shell-and-filesystem.md).*
+
+**Cgroups (control groups)** — A Linux kernel feature that limits and
+measures how much of the host's own CPU, memory, and other resources a
+given process (or group of processes) is allowed to use — one of the two
+kernel features (alongside namespaces) a container actually is, under the
+hood: not a lightweight VM, just an ordinary Linux process with cgroups
+capping what it can consume and namespaces limiting what it can see.
+*Taught in: [Module 10, Lesson 01](module-10-docker-and-containers/lessons/01-containers-vs-vms-and-your-first-container.md).*
+
+**chmod** — The Linux command that changes a file or directory's
+permissions, in letter form (`chmod u+x file`) or numeric/octal form
+(`chmod 600 file`, where `r=4`, `w=2`, `x=1` are summed per owner/group/
+others digit). *Taught in: [Module 09, Lesson 01](module-09-linux-networking-servers/lessons/01-linux-processes-and-permissions.md).*
+
+**chown** — The Linux command that changes a file or directory's owner
+and/or group (`chown newowner:newgroup path`). *Taught in: [Module 09, Lesson 01](module-09-linux-networking-servers/lessons/01-linux-processes-and-permissions.md).*
 
 **Claim (JWT)** — One named piece of information inside a JWT's payload
 (e.g. `sub`, `iat`, `exp`); a **registered claim** (below) is one whose
@@ -284,6 +343,28 @@ in: [Module 01, Lesson 05](module-01-python-properly/lessons/05-oop-classes-and-
 inserts directly into a file when it can't automatically resolve a merge
 conflict, delimiting "your version" from "the incoming version." *Taught
 in: [Module 00, Lesson 04](module-00-developer-environment-and-tooling/lessons/04-git-branching-and-merging.md).*
+
+**Container** — A running instance of a container image: an isolated
+process (or small group of processes) that believes it has its own
+filesystem, network, and process list, but is actually just an ordinary
+process on the host machine, isolated using Linux namespaces and cgroups
+rather than running inside a separate virtual machine — the game-dev
+analogy: one packaged build (the image) can be launched as many running
+game-server instances (containers), each isolated from the others but all
+sharing the same underlying hardware and OS kernel. *Taught in: [Module 10, Lesson 01](module-10-docker-and-containers/lessons/01-containers-vs-vms-and-your-first-container.md).*
+
+**Container image** — A packaged, versioned snapshot of an application
+plus the exact runtime, libraries, and files it needs to run — built once
+from a Dockerfile, then run, unchanged, as a container on any machine with
+a compatible container engine. The game-dev analogy: an image is like a
+packaged build of your game plus the exact runtime/libraries it needs, so
+it runs identically anywhere, instead of shipping source code and hoping
+the target machine already has the right SDK installed. *Taught in: [Module 10, Lesson 02](module-10-docker-and-containers/lessons/02-dockerfiles-layers-and-caching.md).*
+
+**Container registry** — A server that stores and serves container images
+by name and tag (e.g. `python:3.14-slim`, `redis:8-alpine`) — Docker Hub
+is the default, public registry `docker pull`/`docker build` reach out to
+unless configured otherwise. *Taught in: [Module 10, Lesson 02](module-10-docker-and-containers/lessons/02-dockerfiles-layers-and-caching.md).*
 
 **Content-Type header** — An HTTP header stating the format of a message
 body (e.g. `application/json`), telling the receiving side how to
@@ -391,6 +472,10 @@ itself calls other hooks (`useState`, `useEffect`, etc.) to package up and
 reuse stateful logic across components. *Taught in: [Module 04,
 Lesson 04](module-04-react/lessons/04-useref-and-custom-hooks.md).*
 
+**Daemon** — A process that runs continuously in the background, waiting
+to handle requests (e.g. an SSH server, Nginx, `systemd` itself),
+instead of doing one thing and exiting. *Taught in: [Module 09, Lesson 02](module-09-linux-networking-servers/lessons/02-ssh-and-key-based-auth.md).*
+
 **dangerouslySetInnerHTML** — A React prop that inserts a string as raw,
 unescaped HTML, bypassing React's normal automatic escaping entirely; the
 one deliberate way to reintroduce stored XSS into an otherwise-safe React
@@ -476,6 +561,43 @@ domain's authoritative server. *Taught in: [Module 02, Lesson 01](module-02-inte
 provider) your computer asks to perform a DNS lookup on its behalf.
 *Taught in: [Module 02, Lesson 01](module-02-internet-and-web-fundamentals/lessons/01-networks-ip-addresses-and-dns.md).*
 
+**Docker** — The dominant container platform: a container engine (build
+and run images), a CLI, and an image format/ecosystem (Docker Hub) that
+together made containers a practical, everyday development tool rather
+than a niche kernel feature. *Taught in: [Module 10, Lesson 00](module-10-docker-and-containers/lessons/00-setup.md).*
+
+**Docker Compose** — A tool (`docker compose`, built into the modern
+Docker CLI as of this course, August 2026 — the older, standalone,
+hyphenated `docker-compose` binary is now legacy/deprecated) for defining
+and running a multi-container application from one YAML file
+(`docker-compose.yml`): one command (`docker compose up`) builds/pulls
+every service's image and starts them all, wired together on a shared,
+private network. *Taught in: [Module 10, Lesson 06](module-10-docker-and-containers/lessons/06-docker-compose-multi-service-apps.md).*
+
+**Docker Desktop** — The application Windows and macOS developers install
+to get a working Docker environment; on Windows it runs Docker Engine
+inside a lightweight WSL2-backed Linux VM so `docker`/`docker compose`
+commands work the same as they would on real Linux. *Taught in: [Module 10, Lesson 00](module-10-docker-and-containers/lessons/00-setup.md).*
+
+**Docker Engine** — The actual background service (`dockerd`) that builds
+images, starts/stops containers, and manages networks and volumes — what
+the `docker` CLI command talks to; Docker Desktop is the packaged,
+Windows/macOS-friendly way of getting a Docker Engine running at all.
+*Taught in: [Module 10, Lesson 00](module-10-docker-and-containers/lessons/00-setup.md).*
+
+**Docker network** — A private, virtual network Docker creates so a
+group of containers can reach each other by name; `docker compose`
+automatically creates one such network per project and gives every
+service in `docker-compose.yml` a DNS entry equal to its own service
+name, so `backend` can reach `postgres` at the hostname `postgres`, never
+`localhost` (each container has its own private `localhost`, separate
+from every other container's). *Taught in: [Module 10, Lesson 04](module-10-docker-and-containers/lessons/04-docker-networking.md).*
+
+**Dockerfile** — A plain-text file of instructions (`FROM`, `COPY`, `RUN`,
+`CMD`, etc.) describing exactly how to build a container image, one
+instruction at a time, each producing its own cacheable layer. *Taught
+in: [Module 10, Lesson 02](module-10-docker-and-containers/lessons/02-dockerfiles-layers-and-caching.md).*
+
 **Document store** — A NoSQL database (e.g. MongoDB) storing whole,
 often JSON-shaped "documents" that don't all have to share the same
 structure, trading a relational database's strict schema enforcement for
@@ -509,6 +631,11 @@ at runtime, rather than being fixed at compile time. *Taught in: [Module 01,
 Lesson 01](module-01-python-properly/lessons/01-variables-types-and-control-flow.md)
 and [Module 03, Lesson 05](module-03-html-css-javascript/lessons/05-javascript-fundamentals-and-the-event-loop.md).*
 
+**Ed25519** — The current recommended algorithm for new SSH key pairs
+(OpenSSH's own `ssh-keygen` default since version 9.5, October 2023),
+chosen over RSA for its speed and small key size at an equivalent
+security level. *Taught in: [Module 09, Lesson 02](module-09-linux-networking-servers/lessons/02-ssh-and-key-based-auth.md).*
+
 **Encryption** — A *reversible* transformation: something locked with a
 key can later be unlocked with that same (or a related) key to recover
 the original content; the right tool when a system genuinely needs the
@@ -527,6 +654,11 @@ creates exactly one, at startup. *Taught in: [Module 06, Lesson 05](module-06-da
 **Environment variable** — A named piece of text data available to the
 shell and every program it launches, functioning like a small set of
 global settings (e.g. `HOME`, `PATH`). *Taught in: [Module 00, Lesson 01](module-00-developer-environment-and-tooling/lessons/01-shell-and-filesystem.md).*
+
+**Ephemeral port** — A temporary port (roughly 49152–65535) an operating
+system automatically assigns for a short time whenever a program
+initiates an outgoing connection, distinct from a well-known port a
+server deliberately listens on. *Taught in: [Module 09, Lesson 04](module-09-linux-networking-servers/lessons/04-networking-ports-and-ips.md).*
 
 **ES module** — JavaScript's standardized module system (`export`/
 `import`), letting code be split across files with an explicit, enforced
@@ -580,6 +712,11 @@ soon as response headers arrive — including for HTTP error status codes,
 which is why `response.ok` must be checked explicitly rather than relying
 on the Promise to reject. Not to be confused with `git fetch`, above.
 *Taught in: [Module 03, Lesson 07](module-03-html-css-javascript/lessons/07-fetch-promises-and-async-await.md).*
+
+**Firewall** — A checkpoint every network packet must pass before
+reaching any program on a machine, deciding, per port, whether incoming
+traffic is allowed at all; `ufw` (below) is this course's Ubuntu-
+specific tool for configuring one. *Taught in: [Module 09, Lesson 05](module-09-linux-networking-servers/lessons/05-firewalls-with-ufw.md).*
 
 **Fixture** — A `pytest` function, decorated with `@pytest.fixture`,
 whose job is doing setup (and, via `yield`, cleanup) a test needs, made
@@ -856,6 +993,10 @@ returns rows with a match on both sides, while a `LEFT JOIN` (below) keeps
 every row from the left-hand table regardless. *Taught in: [Module 06,
 Lesson 04](module-06-databases/lessons/04-joins-and-group-by.md).*
 
+**journalctl** — The command that reads logs `systemd` automatically
+captured from every service it manages, filterable to one unit with
+`-u <name>` and followable live with `-f`. *Taught in: [Module 09, Lesson 03](module-09-linux-networking-servers/lessons/03-systemd-and-services.md).*
+
 **jsdom** — A plain-JavaScript implementation of a browser's DOM that
 runs inside plain Node.js, with no actual browser window at all, letting
 a frontend component test render and query real-seeming HTML. *Taught
@@ -900,6 +1041,20 @@ matching `for`/`id` attributes, making the field's purpose available to
 screen readers and letting a click on the label's text focus/activate the
 field itself. *Taught in: [Module 03, Lesson 01](module-03-html-css-javascript/lessons/01-html-structure-forms-and-accessibility.md).*
 
+**Layer (image layer)** — One instruction's worth of filesystem change in
+a Dockerfile, stacked on top of the layers before it to form a complete
+container image; Docker caches each layer independently and reuses a
+cached layer unchanged whenever the instruction that produced it, and
+everything it depends on, hasn't changed since the last build. *Taught
+in: [Module 10, Lesson 02](module-10-docker-and-containers/lessons/02-dockerfiles-layers-and-caching.md).*
+
+**Layer caching** — Docker's build-speed optimization built on image
+layers: ordering a Dockerfile so files that change rarely (like
+`requirements.txt`) are copied and installed before files that change
+constantly (like application source) means an ordinary code edit only
+ever invalidates and rebuilds the cheap, fast layers below it, not the
+expensive dependency-install layers above. *Taught in: [Module 10, Lesson 02](module-10-docker-and-containers/lessons/02-dockerfiles-layers-and-caching.md).*
+
 **LEFT JOIN** — A SQL `JOIN` variant that keeps every row from the
 left-hand table even when there's no match on the right (filling
 unmatched columns with `NULL`), unlike a plain `JOIN`, which would omit
@@ -929,6 +1084,11 @@ right underlying type — distinct from a plain `str`, which accepts any
 string at all. Comparable to a TypeScript string-literal union (e.g.
 `"low" | "medium" | "high"`), applied on the Python/Pydantic side. *Taught
 in: [Module 05, Lesson 03](module-05-backend-fastapi/lessons/03-request-bodies-and-pydantic-validation.md).*
+
+**Load balancer** — Something that sits in front of multiple identical
+copies of a backend process and distributes incoming requests across
+them; mechanically the same idea as a reverse proxy (below), just aimed
+at several equivalent backends instead of one. *Taught in: [Module 09, Lesson 06](module-09-linux-networking-servers/lessons/06-nginx-and-reverse-proxies.md).*
 
 **Localhost** — The special address (`127.0.0.1`) that always means "this
 same machine," with no real network, router, or ISP involved. *Taught in:
@@ -1007,11 +1167,44 @@ straightforward substitutions. *Taught in: [Module 08, Lesson 03](module-08-test
 (mount) or is removed from it (unmount); an empty `useEffect` dependency
 array (`[]`) means "run only on mount." *Taught in: [Module 04, Lesson 03](module-04-react/lessons/03-useeffect-the-dependency-array-in-depth.md).*
 
+**Multi-stage build** — A Dockerfile with more than one `FROM` instruction,
+each starting a fresh, separate build "stage"; later stages can selectively
+`COPY --from=<earlier stage>` only the specific files they need, leaving
+everything else that earlier stage produced (a compiler, a full npm
+`node_modules`, pip's own cache) behind. This is how QuestLog's frontend
+image ends up as plain Nginx serving static files, with no Node.js runtime
+inside it at all, despite needing a full Node/npm toolchain to actually
+build those files. *Taught in: [Module 10, Lesson 03](module-10-docker-and-containers/lessons/03-multi-stage-builds-and-image-size.md).*
+
 **Mutable default argument bug** — A common Python bug where a mutable
 default argument value (like `[]`) is created only once, when the
 function is defined, and is then silently shared and accumulated across
 every call that doesn't supply its own value. *Taught in: [Module 01,
 Lesson 02](module-01-python-properly/lessons/02-functions-and-scope.md).*
+
+**Named volume** — A Docker-managed storage location, identified by name
+(e.g. `questlog_pgdata`), that persists a container's data independently
+of the container's own lifecycle — deleting and recreating the container
+that uses it (the normal result of `docker compose up --build`) leaves the
+volume, and everything stored in it, untouched; only an explicit
+`docker compose down -v` or `docker volume rm` removes it. The game-dev
+analogy: a volume is like an external save-game file living outside the
+build itself, so wiping and reinstalling the build doesn't lose player
+progress. *Taught in: [Module 10, Lesson 05](module-10-docker-and-containers/lessons/05-docker-volumes-and-persistence.md).*
+
+**Namespace (Linux)** — A Linux kernel feature that gives a process its
+own, isolated view of some global system resource — its own process list,
+its own network interfaces, its own filesystem mount points — so it can't
+see, and doesn't know about, the equivalent resources any other process
+(or the host itself) has. Alongside cgroups, this is the other kernel
+feature that a container fundamentally *is*: an ordinary process, made to
+believe it's alone on the machine. *Taught in: [Module 10, Lesson 01](module-10-docker-and-containers/lessons/01-containers-vs-vms-and-your-first-container.md).*
+
+**NAT (Network Address Translation)** — The mechanism a router uses to
+let many devices share one public IP address, rewriting outgoing packets
+and routing replies back to the right internal device; incidentally
+means a device behind NAT isn't directly reachable by an unsolicited
+inbound connection, unlike a VPS. *Taught in: [Module 09, Lesson 04](module-09-linux-networking-servers/lessons/04-networking-ports-and-ips.md).*
 
 **Node.js** — A standalone program that runs JavaScript (and, via
 TypeScript's compiler, TypeScript) directly on a machine, outside any
@@ -1098,6 +1291,10 @@ project setup can be reproduced elsewhere with `npm install` — the
 JavaScript ecosystem's equivalent of Python's `requirements.txt`. *Taught
 in: [Module 03, Lesson 00](module-03-html-css-javascript/lessons/00-setup.md).*
 
+**Package manager** — A tool that installs, tracks, and removes software,
+scoped either to one project (`pip`, `npm`) or to an entire machine
+(`apt`, above). *Taught in: [Module 09, Lesson 01](module-09-linux-networking-servers/lessons/01-linux-processes-and-permissions.md).*
+
 **Parameterized query** — A query sent to a database with its SQL
 structure and its actual values kept in two genuinely separate places at
 the wire-protocol level (a "prepared statement"), so a value can never be
@@ -1132,6 +1329,15 @@ specific resource a request is about, contrasted with a query parameter
 (below), used for optional filters/modifiers. *Taught in: [Module 05,
 Lesson 02](module-05-backend-fastapi/lessons/02-path-and-query-parameters.md).*
 
+**Permissions (Unix)** — The `rwx` (read/write/execute) rules attached to
+every file and directory, separately for its owner, its group, and
+everyone else, checked by the kernel on every access — displayed by
+`ls -l` as a 10-character string like `-rw-r--r--`. *Taught in: [Module 09, Lesson 01](module-09-linux-networking-servers/lessons/01-linux-processes-and-permissions.md).*
+
+**PID (Process ID)** — A unique number the kernel assigns to a process
+the moment it starts; no two processes running at the same time ever
+share one. *Taught in: [Module 09, Lesson 01](module-09-linux-networking-servers/lessons/01-linux-processes-and-permissions.md).*
+
 **pip** — Python's standard package installer, used to download and
 install packages into the currently active environment, typically driven
 by a `requirements.txt` file. *Taught in: [Module 01, Lesson 00](module-01-python-properly/lessons/00-setup.md).*
@@ -1147,6 +1353,13 @@ Lesson 00](module-04-react/lessons/00-setup.md).*
 **Port** — A number (0–65535) identifying a specific running program
 ("door") on a machine; an IP address plus a port together fully specify
 which program on which machine to reach. *Taught in: [Module 02, Lesson 01](module-02-internet-and-web-fundamentals/lessons/01-networks-ip-addresses-and-dns.md).*
+
+**Port publishing (Docker)** — Explicitly mapping a container's internal
+port to a port on the host machine (`docker-compose.yml`'s
+`"8080:80"` syntax, host:container), the only way traffic from outside
+Docker's own private network can reach a container at all; a
+Dockerfile's `EXPOSE` instruction, by contrast, is documentation only and
+publishes nothing by itself. *Taught in: [Module 10, Lesson 04](module-10-docker-and-containers/lessons/04-docker-networking.md).*
 
 **POST (HTTP method)** — The HTTP method meaning "here's data, do
 something with it," typically creating a new resource; neither safe nor
@@ -1182,6 +1395,11 @@ QuestLog request resolves down to exactly one principal, a row in the
 use only inside one local network, meaningless if used from any other
 network. *Taught in: [Module 02, Lesson 01](module-02-internet-and-web-fundamentals/lessons/01-networks-ip-addresses-and-dns.md).*
 
+**Process** — One specific, currently-executing instance of a running
+program, with its own private memory and current state, completely
+separate from the program's file on disk; inspected with `ps`/`top` and
+identified by its PID. *Taught in: [Module 09, Lesson 01](module-09-linux-networking-servers/lessons/01-linux-processes-and-permissions.md).*
+
 **Programmatic navigation** — Changing the current URL from code (via
 React Router's `useNavigate()`) rather than as a direct response to a
 `<Link>` click — e.g. redirecting after a form successfully submits.
@@ -1208,6 +1426,11 @@ Context (React) exists to remove. *Taught in: [Module 04, Lesson 06](module-04-r
 **Provider** — The `<SomeContext.Provider value={...}>` component that
 makes a value available to everything rendered inside it, at any depth.
 *Taught in: [Module 04, Lesson 06](module-04-react/lessons/06-context.md).*
+
+**Public IP address** — An IP address reachable from anywhere on the
+internet, assigned to a real server like a VPS; contrasted with a
+private IP address, above, meaningful only inside one local network.
+*Taught in: [Module 09, Lesson 04](module-09-linux-networking-servers/lessons/04-networking-ports-and-ips.md).*
 
 **Pydantic model** — A Python class inheriting from Pydantic's `BaseModel`,
 describing a data shape as type-hinted class attributes; simultaneously a
@@ -1293,6 +1516,15 @@ changes needed, rather than rebuilding the whole page. *Taught in:
 **Redirection (`>`, `>>`)** — Shell syntax that sends a command's output
 into a file instead of the screen; `>` overwrites, `>>` appends. *Taught
 in: [Module 00, Lesson 01](module-00-developer-environment-and-tooling/lessons/01-shell-and-filesystem.md).*
+
+**Redis** — An in-memory key-value store, commonly used as a cache: because
+it keeps data in RAM rather than on disk, reads and writes are extremely
+fast compared to a full relational-database query, at the cost of being
+less durable by default and only ever holding simple key-value(-ish)
+shapes rather than a rich relational schema. QuestLog uses Redis
+(`redis.asyncio`, the current, non-deprecated async client bundled in the
+`redis` PyPI package) to cache a signed-in user's own quest list for 30
+seconds. *Taught in: [Module 10, Lesson 06](module-10-docker-and-containers/lessons/06-docker-compose-multi-service-apps.md).*
 
 **ReDoc** — A separate, open-source tool (bundled and auto-configured by
 FastAPI, served at `/redoc`) that reads a project's OpenAPI document and
@@ -1403,6 +1635,18 @@ constraints while only partially satisfying HATEOAS. *Taught in:
 
 **`rm`** — Shell command to delete files (`rm -r` for folders);
 permanent, with no undo or Recycle Bin. *Taught in: [Module 00, Lesson 01](module-00-developer-environment-and-tooling/lessons/01-shell-and-filesystem.md).*
+
+**Reverse proxy** — A program (Nginx, in this course) that sits in front
+of an application server, receiving all public traffic itself and
+forwarding requests to the real backend on the same machine's internal
+address, relaying the response back — letting one public address serve
+a static frontend, an API, and other cross-cutting concerns (TLS,
+logging) from one place. *Taught in: [Module 09, Lesson 06](module-09-linux-networking-servers/lessons/06-nginx-and-reverse-proxies.md).*
+
+**Root user** — Linux's special superuser account (UID `0`) that bypasses
+permission checks entirely; `sudo` (below) is the standard, safer way to
+run one specific command with root's power instead of logging in as root
+directly. *Taught in: [Module 09, Lesson 01](module-09-linux-networking-servers/lessons/01-linux-processes-and-permissions.md).*
 
 **Row** — One specific record in a database table — one horizontal entry
 matching that table's columns. *Taught in: [Module 06, Lesson 01](module-06-databases/lessons/01-why-a-database-and-the-relational-model.md).*
@@ -1537,6 +1781,17 @@ default. *Taught in: [Module 07, Lesson 08](module-07-auth-security/lessons/08-s
 declarative class-based way to describe database tables and an async
 session API for querying them. *Taught in: [Module 06, Lesson 05](module-06-databases/lessons/05-orms-and-sqlalchemy-basics.md).*
 
+**`ss` (socket statistics)** — The modern command for listing active
+network connections and listening sockets (`ss -tlnp`), showing which
+process is bound to which address and port; the current replacement for
+the older `netstat`. *Taught in: [Module 09, Lesson 04](module-09-linux-networking-servers/lessons/04-networking-ports-and-ips.md).*
+
+**SSH key pair** — A public/private key pair used for authenticating an
+SSH login: the private key never leaves your own machine, while the
+public key is placed in a server's `authorized_keys` file; login proves
+possession of the private key without ever transmitting it. *Taught in:
+[Module 09, Lesson 02](module-09-linux-networking-servers/lessons/02-ssh-and-key-based-auth.md).*
+
 **Staging area (index)** — A holding area in Git where you place exactly
 the changes you want included in your next commit, distinct from both the
 working directory and the permanent commit history. *Taught in:
@@ -1606,6 +1861,11 @@ in: [Module 05, Lesson 04](module-05-backend-fastapi/lessons/04-dependency-injec
 statement (e.g. inside an `INSERT`'s `VALUES` or a `WHERE` clause).
 *Taught in: [Module 06, Lesson 03](module-06-databases/lessons/03-sql-select-insert-update-delete.md).*
 
+**sudo** — "Superuser do": runs one specific command with root's
+elevated permissions, then immediately drops back to the normal user —
+the standard, safer alternative to logging in as root directly. *Taught
+in: [Module 09, Lesson 01](module-09-linux-networking-servers/lessons/01-linux-processes-and-permissions.md).*
+
 **Swagger UI** — A separate, open-source tool (bundled and auto-configured
 by FastAPI, served at `/docs`) that reads a project's OpenAPI document and
 renders it as an interactive page, including a "Try it out" button that
@@ -1617,6 +1877,12 @@ same secret key both creates and verifies signatures; the right fit when
 one single backend is the only party that ever needs to do either job,
 which is why QuestLog uses one. Contrasted with an asymmetric algorithm,
 above. *Taught in: [Module 07, Lesson 04](module-07-auth-security/lessons/04-jwt-structure-in-depth.md).*
+
+**systemd** — Ubuntu's (and most modern Linux distributions') init
+system: the first process the kernel starts at boot (always PID 1),
+responsible for starting and supervising every other background program,
+including any application configured as a **unit file** (below). *Taught
+in: [Module 09, Lesson 03](module-09-linux-networking-servers/lessons/03-systemd-and-services.md).*
 
 **Table** — A named collection of rows sharing the same fixed set of
 columns in a relational database — comparable to a spreadsheet with a
@@ -1716,6 +1982,12 @@ TypeScript project (which JavaScript version to target, where source/
 output files live, how strict to be, etc.). *Taught in: [Module 03,
 Lesson 00](module-03-html-css-javascript/lessons/00-setup.md).*
 
+**TTL (Time To Live)** — How long a cached value is trusted before it's
+treated as stale and discarded, even if nothing ever explicitly
+invalidated it — QuestLog's cached quest list uses a 30-second TTL, so
+Redis's own `EXPIRE`/`SET ... EX` mechanism deletes it automatically if no
+create/update/delete happened to invalidate it sooner. *Taught in: [Module 10, Lesson 06](module-10-docker-and-containers/lessons/06-docker-compose-multi-service-apps.md).*
+
 **Tuple** — An ordered, immutable sequence of values — like a list that
 can never be changed after creation. *Taught in: [Module 01, Lesson 03](module-01-python-properly/lessons/03-data-structures.md).*
 
@@ -1749,6 +2021,11 @@ before it can run in a browser or Node.js. *Taught in: [Module 03,
 Lesson 09](module-03-html-css-javascript/lessons/09-typescript-introduction.md)
 (tooling installed in [Lesson 00](module-03-html-css-javascript/lessons/00-setup.md)).*
 
+**ufw (Uncomplicated Firewall)** — Ubuntu's standard, beginner-friendly
+front end for the kernel's firewall, defaulting to deny all incoming and
+allow all outgoing traffic; configured with commands like
+`ufw allow OpenSSH` and enabled with `ufw enable`. *Taught in: [Module 09, Lesson 05](module-09-linux-networking-servers/lessons/05-firewalls-with-ufw.md).*
+
 **Uncontrolled component** — An input that manages its own value
 internally, the plain-HTML way, with React only touching it (if at all)
 via a `ref`; contrasted with a **controlled component**, above. *Taught
@@ -1765,6 +2042,11 @@ Python's own union type hints above, but a distinct language feature
 enforced by `tsc` rather than Python's optional external type checkers.
 *Taught in: [Module 03, Lesson 09](module-03-html-css-javascript/lessons/09-typescript-introduction.md).*
 
+**Unit file** — A small, plain-text configuration file telling `systemd`
+about one thing it should manage (most relevantly, a service), with
+`[Unit]`/`[Service]`/`[Install]` sections controlling metadata, how to
+run it, and when to auto-start it. *Taught in: [Module 09, Lesson 03](module-09-linux-networking-servers/lessons/03-systemd-and-services.md).*
+
 **Unique constraint** — A database rule rejecting any row that would
 duplicate an existing value in a given column (or set of columns), used
 in QuestLog to guarantee each quest line name has exactly one authoritative
@@ -1774,6 +2056,10 @@ row. *Taught in: [Module 06, Lesson 05](module-06-databases/lessons/05-orms-and-
 (often a single function), with nothing real set up around it — the
 fastest, most isolated, and most numerous layer of the testing pyramid
 (above). *Taught in: [Module 08, Lesson 01](module-08-testing-and-quality/lessons/01-why-tests-and-the-testing-pyramid.md).*
+
+**Upstream (Nginx)** — A named group of backend addresses Nginx can
+`proxy_pass` requests to and distribute across, the configuration
+mechanism underlying a load balancer, above. *Taught in: [Module 09, Lesson 06](module-09-linux-networking-servers/lessons/06-nginx-and-reverse-proxies.md).*
 
 **URL (Uniform Resource Locator)** — The full address of a web resource,
 composed of a scheme, host, path, and optionally a query string and
@@ -1838,6 +2124,14 @@ holding its own private Python package installation, isolated from the
 system's global Python and from every other project's environment.
 *Taught in: [Module 01, Lesson 00](module-01-python-properly/lessons/00-setup.md).*
 
+**Virtual machine (VM)** — A complete, simulated computer running its own
+full guest operating system (kernel included) on top of a hypervisor,
+which emulates the hardware that guest OS believes it's running on. Much
+heavier than a container (which shares the host's kernel and just isolates
+one process using namespaces/cgroups) but more strongly isolated — two
+containers on the same host still share one real kernel, while two VMs on
+the same host each have their own, completely separate one. *Taught in: [Module 10, Lesson 01](module-10-docker-and-containers/lessons/01-containers-vs-vms-and-your-first-container.md).*
+
 **Vite** — A fast build tool and dev server for JavaScript/TypeScript
 frontend projects, providing Hot Module Replacement while developing and
 bundling/optimizing files for a production build (`npm run build`).
@@ -1849,6 +2143,22 @@ familiar to anyone who's used Jest. *Taught in: [Module 08, Lesson 07](module-08
 
 **Void element** — An HTML element with no closing tag and no content,
 like `<img>`, `<br>`, or `<input>`. *Taught in: [Module 03, Lesson 01](module-03-html-css-javascript/lessons/01-html-structure-forms-and-accessibility.md).*
+
+**Volume (Docker)** — A storage mechanism that keeps data alive
+independently of any one container's lifecycle, so stopping, removing, or
+rebuilding a container never loses what was written to a volume — see
+"Named volume" and "Bind mount" above for the two concrete flavors this
+course uses. *Taught in: [Module 10, Lesson 05](module-10-docker-and-containers/lessons/05-docker-volumes-and-persistence.md).*
+
+**VPS (Virtual Private Server)** — A rented, isolated slice of a real
+computer in a data center, running its own full Linux OS with a real
+public IP address anyone can reach — as opposed to WSL2, which runs
+inside your own machine's private network. *Taught in: [Module 09, Lesson 00](module-09-linux-networking-servers/lessons/00-setup.md).*
+
+**Well-known port** — A port number from 0–1023, reserved by convention
+for a specific common service (`22` SSH, `80` HTTP, `443` HTTPS, `5432`
+PostgreSQL); a browser fills in the default for a scheme automatically
+when a URL omits a port. *Taught in: [Module 09, Lesson 04](module-09-linux-networking-servers/lessons/04-networking-ports-and-ips.md).*
 
 **Working directory (filesystem sense)** — The folder you are currently
 "in" when using a shell; also called the current directory. *Taught in:

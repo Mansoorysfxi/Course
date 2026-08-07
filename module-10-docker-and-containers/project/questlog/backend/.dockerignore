@@ -1,0 +1,37 @@
+# Never sent to the Docker daemon as part of this image's build context --
+# see lessons/02-dockerfiles-layers-and-caching.md's ".dockerignore" section
+# for exactly what "build context" means and why this file matters even
+# for things the Dockerfile never explicitly COPYs.
+
+# Real secrets and machine-specific local config -- environment variables
+# are supplied at container-run time instead, via docker-compose.yml's
+# own `environment:` block, never baked into the image itself.
+.env
+.env.test
+
+# Local virtual environments -- this image installs dependencies fresh,
+# inside the build, via requirements.txt; a locally-created .venv would
+# be a large, host-OS-specific folder with zero use inside a Linux
+# container, and copying it in by accident would also risk shipping
+# whatever secrets a local .env-based tool might have cached inside it.
+.venv/
+.venv-*/
+
+# Python bytecode caches and pytest's own cache -- regenerated
+# automatically, never meaningful to ship.
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+
+# Test code -- this app's tests/ folder is real and valuable, but it has
+# no reason to exist inside the image that actually serves production
+# traffic; keeping it out of the build context also keeps this image
+# from accidentally depending on requirements-dev.txt-only packages
+# (pytest, ruff) that were deliberately never installed into this image
+# at all. See lessons/07-containerizing-questlogs-backend.md.
+tests/
+
+# Version control metadata -- never relevant inside a container.
+.git/
+.gitignore

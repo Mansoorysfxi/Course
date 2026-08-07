@@ -48,6 +48,7 @@ course:
 - **Auth:** JWT-based, `passlib`/`bcrypt` for password hashing (exact package verified when Module 07 is generated, since this space changes).
 - **Containers/Deploy:** Docker + docker-compose; concrete cloud target for Module 11 chosen (with research) when that module is generated, with alternatives mentioned per the master plan.
 - **AI:** Anthropic API (Claude) as the primary LLM API taught in Modules 13–15, per the master plan.
+- **Redis's concrete use case (decided when Module 10 was generated):** a Redis-backed cache for `GET /api/quests`'s *unfiltered* quest list only (the call QuestLog's own Quest Board page makes on every load) — a 30-second TTL plus active invalidation (a `redis.delete` call) on every `create`/`update`/`delete` quest route, keyed per-owner so two users never share a cached answer; any filtered call (`?done=`, `?priority=`, `?quest_line=`) deliberately bypasses the cache entirely and always hits Postgres, keeping this module's scope to "a real, working example of the concept," not a general-purpose caching layer. Implemented via `redis.asyncio` (the `redis` PyPI package, not the deprecated standalone `aioredis`), wired in as a FastAPI dependency (`RedisClient`, mirroring the existing `DbSession`) entirely inside `app/routers/quests.py` — `app/repository.py` is untouched. See `module-10-docker-and-containers/lessons/06-docker-compose-multi-service-apps.md` and `lessons/07-containerizing-questlogs-backend.md` for the full explanation.
 
 ## Repo location for the running project's actual code
 

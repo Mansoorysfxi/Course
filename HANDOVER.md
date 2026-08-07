@@ -7,9 +7,12 @@ don't repeat them. This file is about *generating the course*, not about
 the learner's progress — that's [PROGRESS.md](PROGRESS.md), a separate,
 still-empty file the learner's actual study sessions will fill in later.
 
-Last updated: after Module 08 completed (this handover written immediately
-after, per explicit user instruction to generate Module 08 only, then
-update this file and stop).
+Last updated: after Module 10 completed and independently verified on disk
+(diffed against Module 09's questlog to confirm only the documented Redis
+wiring + Docker files changed, both backend pytest (37/37) and frontend
+vitest (17/17) suites actually re-run and passing, `npm run build`
+actually re-run and succeeding, glossary diff checked as purely additive,
+all 9 lessons checked for Rule 5's 8 required sections).
 
 ## Status at a glance
 
@@ -26,9 +29,9 @@ update this file and stop).
 | 06 — Databases | ✅ Fully generated (see "Known issues already hit" — this one needed manual repair) |
 | 07 — Auth, Security & API Best Practices | ✅ Fully generated and verified on disk |
 | 08 — Testing & Software Quality (Review Project) | ✅ Fully generated and verified on disk — test suites actually run and pass, see below |
-| 09 — Linux, Networking & Servers | ❌ Not started — **next up** |
-| 10 — Docker & Containers | ❌ Not started |
-| 11 — CI/CD, Cloud & Production Operations | ❌ Not started |
+| 09 — Linux, Networking & Servers | ✅ Fully generated and verified on disk |
+| 10 — Docker & Containers | ✅ Fully generated and verified on disk |
+| 11 — CI/CD, Cloud & Production Operations | ❌ Not started — **next up** |
 | 12 — AI/ML Foundations | ❌ Not started |
 | 13 — Building with LLM APIs | ❌ Not started |
 | 14 — RAG | ❌ Not started |
@@ -119,7 +122,8 @@ grep -c "Module XX" GLOSSARY.md              # did glossary entries actually lan
 
 Full spec in [RUNNING_PROJECT.md](RUNNING_PROJECT.md) — read it before
 generating any further module. Quick recap of where the codebase actually
-stands after Module 08:
+stands after Module 09 (app code itself is **unchanged since Module 08** —
+Module 09 only changed where/how it runs, see below):
 
 - **Frontend:** React 19 + TypeScript 7 + Vite 8 + Tailwind CSS 4 + React
   Router 8. Real login/signup flow, JWT stored and sent as a Bearer token,
@@ -148,49 +152,154 @@ stands after Module 08:
   module (e.g. 09/10/11 touching deployment/CI) needs the test suite to
   run in a pipeline, this is why no second Postgres instance is required
   for tests specifically — only for the app itself.
+- **New in Module 09:** QuestLog's application code
+  (`backend/app/`, `frontend/src/`) is **byte-for-byte identical to
+  Module 08** — verified via `diff -rq` during handoff, exit code 0. What's
+  new is a `project/questlog/deploy/` folder sitting alongside the app
+  (not mixed into it): a real `systemd` unit file
+  (`questlog-backend.service`), an Nginx site config
+  (`nginx/questlog.conf`) reverse-proxying `/api/*` to the backend and
+  serving the built frontend as static files with SPA fallback, a
+  production `.env` template, and a `DEPLOY_RUNBOOK.md` walking through
+  provisioning a server, installing Postgres on Linux, running the backend
+  as an unprivileged systemd-managed service, and locking the firewall
+  down with `ufw` (allowing only SSH and HTTP). The module deliberately
+  does this **manually** — no Docker, no CI/CD — per the master plan's "the
+  painful way, on purpose" framing, so Module 10 (Docker) feels like
+  relief rather than magic.
+- **Scope decision made with the user for Module 09** (binding on how the
+  lessons are framed, in case Module 10+ ever references it): the module
+  is written as real, followable deployment instructions against a named
+  concrete example (Hetzner CX22, ~$4.59/mo, verified August 2026) but
+  does **not** require the learner to actually own a paid VPS to complete
+  most of the module — Exercises 01–05 all run inside a WSL2 Ubuntu
+  instance (with `systemd` explicitly enabled via `/etc/wsl.conf`, since
+  WSL2 doesn't run it by default). Only the capstone genuinely needs a
+  real, internet-reachable machine, and `project/BRIEF.md` explicitly
+  accepts a "thorough, honest dry run" as a legitimate alternative if the
+  learner doesn't want to pay yet. Module 10 should keep this same
+  optional-real-infra framing in mind if it deploys anywhere for real.
+- **New in Module 10:** QuestLog is now fully containerized. `backend/Dockerfile`
+  (two-stage: installs deps into `/install`, copies only that into a clean
+  `python:3.14-slim` runtime stage, runs as a non-root `appuser`, runs
+  `alembic upgrade head` on every start before Uvicorn) and
+  `frontend/Dockerfile` (Node 24 Alpine build stage → `nginx:1.30-alpine`
+  runtime stage serving `dist/`, `VITE_API_BASE_URL=""` baked in at build
+  time for same-origin relative API calls) sit alongside a root
+  `docker-compose.yml` wiring together `postgres` (named volume,
+  healthcheck via `pg_isready`), `redis` (named volume, healthcheck via
+  `redis-cli ping`), `backend` (`depends_on` with `condition:
+  service_healthy` on both), and `frontend`. No top-level `version:` key
+  (confirmed obsolete for current `docker compose` v2). Run with `docker
+  compose up --build`.
+- **Redis is now real, not just conceptual** (a decision Module 06 flagged
+  as deferred): it caches exactly one thing — a signed-in user's own
+  *unfiltered* `GET /api/quests` response, 30s TTL, actively invalidated
+  on every create/update/delete, keyed per-owner. Filtered queries always
+  bypass the cache. Implemented via `redis.asyncio` (`redis` PyPI package
+  — `aioredis` is deprecated/merged), wired as a `RedisClient` FastAPI
+  dependency mirroring the existing `DbSession` pattern, entirely inside
+  `app/routers/quests.py` (`app/cache.py` is new; `app/repository.py`
+  untouched). An `X-Cache: HIT/MISS/BYPASS` response header exists purely
+  so lessons/exercises can observe cache behavior via plain `curl -i`. The
+  test suite mocks Redis (a `FakeRedis` fixture in `conftest.py`, same
+  spirit as Module 08's SQLite-for-tests decision) rather than requiring a
+  real Redis instance. **This decision is now also recorded as one
+  paragraph appended to `RUNNING_PROJECT.md`'s "Fixed technology
+  decisions" section** — read that if a later module touches Redis.
+- **One real (small, documented, necessary) app-code change beyond
+  Redis:** `frontend/package.json` moved two Windows-only native-binding
+  packages (`@oxlint/binding-win32-x64-msvc`,
+  `@rolldown/binding-win32-x64-msvc`) from `devDependencies` to
+  `optionalDependencies`, because `npm ci` inside the Linux-based Docker
+  build stage would otherwise hard-fail with `EBADPLATFORM`. No `src/`
+  changes. I independently re-ran `npm ci` + `npm run build` +
+  `npx vitest run` after this change (17/17 tests pass, build succeeds)
+  and independently re-ran the backend pytest suite (37/37 pass) — both
+  confirmed on top of the agent's own report, not taken on faith.
+- **Module 09's `project/questlog/deploy/` folder** (the `systemd` unit,
+  Nginx config, runbook) was copied forward **unchanged and kept**, not
+  deleted — a new `deploy/SUPERSEDED.md` explicitly labels it historical
+  and maps each manual artifact to its Module 10 containerized
+  replacement, one-to-one, in a table. This is deliberate: the whole
+  pedagogical point is the learner can compare what they did by hand
+  against what got automated.
+- **Docker itself was not available in the generating agent's sandbox** —
+  Dockerfiles and `docker-compose.yml` were hand-verified for correctness
+  (and I independently read them line by line during verification; they
+  look syntactically sound and follow current best practice: multi-stage
+  builds, non-root users, named volumes vs. bind mounts explained,
+  `depends_on` + healthchecks for startup ordering) but **never actually
+  built or run end-to-end**. If a learner or a later module hits a real
+  Docker build/runtime issue with these files, that's the most likely
+  place a first-pass error could be hiding — worth an actual
+  `docker compose up --build` smoke test the first time anyone has Docker
+  available.
 - **Latest finished reference codebase:**
-  `module-08-testing-and-quality/project/questlog/` (`backend/` + `frontend/`,
-  both with real, passing test suites). **Module 09 must copy this exact
-  folder forward** into `module-09-linux-networking-servers/project/questlog/`
-  — do not regenerate the app from scratch.
+  `module-10-docker-and-containers/project/questlog/` (app code identical
+  to Module 09 except the documented Redis wiring). **Module 11 must copy
+  this exact folder forward** into
+  `module-11-cicd-cloud-production/project/questlog/` — do not regenerate
+  the app from scratch.
 
-## Next up: Module 09 — Linux, Networking & Servers
+## Next up: Module 11 — CI/CD, Cloud & Production Operations
 
-Curriculum per the master plan: Linux deeper (processes, permissions,
-systemd, SSH/key-based auth, package managers); networking for developers
-(ports, localhost, private vs public IPs, firewalls, reverse proxies —
-what Nginx does and why, load balancers conceptually); then **deploy the
-Module 08 QuestLog app manually to a cheap VPS, on purpose, the painful
-way**, so Module 10 (Docker) and Module 11 (CI/CD) later feel like relief
-rather than magic. This module does not add QuestLog *features* — it
-changes *where and how it runs*.
+Curriculum per the master plan: what CI/CD is and why; GitHub Actions from
+zero (workflow syntax explained line by line, build → test → deploy
+pipelines); cloud fundamentals (what AWS/GCP actually sell, core concepts —
+compute, object storage, managed databases, IAM in plain words); deploy
+using one concrete path (a container platform — e.g. AWS ECS, Fly.io,
+Railway — pick one with real current research and go deep, mention
+alternatives per the master plan); HTTPS/TLS certificates, domains, DNS
+records in practice; monitoring & observability (logs, metrics, uptime,
+error tracking e.g. Sentry, health checks); Kubernetes as a conceptual-only
+module (what it is, when you'd actually need it, core objects — pods,
+deployments, services — so the learner can hold a conversation; hands-on
+optional appendix only). Capstone: full CI/CD pipeline — push to main →
+tests run → image builds → auto-deploys to production with HTTPS on a real
+domain.
 
 **Before generating it:**
-1. Skim `module-08-testing-and-quality/project/questlog/` (just enough to
-   know what needs to run on a server: Postgres, the FastAPI backend via
-   Uvicorn, and how the frontend gets served/built) — no code changes are
-   expected to QuestLog itself in this module, only deployment steps.
-2. Web-research (Rule 7): a concrete, currently cheap VPS provider to name
-   as the example (the master plan says "a cheap VPS" without naming one —
-   pick one with current, verifiable pricing and say so), current Ubuntu
-   LTS version to install, current `systemd` service-file conventions,
-   current Nginx stable version and reverse-proxy config syntax, current
-   SSH key-generation guidance (`ssh-keygen` algorithm recommendations
-   have shifted over time — verify, don't assume `rsa` is still the
-   default suggestion).
-3. This module's "exercises" and "capstone" are unusually hands-on-a-real-
-   server rather than hands-on-more-code — the master plan's own framing
-   ("on purpose, the painful way") suggests the lessons should be honest
-   about that friction rather than smoothing it over, since Module 10
-   explicitly exists to fix the pain this module intentionally creates.
-4. Use the same Agent-delegation process described above ("The process that's been working").
+1. Skim `module-10-docker-and-containers/project/questlog/` (the
+   Dockerfiles and `docker-compose.yml`) — Module 11's pipeline builds and
+   deploys these exact images, it doesn't re-invent containerization.
+2. Web-research (Rule 7) heavily — this module touches the fastest-moving
+   territory in the whole course: current GitHub Actions syntax (checkout/
+   setup-node/setup-python/docker build-push action versions), a
+   currently-real, currently-cheap container-hosting platform with actual
+   verified pricing (Fly.io/Railway/Render/AWS ECS — the master plan says
+   "pick one and go deep" — note Module 09 already named Hetzner as the
+   raw-VPS example, so Module 11's platform choice should be a genuinely
+   different, higher-level "you don't manage the VM yourself" tier, not
+   the same VPS again), current free/cheap-tier domain+DNS options,
+   current Let's Encrypt/ACME certificate automation approach on whichever
+   platform is chosen (many platform-as-a-service options handle this
+   automatically — verify and say so if true, don't manually walk through
+   `certbot` if the chosen platform makes that unnecessary), and a
+   currently-real free/cheap tier of an error-tracking tool (Sentry is the
+   master plan's own example — verify current free-tier limits).
+3. This is a natural point to decide, and should explicitly decide,
+   whether the deployed target for Module 11's pipeline is a *new* thing
+   or whether it's meant to replace/coexist with Module 09's manual VPS
+   deploy — read `module-09-linux-networking-servers/README.md`'s framing
+   ("Module 11 automates the manual deploy steps you do by hand here")
+   before deciding, and state the decision clearly in the module and in
+   this handover's own future update.
+4. This module is unusually account/service-heavy (GitHub itself, a cloud
+   platform account, a domain, possibly Sentry) — given the pattern from
+   Module 09 (the user was asked before committing to any real paid VPS
+   spend), **ask the user first** about which pieces they want to actually
+   provision for real vs. read as generic/described-but-optional, the same
+   way Module 09's VPS question was handled, before generating this
+   module's content.
+5. Use the same Agent-delegation process described above ("The process
+   that's been working").
 
-## After Module 09
+## After Module 11
 
-Continue the same pattern through Modules 10–15, always copying the
+Continue the same pattern through Modules 12–15, always copying the
 previous module's `project/questlog/` forward per `RUNNING_PROJECT.md`'s
-table. Module 10 (Docker) containerizes what Module 09 just did by hand.
-Modules 12 and 15 are two points worth flagging in advance:
+table. Modules 12 and 15 are two points worth flagging in advance:
 - **Module 12 (AI/ML Foundations)** is explicitly concept-only per the
   master plan and `RUNNING_PROJECT.md` — no QuestLog code changes, standalone
   exercises (tokenization, embeddings, prompting). Don't force QuestLog

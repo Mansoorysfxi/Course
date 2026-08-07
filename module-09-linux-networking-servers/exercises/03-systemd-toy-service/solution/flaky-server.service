@@ -1,0 +1,12 @@
+[Unit]
+Description=Exercise 03 -- flaky_server.py, deliberately crashes to test Restart=
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 /home/yourname/exercise-03/flaky_server.py
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target

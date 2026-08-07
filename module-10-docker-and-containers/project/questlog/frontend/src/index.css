@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+/*
+ * Tailwind CSS v4's Vite plugin scans your source files for class names
+ * automatically -- there is no `content: [...]` array to maintain (that
+ * was a Tailwind v3 requirement). The single line above pulls in Tailwind's
+ * base styles, its utility classes, and its default theme. See
+ * lessons/10-tailwind-and-utility-first-css.md for the full explanation.
+ */
+
+@theme {
+  --font-sans: "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+
+body {
+  font-family: var(--font-sans);
+}
