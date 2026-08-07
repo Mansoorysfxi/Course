@@ -75,6 +75,17 @@ each other's internals; the modern, `async`-capable successor to the
 older WSGI standard, which could only hand a server one request at a
 time. *Taught in: [Module 05, Lesson 00](module-05-backend-fastapi/lessons/00-setup.md).*
 
+**ASGI transport** — `httpx`'s mechanism (`ASGITransport`) for handing a
+request directly to an ASGI app's own code, in-process, with no real
+network socket at all — what lets a test call a real FastAPI app the
+same way a real server would, at a fraction of the cost. *Taught in:
+[Module 08, Lesson 05](module-08-testing-and-quality/lessons/05-testing-fastapi-endpoints.md).*
+
+**Assertion introspection** — `pytest`'s ability to show the actual
+runtime values on both sides of a failed plain `assert` (e.g. `assert 5
+== 6`), without needing special assertion methods like `assertEqual`.
+*Taught in: [Module 08, Lesson 02](module-08-testing-and-quality/lessons/02-pytest-fundamentals-and-fixtures.md).*
+
 **Asymmetric algorithm** — A signing scheme (e.g. `RS256`) where a private
 key signs and a separate, publicly shareable public key verifies —
 useful when other services must verify tokens without ever being trusted
@@ -327,6 +338,13 @@ doubling it roughly doubles how long one hash takes, deliberately, so
 brute-forcing stays impractical even as hardware gets faster. *Taught in:
 [Module 07, Lesson 02](module-07-auth-security/lessons/02-password-hashing.md).*
 
+**Coverage (test coverage)** — A measurement of which lines of
+application code actually ran at least once while a test suite executed,
+reported as a percentage; useful for finding code with zero tests at
+all, but it says nothing about whether the tests that *do* exist checked
+the right thing — 100% coverage is not, by itself, a goal worth chasing.
+*Taught in: [Module 08, Lesson 02](module-08-testing-and-quality/lessons/02-pytest-fundamentals-and-fixtures.md).*
+
 **Credential** — Proof of a claimed identity presented on a request — a
 password at login, or the token/cookie presented afterward to avoid
 re-proving it every time. *Taught in: [Module 07, Lesson 01](module-07-auth-security/lessons/01-authentication-vs-authorization.md).*
@@ -384,6 +402,12 @@ loader/action style of routing, which fetches data before a route renders;
 mentioned but not used by QuestLog, which stays in declarative mode.
 *Taught in: [Module 04, Lesson 08](module-04-react/lessons/08-react-router.md).*
 
+**Debugger** — A tool that pauses a running program at a specific point
+and lets you inspect its live variables and step through its code one
+line at a time, instead of only rereading source code and guessing;
+Python's built-in one is `pdb`, reachable via `breakpoint()`. *Taught in:
+[Module 08, Lesson 04](module-08-testing-and-quality/lessons/04-debugging-techniques.md).*
+
 **Declarative mode (React Router)** — React Router's classic, JSX-based
 routing style (`<BrowserRouter>`, `<Routes>`, `<Route>`), with no server
 concerns or data-loading conventions — the mode this course's QuestLog
@@ -431,6 +455,13 @@ unpacking. *Taught in: [Module 03, Lesson 08](module-03-html-css-javascript/less
 section, marking a package (e.g. `typescript`) as a tool needed only while
 developing/building a project, not something a finished app needs to
 actually run for a user. *Taught in: [Module 03, Lesson 00](module-03-html-css-javascript/lessons/00-setup.md).*
+
+**Dialect (SQL)** — The specific extensions, data types, and edge-case
+behaviors that differ between two database products (e.g. PostgreSQL vs.
+SQLite) that otherwise both implement the core SQL language similarly;
+the reason testing against a different database product than production
+uses carries some real, if often small, risk. *Taught in: [Module 08,
+Lesson 06](module-08-testing-and-quality/lessons/06-testing-with-a-database.md).*
 
 **Dict (dictionary)** — An unordered (but insertion-order-preserving)
 collection of key→value pairs, optimized for fast lookup by key. *Taught
@@ -484,6 +515,11 @@ the original content; the right tool when a system genuinely needs the
 original data back later, unlike hashing, below, used for passwords.
 *Taught in: [Module 07, Lesson 02](module-07-auth-security/lessons/02-password-hashing.md).*
 
+**End-to-end test (E2E test)** — The top, smallest, slowest, most
+realistic layer of the testing pyramid: driving an entire real system,
+usually through the same interface a real user would (a real browser),
+start to finish. *Taught in: [Module 08, Lesson 01](module-08-testing-and-quality/lessons/01-why-tests-and-the-testing-pyramid.md).*
+
 **Engine (SQLAlchemy)** — The SQLAlchemy object that knows how to open and
 pool real network connections to a database; an application typically
 creates exactly one, at startup. *Taught in: [Module 06, Lesson 05](module-06-databases/lessons/05-orms-and-sqlalchemy-basics.md).*
@@ -524,6 +560,11 @@ completely empty. *Taught in: [Module 03, Lesson 05](module-03-html-css-javascri
 wrong, immediately interrupting normal execution and propagating upward
 until something catches it. *Taught in: [Module 01, Lesson 06](module-01-python-properly/lessons/06-error-handling.md).*
 
+**Factory fixture** — A `pytest` fixture whose value is itself a
+function, so a test can call it more than once, with different
+arguments each time, rather than receiving one fixed, pre-built value.
+*Taught in: [Module 08, Lesson 02](module-08-testing-and-quality/lessons/02-pytest-fundamentals-and-fixtures.md).*
+
 **Fast-forward merge** — A merge where the target branch hadn't moved
 since the branch being merged split off, so Git can just slide the
 pointer forward with nothing to actually combine. *Taught in: [Module 00,
@@ -539,6 +580,13 @@ soon as response headers arrive — including for HTTP error status codes,
 which is why `response.ok` must be checked explicitly rather than relying
 on the Promise to reject. Not to be confused with `git fetch`, above.
 *Taught in: [Module 03, Lesson 07](module-03-html-css-javascript/lessons/07-fetch-promises-and-async-await.md).*
+
+**Fixture** — A `pytest` function, decorated with `@pytest.fixture`,
+whose job is doing setup (and, via `yield`, cleanup) a test needs, made
+available to any test simply by naming it as a parameter — `pytest`
+resolves it automatically, the same dependency-injection idea (above)
+FastAPI's own `Depends()` uses for routes. *Taught in: [Module 08, Lesson
+02](module-08-testing-and-quality/lessons/02-pytest-fundamentals-and-fixtures.md).*
 
 **Flex container** — An element with `display: flex` set on it, causing
 its direct children to become flex items arranged along a single row or
@@ -556,6 +604,12 @@ Horizontal/Vertical Box. *Taught in: [Module 03, Lesson 03](module-03-html-css-j
 **Floor division (`//`)** — Division that rounds its result down to the
 nearest whole number, discarding the remainder. *Taught in: [Module 01,
 Lesson 01](module-01-python-properly/lessons/01-variables-types-and-control-flow.md).*
+
+**Formatter** — A tool that rewrites a source file's whitespace, quote
+style, and line breaks into one consistent shape, with no opinion about
+whether the code's actual logic is correct; this course uses `ruff
+format` (Python) and `prettier` (JS/TS). *Taught in: [Module 08, Lesson
+08](module-08-testing-and-quality/lessons/08-linters-and-formatters.md).*
 
 **f-string** — A string literal prefixed with `f`, allowing Python
 expressions inside `{curly braces}` to be evaluated and inserted directly
@@ -767,6 +821,11 @@ in: [Module 01, Lesson 05](module-01-python-properly/lessons/05-oop-classes-and-
 `__init__`), belonging to one specific instance rather than being shared
 across all instances of the class. *Taught in: [Module 01, Lesson 05](module-01-python-properly/lessons/05-oop-classes-and-dunders.md).*
 
+**Integration test** — A test that exercises several real pieces of a
+system working together (e.g. real routing, real dependency injection,
+and a real database), one layer up the testing pyramid from a unit test
+(below). *Taught in: [Module 08, Lesson 01](module-08-testing-and-quality/lessons/01-why-tests-and-the-testing-pyramid.md).*
+
 **Interface (TypeScript)** — A TypeScript declaration describing the
 required shape of an object — which properties it must have and their
 types — checked by `tsc` at compile time and erased entirely from the
@@ -796,6 +855,11 @@ condition (typically a foreign key); an `INNER JOIN` (plain `JOIN`) only
 returns rows with a match on both sides, while a `LEFT JOIN` (below) keeps
 every row from the left-hand table regardless. *Taught in: [Module 06,
 Lesson 04](module-06-databases/lessons/04-joins-and-group-by.md).*
+
+**jsdom** — A plain-JavaScript implementation of a browser's DOM that
+runs inside plain Node.js, with no actual browser window at all, letting
+a frontend component test render and query real-seeming HTML. *Taught
+in: [Module 08, Lesson 00](module-08-testing-and-quality/lessons/00-setup.md).*
 
 **JSON** — A plain-text data format (JavaScript Object Notation) mapping
 almost directly onto Python's `dict`/`list`/`str`/`int`/`float`/`bool`/`None`,
@@ -845,6 +909,11 @@ that row entirely. *Taught in: [Module 06, Lesson 04](module-06-databases/lesson
 need to share into their common parent, which passes the value down as
 props and update functions down as props. *Taught in: [Module 04,
 Lesson 05](module-04-react/lessons/05-forms-controlled-components-and-lifting-state.md).*
+
+**Linter** — A tool that reads source code without running it and
+reports real bugs, suspicious patterns, and style problems, some
+auto-fixable; this course uses `ruff` (Python) and `oxlint` (JS/TS, from
+Module 04). *Taught in: [Module 08, Lesson 08](module-08-testing-and-quality/lessons/08-linters-and-formatters.md).*
 
 **List** — An ordered, mutable sequence of values, allowing duplicates.
 *Taught in: [Module 01, Lesson 03](module-01-python-properly/lessons/03-data-structures.md).*
@@ -916,12 +985,23 @@ where the unconditional, default CSS describes the narrowest (typically
 mobile) layout, with `min-width` media queries adding more elaborate
 layouts as the viewport widens. *Taught in: [Module 03, Lesson 04](module-03-html-css-javascript/lessons/04-css-grid-and-responsive-design.md).*
 
+**Mock** — A fake stand-in object, used in a test, that records how it
+was called so the test can assert on that history afterward, and can be
+told in advance what to return; one specific kind of test double
+(below). *Taught in: [Module 08, Lesson 03](module-08-testing-and-quality/lessons/03-parametrize-and-mocking.md).*
+
 **Module** — A single Python file, importable by its filename (minus
 `.py`) into other files. *Taught in: [Module 01, Lesson 07](module-01-python-properly/lessons/07-modules-packages-and-virtual-environments.md).*
 
 **Module search path (`sys.path`)** — The ordered list of folders Python
 searches, stopping at the first match, when resolving an `import`
 statement. *Taught in: [Module 01, Lesson 07](module-01-python-properly/lessons/07-modules-packages-and-virtual-environments.md).*
+
+**Monkeypatch** — `pytest`'s own built-in fixture for temporarily
+replacing one attribute, function, or environment variable for the
+duration of a single test, automatically restored afterward; a simpler
+alternative to `unittest.mock.patch` (see Mock, above) for
+straightforward substitutions. *Taught in: [Module 08, Lesson 03](module-08-testing-and-quality/lessons/03-parametrize-and-mocking.md).*
 
 **Mount / Unmount** — The moment a component first appears in the page
 (mount) or is removed from it (unmount); an empty `useEffect` dependency
@@ -1025,6 +1105,11 @@ mis-treated as part of the query's own syntax; the mechanism that makes
 SQLAlchemy's query-building API safe from SQL injection by default.
 *Taught in: [Module 07, Lesson 08](module-07-auth-security/lessons/08-sql-injection-and-orm-safety.md).*
 
+**Parametrize** — `@pytest.mark.parametrize`, a decorator that runs one
+test function multiple times, once per supplied set of inputs, with each
+run reported as its own, separately pass/fail-able test. *Taught in:
+[Module 08, Lesson 03](module-08-testing-and-quality/lessons/03-parametrize-and-mocking.md).*
+
 **Partial Prerendering (PPR)** — A Next.js rendering approach (introduced
 in Next.js 15) that mixes a static shell with dynamic, per-request parts
 streamed in afterward, on the same page. *Taught in: [Module 04, Lesson 09](module-04-react/lessons/09-nextjs-ssr-ssg-csr-concepts.md).*
@@ -1070,6 +1155,13 @@ idempotent by default. *Taught in: [Module 02, Lesson 03](module-02-internet-and
 **PostgreSQL** — The relational database this course uses, a standalone
 server program that listens on a network port and manages data stored
 permanently on disk, queried via SQL. *Taught in: [Module 06, Lesson 00](module-06-databases/lessons/00-setup.md).*
+
+**Pre-commit hook** — A script that runs automatically at the moment
+right after `git commit` is typed but before the commit is actually
+created, able to inspect and refuse what's about to be committed;
+**"pre-commit"** is also the name of a specific Python framework
+(installed via `pip`) that manages a whole list of such hooks from one
+`.pre-commit-config.yaml` file. *Taught in: [Module 08, Lesson 09](module-08-testing-and-quality/lessons/09-pre-commit-hooks.md).*
 
 **Preflight request** — A separate `OPTIONS` request a browser
 automatically sends *before* a non-"simple" cross-origin request (e.g.
@@ -1187,6 +1279,12 @@ that run only on the server, never ship their own JavaScript to the
 browser, and can access server-side resources (a database, a secret key)
 directly. *Taught in: [Module 04, Lesson 09](module-04-react/lessons/09-nextjs-ssr-ssg-csr-concepts.md).*
 
+**React Testing Library (RTL)** — A library for testing React components
+by rendering them into a fake DOM (via jsdom, above) and interacting
+with them the way a real user would — finding things by visible
+text/role/label, never by internal implementation detail. *Taught in:
+[Module 08, Lesson 07](module-08-testing-and-quality/lessons/07-frontend-testing-with-vitest-and-rtl.md).*
+
 **Reconciliation** — React's process of comparing a new Virtual DOM tree
 against the previous one and computing the minimal set of real-DOM
 changes needed, rather than rebuilding the whole page. *Taught in:
@@ -1215,6 +1313,11 @@ expires. *Taught in: [Module 07, Lesson 05](module-07-auth-security/lessons/05-o
 `iat`, `exp`, and others) is part of the official JWT specification
 itself, so any JWT library in any language understands it the same way.
 *Taught in: [Module 07, Lesson 04](module-07-auth-security/lessons/04-jwt-structure-in-depth.md).*
+
+**Regression** — A bug where something that used to work stops working
+because of a change made elsewhere, often in code the person making the
+change didn't realize was related; the main category of problem an
+automated test suite exists to catch. *Taught in: [Module 08, Lesson 01](module-08-testing-and-quality/lessons/01-why-tests-and-the-testing-pyramid.md).*
 
 **Relational database** — A database organizing data into tables of rows
 and columns, with relationships between tables expressed via foreign
@@ -1533,6 +1636,35 @@ expressions inside `${ }` — JavaScript's equivalent of Python's f-strings.
 typed input; distinct from the shell (the program interpreting that
 input) running inside it. *Taught in: [Module 00, Lesson 01](module-00-developer-environment-and-tooling/lessons/01-shell-and-filesystem.md).*
 
+**Test client** — An object (e.g. an `httpx.AsyncClient` wired to
+`ASGITransport`, above) that sends requests directly into an
+application's own code for testing, with no real network connection
+involved; a different, more specific meaning from the general "Client"
+(Module 02) or OAuth2's "Client" (Module 07), both above. *Taught in:
+[Module 08, Lesson 05](module-08-testing-and-quality/lessons/05-testing-fastapi-endpoints.md).*
+
+**Test discovery** — The rules a test runner (below) uses to
+automatically find test files and test functions on its own, based on
+naming conventions (e.g. a file named `test_*.py`, a function named
+`test_*`), with no test needing to be manually registered anywhere.
+*Taught in: [Module 08, Lesson 02](module-08-testing-and-quality/lessons/02-pytest-fundamentals-and-fixtures.md).*
+
+**Test double** — The general term for any fake object used in place of
+a real one inside a test (a mock, above, is one specific kind); borrowed
+from the movie industry's "stunt double." *Taught in: [Module 08, Lesson
+03](module-08-testing-and-quality/lessons/03-parametrize-and-mocking.md).*
+
+**Test runner** — A program whose job is discovering test files/functions,
+running them, and reporting which passed and which failed; `pytest`
+(Python) and Vitest (below, JavaScript/TypeScript) are this course's two.
+*Taught in: [Module 08, Lesson 01](module-08-testing-and-quality/lessons/01-why-tests-and-the-testing-pyramid.md).*
+
+**Testing pyramid** — A description of a healthy test suite's shape:
+mostly fast, isolated unit tests (below) at the bottom; a meaningful but
+smaller number of integration tests (above) in the middle; a small
+number of slow, realistic end-to-end tests (above) at the top. *Taught
+in: [Module 08, Lesson 01](module-08-testing-and-quality/lessons/01-why-tests-and-the-testing-pyramid.md).*
+
 **Three-way handshake** — The SYN / SYN-ACK / ACK exchange that opens a
 TCP connection, confirming both sides are ready before any real data is
 sent. *Taught in: [Module 02, Lesson 02](module-02-internet-and-web-fundamentals/lessons/02-tcp-tls-and-the-request-response-journey.md).*
@@ -1638,6 +1770,11 @@ duplicate an existing value in a given column (or set of columns), used
 in QuestLog to guarantee each quest line name has exactly one authoritative
 row. *Taught in: [Module 06, Lesson 05](module-06-databases/lessons/05-orms-and-sqlalchemy-basics.md).*
 
+**Unit test** — A test that exercises one small, isolated piece of code
+(often a single function), with nothing real set up around it — the
+fastest, most isolated, and most numerous layer of the testing pyramid
+(above). *Taught in: [Module 08, Lesson 01](module-08-testing-and-quality/lessons/01-why-tests-and-the-testing-pyramid.md).*
+
 **URL (Uniform Resource Locator)** — The full address of a web resource,
 composed of a scheme, host, path, and optionally a query string and
 fragment (e.g. `https://pokeapi.co/api/v2/pokemon/pikachu?limit=20#results`).
@@ -1705,6 +1842,10 @@ system's global Python and from every other project's environment.
 frontend projects, providing Hot Module Replacement while developing and
 bundling/optimizing files for a production build (`npm run build`).
 *Taught in: [Module 04, Lesson 00](module-04-react/lessons/00-setup.md).*
+
+**Vitest** — The test runner (above) this course uses for QuestLog's
+React/TypeScript frontend, built to work well with Vite and to feel
+familiar to anyone who's used Jest. *Taught in: [Module 08, Lesson 07](module-08-testing-and-quality/lessons/07-frontend-testing-with-vitest-and-rtl.md).*
 
 **Void element** — An HTML element with no closing tag and no content,
 like `<img>`, `<br>`, or `<input>`. *Taught in: [Module 03, Lesson 01](module-03-html-css-javascript/lessons/01-html-structure-forms-and-accessibility.md).*
