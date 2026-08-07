@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quest Tracker</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <header>
+    <h1>Quest Tracker</h1>
+  </header>
+
+  <main>
+    <section>
+      <h2>Add a Quest</h2>
+      <form id="quest-form">
+        <div>
+          <label for="quest-name">Quest name</label>
+          <input type="text" id="quest-name" name="questName" required>
+        </div>
+        <div>
+          <label for="quest-difficulty">Difficulty</label>
+          <select id="quest-difficulty" name="difficulty">
+            <option value="Easy">Easy</option>
+            <option value="Medium">Medium</option>
+            <option value="Hard">Hard</option>
+          </select>
+        </div>
+        <button type="submit">Add Quest</button>
+      </form>
+    </section>
+
+    <section>
+      <h2>Your Quests</h2>
+      <ul id="quest-list"></ul>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

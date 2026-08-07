@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quest Board</title>
+</head>
+<body>
+
+  <header>
+    <h1>Quest Board</h1>
+    <nav>
+      <a href="#">Home</a>
+      <a href="#">Active Quests</a>
+      <a href="#">Completed Quests</a>
+    </nav>
+  </header>
+
+  <main>
+
+    <article>
+      <h2>Slay the Dragon</h2>
+      <p>A fearsome red dragon has been terrorizing the village of Oakhaven
+        for three nights running. The village elder is offering a
+        substantial reward to whoever can drive it off.</p>
+    </article>
+
+    <article>
+      <h2>Find the Lost Amulet</h2>
+      <p>A traveling merchant lost a family amulet somewhere along the
+        forest road. She believes it may have fallen near the old stone
+        bridge.</p>
+    </article>
+
+    <section>
+      <h2>Active Quests</h2>
+      <ul>
+        <li>Slay the Dragon</li>
+        <li>Find the Lost Amulet</li>
+        <li>Water the Elder's Plants</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Submit a New Quest</h2>
+      <form>
+        <div>
+          <label for="quest-name">Quest name</label>
+          <input type="text" id="quest-name" name="questName" required>
+        </div>
+
+        <div>
+          <label for="quest-difficulty">Difficulty</label>
+          <select id="quest-difficulty" name="difficulty">
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="quest-notes">Notes</label>
+          <textarea id="quest-notes" name="notes" rows="3"></textarea>
+        </div>
+
+        <div>
+          <input type="checkbox" id="quest-urgent" name="urgent">
+          <label for="quest-urgent">Urgent</label>
+        </div>
+
+        <button type="submit">Add Quest</button>
+      </form>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Quest Board. A practice page for Module 03.</p>
+  </footer>
+
+</body>
+</html>

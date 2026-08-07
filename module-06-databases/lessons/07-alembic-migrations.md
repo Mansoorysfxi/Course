@@ -1,0 +1,147 @@
+# Lesson 07 — Migrations With Alembic
+
+## What you'll learn
+
+- What a migration is and why you can't just hand-edit a production schema.
+- How to generate, read, and apply a migration with Alembic.
+- What `env.py` actually does.
+- How to change a model and generate a second migration.
+
+## Why this matters
+
+Your Python classes (`db_models.py`) describe the schema you *want*.
+Alembic is what actually makes Postgres's real tables match that
+description — safely, repeatably, and with a permanent record of every
+change, across every environment (your machine, a teammate's, production).
+
+## Prerequisites
+
+Lessons 05–06 (SQLAlchemy models and `Base.metadata`).
+
+## The concept, explained simply
+
+Imagine hand-editing a live database's structure directly, in production,
+via `psql`, every time you add a feature. It works exactly once, on exactly
+one database, and leaves zero record of what you did or why — impossible
+to repeat identically on a second server, a teammate's machine, or after a
+disaster recovery restore. A **migration** is a small, version-controlled
+Python file describing one specific schema change (e.g. "add a `priority`
+column") that can be applied — and, ideally, un-applied — consistently
+anywhere, the same way a Git commit (Module 00) is a small, ordered,
+reproducible record of a code change.
+
+## The details
+
+### The migration that already exists
+
+`alembic/versions/..._initial_schema_users_quest_lines_quests.py`:
+```python
+def upgrade() -> None:
+    op.create_table('quest_lines', sa.Column('id', ...), ...)
+    op.create_table('users', ...)
+    op.create_table('quests', ...)
+
+def downgrade() -> None:
+    op.drop_table('quests')
+    op.drop_table('users')
+    op.drop_table('quest_lines')
+```
+`upgrade()` is what runs when you *apply* this migration; `downgrade()`
+is what runs to *undo* it. Note the drop order in `downgrade()` is the
+*reverse* of the create order in `upgrade()` — `quests` is dropped first
+because it has foreign keys pointing at the other two tables (Lesson 01);
+Postgres refuses to drop a table another table still references, exactly
+the same protection you saw in Lesson 03's `DELETE` example.
+
+### Applying it
+
+```bash
+cd module-06-databases/project/questlog/backend
+alembic upgrade head
+```
+`head` means "the newest migration on record" — Alembic tracks which
+migrations have already been applied in a special table it creates
+(`alembic_version`), so running this command again does nothing if you're
+already up to date.
+
+**Try it yourself:** run `alembic current` before and after `alembic
+upgrade head`, and read the difference in output — this is Alembic telling
+you exactly which migration your database is currently at.
+
+### `env.py`: the two lines that matter
+
+`alembic/env.py` is mostly generated scaffolding (from `alembic init -t
+async alembic`, matching this project's async SQLAlchemy setup) you rarely
+touch. Exactly two lines were customized for QuestLog:
+```python
+config.set_main_option("sqlalchemy.url", DATABASE_URL)
+target_metadata = Base.metadata
+```
+The first ensures Alembic connects to the *same* database
+`app/database.py` does (read from the same `DATABASE_URL`, never a second,
+hardcoded copy that could quietly drift). The second is what
+`alembic revision --autogenerate` (below) compares the real database
+against — `Base.metadata` is the complete collection of every table
+described by every class inheriting from `Base` (Lesson 05).
+
+### Generating a migration automatically
+
+Add a hypothetical new column to `db_models.py`'s `Quest` class (don't
+actually keep this change unless Exercise 03 asks you to — this is a
+walkthrough):
+```python
+notes: Mapped[str | None] = mapped_column(String, nullable=True)
+```
+Then:
+```bash
+alembic revision --autogenerate -m "add notes column to quests"
+```
+**What autogenerate actually looks at:** Alembic connects to your real,
+currently-running database, reads its actual current structure, compares
+that against `target_metadata` (your Python classes), and writes a new
+migration file containing *only the difference* — here, one new nullable
+column. **Autogenerate is a helpful draft, not a guarantee** — always open
+the generated file and read it before applying, especially for anything
+beyond simple additive changes (renaming a column, for instance, is
+autodetected as a drop-and-add by default unless you tell Alembic
+otherwise, which would silently lose data).
+
+```bash
+alembic upgrade head
+```
+Applies it. `alembic downgrade -1` would undo exactly one migration step
+(the most recent one), running its `downgrade()` function.
+
+## Common mistakes & gotchas
+
+- **Editing a model without generating/applying a migration.** Your Python
+  code and the real database silently disagree — the app might even seem
+  to work locally (SQLAlchemy trusts your model definitions) until a query
+  touches the actually-missing column and Postgres errors.
+- **Never reading an autogenerated migration before running it.** Blindly
+  trusting autogenerate on a rename or a type change is a common way to
+  accidentally drop and lose real data — always read `upgrade()` before
+  applying it against anything with data you care about.
+- **Applying migrations out of order or skipping one.** Alembic tracks a
+  linear chain (each migration's `down_revision` points at the one before
+  it) — always run `alembic upgrade head` rather than jumping to a specific
+  revision unless you specifically mean to.
+- **Committing to Git without committing the migration file alongside the
+  model change that caused it.** A teammate pulling your model change
+  without the matching migration file has no way to actually create the
+  new column in their own database.
+
+## How this connects
+
+This is the mechanism Module 07 will use to add authentication tables/
+columns, and every future schema change for the rest of the course. Lesson
+10 designs QuestLog's schema with an eye toward migrations staying simple
+(see its discussion of the `users` table existing "one module early" for
+exactly this reason).
+
+## Quick self-check
+
+1. Why is a migration better than hand-editing a production database directly?
+2. What do `upgrade()` and `downgrade()` each do, and why is `downgrade()`'s table-drop order reversed?
+3. What does Alembic's autogenerate actually compare against what?
+4. Why must you always read an autogenerated migration before applying it, especially for a rename?

@@ -1,0 +1,12 @@
+{
+  "name": "exercise-05-typescript-conversion",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "typescript": "^7.0.2"
+  }
+}

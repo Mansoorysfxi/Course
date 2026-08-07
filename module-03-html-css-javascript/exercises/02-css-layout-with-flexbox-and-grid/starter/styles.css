@@ -1,0 +1,62 @@
+/* TODO 1: add the universal box-sizing reset here, as the FIRST rule in
+   the file. See Lesson 02's "box-sizing" section. */
+
+
+body {
+  font-family: sans-serif;
+  margin: 0;
+  color: #222;
+}
+
+/* TODO 2: make .toolbar (the <nav> inside the header) a flex container.
+   Its links should sit in a row, evenly spaced (justify-content), and
+   vertically centered (align-items). See Lesson 03. */
+.toolbar a {
+  color: white;
+  text-decoration: none;
+}
+
+/* TODO 3: give .quest-card padding, a border, and a background color.
+   Pick values you like — the point is practicing the box model, not
+   matching an exact design. See Lesson 02. */
+.quest-card {
+}
+
+/* TODO 4: make .dashboard a CSS Grid container.
+   - Default (mobile-first, no media query): a single column — header,
+     sidebar, main content, and footer all stacked vertically in that
+     order.
+   - Inside a `@media (min-width: 768px)` block: switch to a layout with
+     a header row spanning full width, a middle row with the sidebar and
+     main content side by side, and a footer row spanning full width —
+     matching Lesson 04's dashboard example.
+   See Lesson 04. */
+.dashboard {
+}
+
+.dashboard-header {
+  background-color: #222;
+  color: white;
+  padding: 16px;
+}
+
+.sidebar {
+  background-color: #f4f4f4;
+  padding: 16px;
+}
+
+.main-content {
+  padding: 16px;
+}
+
+.dashboard-footer {
+  background-color: #333;
+  color: white;
+  padding: 8px 16px;
+}
+
+/* TODO 5: make .quest-list a Grid container using
+   repeat(auto-fit, minmax(220px, 1fr)) for its columns, with a sensible
+   gap. See Lesson 04's `repeat()`/`auto-fit` note. */
+.quest-list {
+}

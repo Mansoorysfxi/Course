@@ -1,0 +1,43 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 16px;
+  color: #222;
+}
+
+header {
+  margin-bottom: 16px;
+}
+
+form div {
+  margin-bottom: 8px;
+}
+
+#quest-list {
+  list-style: none;
+  padding: 0;
+}
+
+#quest-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+#quest-list li.completed .quest-text {
+  text-decoration: line-through;
+  color: #888;
+}
+
+.quest-text {
+  flex-grow: 1;
+}

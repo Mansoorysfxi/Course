@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather Lookup Widget</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <header>
+    <h1>Weather Lookup Widget</h1>
+  </header>
+
+  <main>
+    <div>
+      <label for="city-select">City</label>
+      <select id="city-select">
+        <option value="52.52,13.41">Berlin</option>
+        <option value="35.6762,139.6503">Tokyo</option>
+        <option value="-33.8688,151.2093">Sydney</option>
+        <option value="40.7128,-74.006">New York</option>
+      </select>
+    </div>
+
+    <button id="get-weather-btn" type="button">Get Weather</button>
+    <button id="trigger-error-btn" type="button">Trigger a Deliberate Error</button>
+
+    <div id="weather-status">Ready.</div>
+    <div id="weather-result"></div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

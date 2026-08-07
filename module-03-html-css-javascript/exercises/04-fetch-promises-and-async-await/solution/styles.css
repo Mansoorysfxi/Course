@@ -1,0 +1,27 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 16px;
+  color: #222;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 400px;
+}
+
+#weather-status {
+  font-style: italic;
+  color: #555;
+}
+
+#weather-result {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
