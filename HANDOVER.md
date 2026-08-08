@@ -7,12 +7,14 @@ don't repeat them. This file is about *generating the course*, not about
 the learner's progress — that's [PROGRESS.md](PROGRESS.md), a separate,
 still-empty file the learner's actual study sessions will fill in later.
 
-Last updated: after Module 10 completed and independently verified on disk
-(diffed against Module 09's questlog to confirm only the documented Redis
-wiring + Docker files changed, both backend pytest (37/37) and frontend
-vitest (17/17) suites actually re-run and passing, `npm run build`
-actually re-run and succeeding, glossary diff checked as purely additive,
-all 9 lessons checked for Rule 5's 8 required sections).
+Last updated: after Module 11 completed and independently verified on disk
+(diffed against Module 10's questlog to confirm only the documented
+`/health` endpoint + Sentry wiring + CI/CD files changed, both backend
+pytest (39/39) and frontend vitest (17/17) suites actually re-run and
+passing, `npm run build` actually re-run and succeeding, glossary/
+RUNNING_PROJECT.md diffs checked as purely additive, all 9 lessons checked
+for Rule 5's 8 required sections, one stray `.ruff_cache` the agent left
+behind found and deleted during verification).
 
 ## Status at a glance
 
@@ -31,8 +33,8 @@ all 9 lessons checked for Rule 5's 8 required sections).
 | 08 — Testing & Software Quality (Review Project) | ✅ Fully generated and verified on disk — test suites actually run and pass, see below |
 | 09 — Linux, Networking & Servers | ✅ Fully generated and verified on disk |
 | 10 — Docker & Containers | ✅ Fully generated and verified on disk |
-| 11 — CI/CD, Cloud & Production Operations | ❌ Not started — **next up** |
-| 12 — AI/ML Foundations | ❌ Not started |
+| 11 — CI/CD, Cloud & Production Operations | ✅ Fully generated and verified on disk |
+| 12 — AI/ML Foundations | ❌ Not started — **next up** |
 | 13 — Building with LLM APIs | ❌ Not started |
 | 14 — RAG | ❌ Not started |
 | 15 — Agents & Modern AI Workflows (Final Capstone) | ❌ Not started |
@@ -117,13 +119,26 @@ grep -c "Module XX" GLOSSARY.md              # did glossary entries actually lan
    with a precise "here's what's actually on disk, here's what's missing"
    message is reliable — don't restart a module from scratch after a
    session-limit or connection failure.**
+7. **Agents that run `ruff`/`pytest` inside the copied-forward `project/questlog/`
+   sometimes leave `.ruff_cache`/`.pytest_cache` behind despite explicitly
+   claiming in their self-audit that they swept for stray artifacts** — this
+   happened in both Module 10 (caught before it mattered) and Module 11
+   (a `.ruff_cache` under `backend/` survived the agent's own claimed
+   "no stray artifacts" scan and was only caught during independent
+   verification). **Lesson: don't just trust a "no stray artifacts" claim —
+   actually run the `find ... -name ".ruff_cache" -o -name ".pytest_cache"`
+   check yourself post-hoc, every time**, in addition to the
+   `node_modules`/`__pycache__`/`.venv*` check issue 4 already calls out.
+   Also: if *you* (whoever is verifying) run `pytest`/`ruff` yourself
+   during verification, remember to clean up the cache folders your own
+   verification run creates too — don't assume only the agent can leave a
+   mess.
 
 ## The running project: QuestLog
 
 Full spec in [RUNNING_PROJECT.md](RUNNING_PROJECT.md) — read it before
 generating any further module. Quick recap of where the codebase actually
-stands after Module 09 (app code itself is **unchanged since Module 08** —
-Module 09 only changed where/how it runs, see below):
+stands after Module 11:
 
 - **Frontend:** React 19 + TypeScript 7 + Vite 8 + Tailwind CSS 4 + React
   Router 8. Real login/signup flow, JWT stored and sent as a Bearer token,
@@ -235,77 +250,126 @@ Module 09 only changed where/how it runs, see below):
   place a first-pass error could be hiding — worth an actual
   `docker compose up --build` smoke test the first time anyone has Docker
   available.
+- **New in Module 11:** QuestLog now has a real CI/CD pipeline
+  (`.github/workflows/ci-cd.yml`) — on every push/PR to `main`, backend
+  pytest + ruff and frontend vitest + build run as two parallel jobs; on a
+  push to `main` only, and only if both pass, both Docker images build and
+  push to GitHub Container Registry (tagged `:latest` and `:<commit-sha>`,
+  image owner lowercased via bash parameter expansion since GHCR requires
+  lowercase and GitHub Actions' expression language has no built-in
+  `lowercase()`), then a `deploy` job hits Render's Deploy Hooks with
+  `imgURL` pinned to that exact commit SHA. `render.yaml` (a Render
+  Blueprint) defines the actual services. The workflow is written as if
+  `project/questlog/`'s *contents* (not the folder itself) are the root of
+  their own separate GitHub repo — same pattern Module 09 used for its
+  runbook.
+- **Deploy platform chosen: Render** (recorded in `RUNNING_PROJECT.md`'s
+  "Fixed technology decisions"). Chosen over Fly.io/Railway specifically
+  because live research at generation time (August 2026) found both had
+  discontinued genuine free tiers — Fly.io now gives new signups only a
+  2-hour/7-day trial, Railway a one-time $5 credit then $1/month — which
+  would have broken this course's "reading/most-of-the-module never
+  requires spend" rule. Render still offers real free Docker-backed web
+  services, free Postgres (1GB/30-day expiry), a free Redis-compatible Key
+  Value store, and fully automatic TLS on both its own subdomain and a
+  custom domain. This is deliberately a different, higher tier than
+  Module 09's raw Hetzner VPS (never re-litigated) — no VM management at
+  all, chosen so the automatic-HTTPS/one-file-deploy contrast against
+  Module 09's manual, HTTP-only deploy is real and felt, not cosmetic.
+- **Two small, real, documented app-code changes** (both independently
+  re-verified, not just taken on the agent's word): a `GET /health`
+  endpoint in `backend/app/main.py` that Render's own deploy process polls
+  before routing traffic — checks Postgres via `SELECT 1` (a *hard*
+  dependency, fails the check) and Redis via `ping()` (a *soft* dependency,
+  reported but doesn't fail the check, since QuestLog's cache is a
+  deliberately optional optimization); and optional, off-by-default Sentry
+  error tracking on both backend (`sentry-sdk`, gated on `settings.sentry_dsn`
+  being non-`None`) and frontend (`src/monitoring.ts`, gated on a build-time
+  `VITE_SENTRY_DSN` arg). Every exercise/lesson/local run with no DSN
+  configured has Sentry completely inert. I independently re-ran both test
+  suites after these changes: backend pytest **39/39 pass** (37 + 2 new
+  health-endpoint tests) + ruff clean; frontend vitest **17/17 pass** +
+  `npm run build` succeeds.
+- **The `project/questlog/deploy/` folder now carries two "superseded"
+  writeups**, kept side by side: Module 10's original `SUPERSEDED.md`
+  (Module 09's manual artifacts → Module 10's containers) plus a new
+  `SUPERSEDED_BY_MODULE_11.md` (Module 10's "a human still has to type
+  `docker compose up --build`" → Module 11's fully automatic pipeline),
+  each with a one-to-one comparison table. Nothing in `deploy/` was
+  deleted — same "let the learner compare by-hand vs. automated"
+  reasoning as Module 10.
+- **No real cloud accounts, GitHub repos, domains, or Sentry projects were
+  actually created** by the generating agent — this module is
+  instructional content and real config files (workflow YAML, `render.yaml`)
+  a learner runs themselves; no live deploy was performed or claimed.
+- **A stray `.ruff_cache` under `backend/` was found and deleted during
+  independent verification**, despite the agent's self-audit explicitly
+  claiming no stray artifacts remained — see "Known issues already hit"
+  #7, added because of this.
 - **Latest finished reference codebase:**
-  `module-10-docker-and-containers/project/questlog/` (app code identical
-  to Module 09 except the documented Redis wiring). **Module 11 must copy
-  this exact folder forward** into
-  `module-11-cicd-cloud-production/project/questlog/` — do not regenerate
-  the app from scratch.
+  `module-11-cicd-cloud-production/project/questlog/` (app code identical
+  to Module 10 except the documented `/health` + Sentry additions).
+  **Module 12 is concept-only per the master plan and makes no QuestLog
+  code changes at all** — see below — so this remains the reference
+  codebase until Module 13 touches QuestLog again.
 
-## Next up: Module 11 — CI/CD, Cloud & Production Operations
+## Next up: Module 12 — AI/ML Foundations
 
-Curriculum per the master plan: what CI/CD is and why; GitHub Actions from
-zero (workflow syntax explained line by line, build → test → deploy
-pipelines); cloud fundamentals (what AWS/GCP actually sell, core concepts —
-compute, object storage, managed databases, IAM in plain words); deploy
-using one concrete path (a container platform — e.g. AWS ECS, Fly.io,
-Railway — pick one with real current research and go deep, mention
-alternatives per the master plan); HTTPS/TLS certificates, domains, DNS
-records in practice; monitoring & observability (logs, metrics, uptime,
-error tracking e.g. Sentry, health checks); Kubernetes as a conceptual-only
-module (what it is, when you'd actually need it, core objects — pods,
-deployments, services — so the learner can hold a conversation; hands-on
-optional appendix only). Capstone: full CI/CD pipeline — push to main →
-tests run → image builds → auto-deploys to production with HTTPS on a real
-domain.
+Per the master plan, this module is a deliberate change of shape from
+Modules 00–11: **concept-only, standalone exercises, zero QuestLog code
+changes.** `RUNNING_PROJECT.md`'s own table already says so explicitly —
+don't force QuestLog integration here just for consistency's sake; Module
+13 (Building with LLM APIs) is where QuestLog itself gains an AI feature.
+
+Curriculum per the master plan: what machine learning actually is
+(training vs. inference, minimal math — dot products/gradients
+conceptually, no heavy calculus); neural networks conceptually (neurons,
+weights, loss, backpropagation intuition); what an LLM is (tokens,
+embeddings — the "meaning as coordinates" analogy, in depth — attention/
+transformers at an intuition level, why LLMs hallucinate, context windows,
+temperature/sampling); prompt engineering as a real skill (system prompts,
+few-shot, chain-of-thought, structured outputs). Suggested exercises per
+the master plan: hand-tokenize text, visualize embeddings with a small
+script, systematic prompt experiments.
 
 **Before generating it:**
-1. Skim `module-10-docker-and-containers/project/questlog/` (the
-   Dockerfiles and `docker-compose.yml`) — Module 11's pipeline builds and
-   deploys these exact images, it doesn't re-invent containerization.
-2. Web-research (Rule 7) heavily — this module touches the fastest-moving
-   territory in the whole course: current GitHub Actions syntax (checkout/
-   setup-node/setup-python/docker build-push action versions), a
-   currently-real, currently-cheap container-hosting platform with actual
-   verified pricing (Fly.io/Railway/Render/AWS ECS — the master plan says
-   "pick one and go deep" — note Module 09 already named Hetzner as the
-   raw-VPS example, so Module 11's platform choice should be a genuinely
-   different, higher-level "you don't manage the VM yourself" tier, not
-   the same VPS again), current free/cheap-tier domain+DNS options,
-   current Let's Encrypt/ACME certificate automation approach on whichever
-   platform is chosen (many platform-as-a-service options handle this
-   automatically — verify and say so if true, don't manually walk through
-   `certbot` if the chosen platform makes that unnecessary), and a
-   currently-real free/cheap tier of an error-tracking tool (Sentry is the
-   master plan's own example — verify current free-tier limits).
-3. This is a natural point to decide, and should explicitly decide,
-   whether the deployed target for Module 11's pipeline is a *new* thing
-   or whether it's meant to replace/coexist with Module 09's manual VPS
-   deploy — read `module-09-linux-networking-servers/README.md`'s framing
-   ("Module 11 automates the manual deploy steps you do by hand here")
-   before deciding, and state the decision clearly in the module and in
-   this handover's own future update.
-4. This module is unusually account/service-heavy (GitHub itself, a cloud
-   platform account, a domain, possibly Sentry) — given the pattern from
-   Module 09 (the user was asked before committing to any real paid VPS
-   spend), **ask the user first** about which pieces they want to actually
-   provision for real vs. read as generic/described-but-optional, the same
-   way Module 09's VPS question was handled, before generating this
-   module's content.
-5. Use the same Agent-delegation process described above ("The process
+1. This module needs comparatively little QuestLog-codebase context —
+   skim `RUNNING_PROJECT.md`'s Module 12 row and "Fixed technology
+   decisions" (which already commits to the Anthropic API as this course's
+   primary LLM API for Modules 13–15) so this module's own exercises can
+   use Claude/the Anthropic API consistently with what's coming, without
+   actually building any agent/RAG/tool-use content yet (that's Modules
+   13–15's job) — Module 12 should stay conceptual and use the API only
+   for small, standalone illustrative exercises (e.g. a tokenization/
+   prompting playground script), if it uses a real API at all.
+2. Web-research (Rule 7): current tokenizer behavior/tooling worth
+   demonstrating (e.g. `tiktoken` or the current Anthropic tokenizer
+   approach — verify current recommended way to count/inspect tokens for
+   Claude models specifically, since this course's Modules 13–15 standardize
+   on Anthropic), current embedding-model examples worth a hands-on
+   visualization exercise (a small, currently-available, ideally free/cheap
+   embeddings API or a local small model — verify current options, don't
+   assume a specific model name is still current), and confirm current
+   terminology hasn't shifted (e.g. current common usage of "context
+   window" sizes for current frontier models, current framing of
+   temperature/sampling parameters) — this is a fast-moving field, don't
+   rely on memory for specific numbers.
+3. If any exercise calls a real LLM API, decide and document whether it
+   requires the learner to have their own API key (likely yes, per how
+   Module 13+ will need one anyway) — frame this the same "free tier where
+   possible, clearly optional/costed where not" way Modules 09/11 handled
+   real infrastructure, since API usage costs real (small) money.
+4. Use the same Agent-delegation process described above ("The process
    that's been working").
 
-## After Module 11
+## After Module 12
 
-Continue the same pattern through Modules 12–15, always copying the
+Continue the same pattern through Modules 13–15, always copying the
 previous module's `project/questlog/` forward per `RUNNING_PROJECT.md`'s
-table. Modules 12 and 15 are two points worth flagging in advance:
-- **Module 12 (AI/ML Foundations)** is explicitly concept-only per the
-  master plan and `RUNNING_PROJECT.md` — no QuestLog code changes, standalone
-  exercises (tokenization, embeddings, prompting). Don't force QuestLog
-  integration where the plan deliberately doesn't want it yet.
-- **Module 15** is the course's **final capstone** — budget real care for
-  it; it's the portfolio piece the entire course has been building toward.
+table (Module 13 resumes touching QuestLog code — its own AI-assistant
+feature). Module 15 is worth flagging in advance: it's the course's
+**final capstone** — budget real care for it; it's the portfolio piece the
+entire course has been building toward.
 
 ## Root-file maintenance as modules are added
 

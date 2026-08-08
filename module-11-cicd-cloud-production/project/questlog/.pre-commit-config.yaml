@@ -1,0 +1,64 @@
+# Runs automatically on `git commit` once installed (see lessons/09-pre-commit-hooks.md
+# and lessons/00-setup.md for `pre-commit install`) -- every hook below
+# runs against only the files you're about to commit, and a hook that
+# fails (or that auto-fixes something) blocks that commit until you `git
+# add` the fix and try again.
+#
+# Verified while writing this module (August 2026): `pre-commit` framework
+# 4.6.1 (PyPI), `pre-commit-hooks` v6.0.0, `ruff-pre-commit` v0.16.1
+# (matching this backend's own pinned `ruff==0.16.1`, requirements-dev.txt).
+# See lessons/09-pre-commit-hooks.md for why the frontend's own two hooks,
+# below, are deliberately written as `local`/`system` hooks instead of the
+# more commonly seen `pre-commit/mirrors-prettier` repo -- in short: this
+# project already manages its own exact `prettier` and `oxlint` versions
+# via `frontend/package.json`, so shelling out to the already-installed
+# `npm` scripts guarantees the hook always uses that exact version, with
+# no second, separately-pinned copy for pre-commit to keep in sync.
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.16.1
+    hooks:
+      # Order matters -- lint (and auto-fix) BEFORE formatting, so a fix
+      # ruff-check makes (e.g. reordering an import block) still gets
+      # formatted afterward, not the other way around.
+      - id: ruff-check
+        name: ruff check (backend)
+        args: [--fix]
+        files: ^backend/
+      - id: ruff-format
+        name: ruff format (backend)
+        files: ^backend/
+
+  - repo: local
+    hooks:
+      - id: prettier
+        name: prettier --check (frontend)
+        # `language: system` -- see this file's own header comment above --
+        # means pre-commit does not create or manage any environment of
+        # its own for this hook at all; it simply runs this exact shell
+        # command using whatever is already on PATH/already installed in
+        # frontend/node_modules (from `npm install`, lessons/00-setup.md).
+        entry: npm --prefix frontend run format:check
+        language: system
+        files: ^frontend/src/.*\.(ts|tsx)$
+        pass_filenames: false
+      - id: oxlint
+        name: oxlint (frontend)
+        entry: npm --prefix frontend run lint
+        language: system
+        files: ^frontend/src/.*\.(ts|tsx)$
+        pass_filenames: false
+      - id: pytest
+        name: pytest (backend)
+        entry: bash -c "cd backend && python -m pytest -q"
+        language: system
+        files: ^backend/
+        pass_filenames: false

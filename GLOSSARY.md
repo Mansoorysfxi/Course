@@ -7,6 +7,12 @@ language with a pointer back to where it was taught.
 
 ---
 
+**A / AAAA record** — The simplest kind of DNS record: a domain name
+mapped directly to an IPv4 (`A`) or IPv6 (`AAAA`) address, as opposed to
+a `CNAME` record (below), which points at another domain name instead.
+*Taught in: [Module 02, Lesson 01](module-02-internet-and-web-fundamentals/lessons/01-networks-ip-addresses-and-dns.md);
+DNS record types beyond `A` covered in full in [Module 11, Lesson 05](module-11-cicd-cloud-production/lessons/05-https-tls-domains-and-dns.md).*
+
 **Absolute path** — A filesystem path that always points to the same
 location no matter where you currently are (e.g. `/c/Users/YourName/Desktop`),
 as opposed to a relative path. *Taught in: [Module 00, Lesson 01](module-00-developer-environment-and-tooling/lessons/01-shell-and-filesystem.md).*
@@ -33,6 +39,14 @@ rules), **I**solation (concurrent transactions don't see each other's
 uncommitted changes), **D**urability (once committed, survives a crash).
 *Taught in: [Module 06, Lesson 02](module-06-databases/lessons/02-indexes-transactions-and-acid.md).*
 
+**ACME (Automatic Certificate Management Environment)** — The automated
+protocol that lets a Certificate Authority like Let's Encrypt issue a
+real TLS certificate with no human manually reviewing the request —
+instead, the requester proves domain ownership by satisfying a small,
+temporary challenge (an HTTP-01 challenge, serving a specific file at a
+specific URL; or a DNS-01 challenge, adding a specific `TXT` record).
+*Taught in: [Module 11, Lesson 05](module-11-cicd-cloud-production/lessons/05-https-tls-domains-and-dns.md).*
+
 **Aggregate function** — A SQL function (e.g. `COUNT`, `SUM`) that computes
 one result across every row *within* a `GROUP BY` group, rather than one
 row at a time. *Taught in: [Module 06, Lesson 04](module-06-databases/lessons/04-joins-and-group-by.md).*
@@ -41,6 +55,12 @@ row at a time. *Taught in: [Module 06, Lesson 04](module-06-databases/lessons/04
 applying versioned, chained migration files that bring a real database's
 structure in line with a project's ORM model classes. *Taught in:
 [Module 06, Lesson 07](module-06-databases/lessons/07-alembic-migrations.md).*
+
+**Apex domain** — A domain name with no subdomain at all (`yourdomain.com`,
+as opposed to `www.yourdomain.com` or `app.yourdomain.com`); DNS rules
+generally forbid a `CNAME` record at the apex, which is why platforms
+usually recommend pointing a subdomain at them instead. *Taught in:
+[Module 11, Lesson 05](module-11-cicd-cloud-production/lessons/05-https-tls-domains-and-dns.md).*
 
 **API (Application Programming Interface)** — A defined way one piece of
 software lets another use its functionality without needing to know how
@@ -170,6 +190,12 @@ in sync live — unlike a named volume, Docker doesn't manage where the data
 actually lives; you already know, because you chose the exact host path.
 *Taught in: [Module 10, Lesson 05](module-10-docker-and-containers/lessons/05-docker-volumes-and-persistence.md).*
 
+**Blueprint (Render)** — A `render.yaml` file describing a whole set of
+services, databases, and cache instances as one declarative document, so
+Render can create and wire all of them together at once instead of
+clicking through its dashboard separately for each. *Taught in:
+[Module 11, Lesson 08](module-11-cicd-cloud-production/lessons/08-deploying-questlog-with-ci-cd.md).*
+
 **Boolean attribute** — An HTML attribute (e.g. `required`, `disabled`)
 whose mere presence in a tag turns a behavior on, with no value needed.
 *Taught in: [Module 03, Lesson 01](module-03-html-css-javascript/lessons/01-html-structure-forms-and-accessibility.md).*
@@ -246,6 +272,11 @@ a "not found" page. *Taught in: [Module 04, Lesson 08](module-04-react/lessons/0
 **`cd`** — Shell command to change your current/working directory.
 *Taught in: [Module 00, Lesson 01](module-00-developer-environment-and-tooling/lessons/01-shell-and-filesystem.md).*
 
+**Certificate Authority (CA)** — An organization trusted (by browsers and
+operating systems) to verify domain ownership and issue TLS certificates;
+Let's Encrypt is the free, nonprofit CA behind most of the modern web's
+automatic certificate issuance. *Taught in: [Module 11, Lesson 05](module-11-cicd-cloud-production/lessons/05-https-tls-domains-and-dns.md).*
+
 **Cgroups (control groups)** — A Linux kernel feature that limits and
 measures how much of the host's own CPU, memory, and other resources a
 given process (or group of processes) is allowed to use — one of the two
@@ -261,6 +292,11 @@ others digit). *Taught in: [Module 09, Lesson 01](module-09-linux-networking-ser
 
 **chown** — The Linux command that changes a file or directory's owner
 and/or group (`chown newowner:newgroup path`). *Taught in: [Module 09, Lesson 01](module-09-linux-networking-servers/lessons/01-linux-processes-and-permissions.md).*
+
+**CI/CD** — Continuous Integration / Continuous Delivery (or Deployment)
+— see each individual term (below) for the precise distinction between
+them; together, the practice of automatically building, testing, and
+(optionally) deploying every code change. *Taught in: [Module 11, Lesson 01](module-11-cicd-cloud-production/lessons/01-what-ci-cd-is-and-why.md).*
 
 **Claim (JWT)** — One named piece of information inside a JWT's payload
 (e.g. `sub`, `iat`, `exp`); a **registered claim** (below) is one whose
@@ -318,6 +354,12 @@ entire history into a new local folder, automatically setting up `origin`.
 function it was defined inside, even after that outer function has
 finished running. *Taught in: [Module 01, Lesson 02](module-01-python-properly/lessons/02-functions-and-scope.md).*
 
+**CNAME record** — A DNS record pointing one domain name at ANOTHER
+domain name, rather than directly at an IP address — used, for example,
+to point `app.yourdomain.com` at `your-service.onrender.com`, so it
+keeps working automatically even if the platform's own underlying IP
+address changes. *Taught in: [Module 11, Lesson 05](module-11-cicd-cloud-production/lessons/05-https-tls-domains-and-dns.md).*
+
 **Column** — A named, fixed-type field every row in a database table has,
 comparable to one field of a spreadsheet's header row. *Taught in:
 [Module 06, Lesson 01](module-06-databases/lessons/01-why-a-database-and-the-relational-model.md).*
@@ -361,6 +403,12 @@ packaged build of your game plus the exact runtime/libraries it needs, so
 it runs identically anywhere, instead of shipping source code and hoping
 the target machine already has the right SDK installed. *Taught in: [Module 10, Lesson 02](module-10-docker-and-containers/lessons/02-dockerfiles-layers-and-caching.md).*
 
+**Container platform** — A hosting service (Render, Fly.io, Railway,
+AWS ECS/Fargate, Google Cloud Run) that runs a container image you hand
+it, without you ever managing the underlying virtual machine yourself —
+also called a **Platform-as-a-Service (PaaS)** — a genuinely different,
+higher-management tier than a raw VPS. *Taught in: [Module 11, Lesson 04](module-11-cicd-cloud-production/lessons/04-cloud-fundamentals-and-your-chosen-platform.md).*
+
 **Container registry** — A server that stores and serves container images
 by name and tag (e.g. `python:3.14-slim`, `redis:8-alpine`) — Docker Hub
 is the default, public registry `docker pull`/`docker build` reach out to
@@ -381,6 +429,20 @@ and [Lesson 10](module-01-python-properly/lessons/10-decorators-and-context-mana
 component, at any depth, without manually passing it through every
 intermediate component's props. Distinct from a Python context manager,
 above. *Taught in: [Module 04, Lesson 06](module-04-react/lessons/06-context.md).*
+
+**Continuous Delivery** — Every change that passes CI is automatically
+packaged into a deployable artifact, but a human still decides when (or
+whether) to actually deploy it. *Taught in: [Module 11, Lesson 01](module-11-cicd-cloud-production/lessons/01-what-ci-cd-is-and-why.md).*
+
+**Continuous Deployment** — Every change that passes CI is automatically
+deployed to production, with no human approval step at all — the
+practice this course's own QuestLog capstone pipeline uses. *Taught in:
+[Module 11, Lesson 01](module-11-cicd-cloud-production/lessons/01-what-ci-cd-is-and-why.md).*
+
+**Continuous Integration (CI)** — Automatically building and testing
+every change, as often as possible (ideally on every push), so a broken
+change is caught within minutes instead of days later. *Taught in:
+[Module 11, Lesson 01](module-11-cicd-cloud-production/lessons/01-what-ci-cd-is-and-why.md).*
 
 **Controlled component** — An input whose current value lives in React
 state (`value` + `onChange`) rather than in the browser's own internal DOM
@@ -531,6 +593,18 @@ By default, FastAPI calls a given dependency at most once per incoming
 request, reusing the result if it's referenced more than once in the same
 request's dependency tree. *Taught in: [Module 05, Lesson 04](module-05-backend-fastapi/lessons/04-dependency-injection-and-depends.md).*
 
+**Deploy Hook (Render)** — A unique URL, specific to one Render service,
+that triggers an on-demand redeploy with a single HTTP request —
+optionally pinning an exact image tag/digest via an `imgURL` query
+parameter, used to trigger a deploy from a CI/CD pipeline. *Taught in:
+[Module 11, Lesson 08](module-11-cicd-cloud-production/lessons/08-deploying-questlog-with-ci-cd.md).*
+
+**Deployment (Kubernetes)** — An object describing the DESIRED state of a
+set of identical Pods (below) — e.g. "always keep 5 replicas of this
+image running" — that Kubernetes continuously reconciles reality
+against, replacing a crashed Pod automatically with no human involved.
+*Taught in: [Module 11, Lesson 07](module-11-cicd-cloud-production/lessons/07-kubernetes-conceptually.md).*
+
 **Destructuring** — JavaScript syntax for pulling values out of an object
 or array directly into named variables in one step (e.g.
 `const { name, difficulty } = quest;`), comparable to Python's tuple/dict
@@ -660,6 +734,12 @@ system automatically assigns for a short time whenever a program
 initiates an outgoing connection, distinct from a well-known port a
 server deliberately listens on. *Taught in: [Module 09, Lesson 04](module-09-linux-networking-servers/lessons/04-networking-ports-and-ips.md).*
 
+**Error tracking** — A specialized tool (Sentry, below) that catches,
+deduplicates, and alerts on unhandled exceptions/crashes specifically,
+with a full stack trace and request context — distinct from general
+logs, metrics, or uptime monitoring, each of which catches something the
+others don't. *Taught in: [Module 11, Lesson 06](module-11-cicd-cloud-production/lessons/06-monitoring-logging-and-error-tracking.md).*
+
 **ES module** — JavaScript's standardized module system (`export`/
 `import`), letting code be split across files with an explicit, enforced
 public surface — comparable to Python's own `import` system, but with
@@ -784,6 +864,12 @@ collection immediately. *Taught in: [Module 01, Lesson 04](module-01-python-prop
 don't change anything"; both safe and idempotent. *Taught in: [Module 02,
 Lesson 03](module-02-internet-and-web-fundamentals/lessons/03-http-methods-and-status-codes.md).*
 
+**GHCR (GitHub Container Registry)** — GitHub's own, built-in container
+registry, one per GitHub account/org at no extra signup, that this
+course's CI/CD pipeline pushes QuestLog's Docker images to using the
+automatic `GITHUB_TOKEN` (below) — no separate account or password
+needed. *Taught in: [Module 11, Lesson 08](module-11-cicd-cloud-production/lessons/08-deploying-questlog-with-ci-cd.md).*
+
 **Git** — A distributed version control program that tracks the history
 of changes to files, letting you save checkpoints, roll back, and combine
 changes from multiple sources. *Taught in: [Module 00, Lesson 00](module-00-developer-environment-and-tooling/lessons/00-setup.md)
@@ -807,9 +893,19 @@ collaboration features (Pull Requests, issues, etc.) on top of plain Git.
 *Taught in: [Module 00, Lesson 00](module-00-developer-environment-and-tooling/lessons/00-setup.md)
 and [Lesson 05](module-00-developer-environment-and-tooling/lessons/05-github-and-pull-requests.md).*
 
+**GitHub Actions** — GitHub's own built-in CI/CD service: a text file
+(a **workflow**, below) describing what should run and when, executed
+automatically on a fresh, disposable virtual machine (a **runner**,
+below) GitHub provides. *Taught in: [Module 11, Lesson 02](module-11-cicd-cloud-production/lessons/02-github-actions-from-zero.md).*
+
 **GitHub CLI (`gh`)** — An official command-line tool for interacting with
 GitHub (creating repos, opening PRs, etc.) without leaving the terminal.
 *Taught in: [Module 00, Lesson 00](module-00-developer-environment-and-tooling/lessons/00-setup.md).*
+
+**`GITHUB_TOKEN`** — A short-lived credential GitHub Actions generates
+automatically for every single workflow run and revokes the moment that
+run ends, scoped via a job's own `permissions:` key — no manual account
+or password needed to push to GHCR (above). *Taught in: [Module 11, Lesson 02](module-11-cicd-cloud-production/lessons/02-github-actions-from-zero.md).*
 
 **Glob / wildcard** — A pattern (e.g. `*.txt`) used by shell commands to
 match multiple filenames at once. `*` means "match anything." *Taught in:
@@ -862,6 +958,11 @@ alongside an HTTP request or response line's body, describing facts about
 the message (format, size, caching rules, identity) rather than being the
 main content itself. *Taught in: [Module 02, Lesson 04](module-02-internet-and-web-fundamentals/lessons/04-headers-cookies-and-statelessness.md).*
 
+**Health check** — An endpoint (e.g. `/health`) a piece of automation —
+never a human — polls to decide whether to route real traffic to a given
+instance, or to restart it; distinct from a human-facing feature. *Taught
+in: [Module 11, Lesson 06](module-11-cicd-cloud-production/lessons/06-monitoring-logging-and-error-tracking.md).*
+
 **Heredoc** — A shell syntax (`<< 'EOF' ... EOF`) for writing multiple
 lines of text into a file directly from the command line, without an
 editor. *Taught in: [Module 00, Lesson 03](module-00-developer-environment-and-tooling/lessons/03-git-fundamentals.md).*
@@ -913,6 +1014,12 @@ state to already-present, server-rendered HTML, making static markup
 interactive without discarding and re-building it. *Taught in: [Module 04,
 Lesson 09](module-04-react/lessons/09-nextjs-ssr-ssg-csr-concepts.md).*
 
+**IAM (Identity and Access Management)** — A cloud provider's system for
+controlling which specific identity (human or automation) is allowed to
+do what to which specific resource — the cloud-scale version of the same
+access-control thinking Module 07's auth lesson taught for QuestLog's
+own users. *Taught in: [Module 11, Lesson 04](module-11-cicd-cloud-production/lessons/04-cloud-fundamentals-and-your-chosen-platform.md).*
+
 **Idempotent** — A property of an HTTP method meaning that making the
 exact same request multiple times has the same effect as making it once
 (e.g. `PUT`, `DELETE`, `GET`) — contrasted with methods like `POST`, where
@@ -942,6 +1049,11 @@ indexed column at the cost of slightly slower writes to that table.
 **Index route** — In React Router, the child route that renders when its
 parent's path matches exactly, with no further URL segment. *Taught in:
 [Module 04, Lesson 08](module-04-react/lessons/08-react-router.md).*
+
+**Ingress (Kubernetes)** — An object that routes real, external internet
+traffic INTO a cluster, to the correct Service (below), based on
+hostname or URL path — conceptually the cluster-managed equivalent of an
+Nginx reverse proxy. *Taught in: [Module 11, Lesson 07](module-11-cicd-cloud-production/lessons/07-kubernetes-conceptually.md).*
 
 **Inheritance** — Defining a class based on another class, automatically
 gaining its attributes/methods and optionally overriding them; expresses
@@ -986,6 +1098,11 @@ inside one local network). *Taught in: [Module 02, Lesson 01](module-02-internet
 **Iterator** — An object that hands out one item at a time via
 `__next__`, remembering its position, until it raises `StopIteration`.
 *Taught in: [Module 01, Lesson 04](module-01-python-properly/lessons/04-comprehensions-generators-and-iterators.md).*
+
+**Job (GitHub Actions)** — One ordered list of steps (below) within a
+workflow, run on its own fresh runner; two jobs with no `needs:`
+relationship run in parallel, on separate runners, by default. *Taught
+in: [Module 11, Lesson 02](module-11-cicd-cloud-production/lessons/02-github-actions-from-zero.md).*
 
 **JOIN** — A SQL clause combining rows from two tables based on a matching
 condition (typically a foreign key); an `INNER JOIN` (plain `JOIN`) only
@@ -1035,6 +1152,12 @@ naming its parameter (e.g. `greet(name="Aria")`) rather than by position.
 **`**kwargs`** — A parameter prefixed with `**` that collects any number
 of extra keyword arguments a function is called with into a dict. *Taught
 in: [Module 01, Lesson 02](module-01-python-properly/lessons/02-functions-and-scope.md).*
+
+**Kubernetes** — A fleet manager for containers across many machines at
+once, automatically restarting failed instances, scaling replica count,
+and routing traffic to healthy ones — see Pod, Deployment, Service, and
+Ingress (each below) for its four core object types. *Taught in:
+[Module 11, Lesson 07](module-11-cicd-cloud-production/lessons/07-kubernetes-conceptually.md).*
 
 **Label (HTML)** — A `<label>` element paired with a form field via
 matching `for`/`id` attributes, making the field's purpose available to
@@ -1101,6 +1224,11 @@ redirect status, stating the URL a client should go to next. *Taught in:
 **Main axis** — In a Flexbox container, the axis `flex-direction` points
 along (horizontal for `row`, vertical for `column`); controlled primarily
 by `justify-content`. *Taught in: [Module 03, Lesson 03](module-03-html-css-javascript/lessons/03-css-flexbox.md).*
+
+**Managed database** — A database instance a cloud provider or platform
+installs, patches, and backs up for you (AWS RDS, Google Cloud SQL,
+Render's own managed Postgres) instead of you running it by hand the way
+Module 09's manual VPS deploy did. *Taught in: [Module 11, Lesson 04](module-11-cicd-cloud-production/lessons/04-cloud-fundamentals-and-your-chosen-platform.md).*
 
 **Markup language** — A language (like HTML) with no variables, loops, or
 logic, used to wrap plain text in tags that describe what each piece of
@@ -1251,6 +1379,10 @@ entirely; it does not check whether the extracted token is genuine —
 that verification is a separate dependency's job. *Taught in:
 [Module 07, Lesson 07](module-07-auth-security/lessons/07-protecting-routes-with-dependencies.md).*
 
+**Object storage** — A cloud service (AWS S3, Google Cloud Storage) for
+storing files as simple, named "objects" rather than on a traditional
+filesystem a server manages itself. *Taught in: [Module 11, Lesson 04](module-11-cicd-cloud-production/lessons/04-cloud-fundamentals-and-your-chosen-platform.md).*
+
 **OpenAPI** — A specification (not a tool or a page) for describing, in a
 structured JSON/YAML document, everything about an HTTP API — every
 route, every parameter, every possible response shape and status code.
@@ -1349,6 +1481,10 @@ into the next command's input. *Taught in: [Module 00, Lesson 01](module-00-deve
 to add a capability Vite doesn't have on its own (e.g. `@vitejs/plugin-react`
 for JSX, `@tailwindcss/vite` for Tailwind). *Taught in: [Module 04,
 Lesson 00](module-04-react/lessons/00-setup.md).*
+
+**Pod (Kubernetes)** — The smallest unit Kubernetes actually schedules
+and runs — almost always one container, treated as disposable (routinely
+destroyed and recreated, never precious). *Taught in: [Module 11, Lesson 07](module-11-cicd-cloud-production/lessons/07-kubernetes-conceptually.md).*
 
 **Port** — A number (0–65535) identifying a specific running program
 ("door") on a machine; an IP address plus a port together fully specify
@@ -1584,6 +1720,13 @@ Lesson 05](module-00-developer-environment-and-tooling/lessons/05-github-and-pul
 getting back a new description of UI; not the same thing as the browser
 physically repainting the screen. *Taught in: [Module 04, Lesson 02](module-04-react/lessons/02-state-and-the-rendering-model.md).*
 
+**Render (cloud platform)** — This course's chosen container platform for
+Module 11's capstone: free Docker-image-backed web services, free
+managed Postgres, a free Redis-compatible cache, and fully automatic
+TLS — chosen over Fly.io/Railway specifically because both discontinued
+their own real free tiers by 2026. Not to be confused with "render" the
+React verb, above. *Taught in: [Module 11, Lesson 04](module-11-cicd-cloud-production/lessons/04-cloud-fundamentals-and-your-chosen-platform.md).*
+
 **Repository (repo)** — A project folder whose history of changes Git is
 tracking, backed by a hidden `.git` folder. *Taught in: [Module 00,
 Lesson 03](module-00-developer-environment-and-tooling/lessons/03-git-fundamentals.md).*
@@ -1657,6 +1800,12 @@ conditionals/loops/nested functions), and only from components or other
 hooks — so React can reliably track each hook's state by call order
 across renders. *Taught in: [Module 04, Lesson 04](module-04-react/lessons/04-useref-and-custom-hooks.md).*
 
+**Runner (GitHub Actions)** — The fresh, disposable virtual machine
+GitHub Actions provides for exactly one job, discarded once that job
+finishes; every job starts with a completely empty runner, with no
+repository code on it until `actions/checkout` runs. *Taught in:
+[Module 11, Lesson 02](module-11-cicd-cloud-production/lessons/02-github-actions-from-zero.md).*
+
 **Safe method** — A property of an HTTP method meaning it must not cause
 the server to change anything (e.g. `GET`, `HEAD`) — a read-only contract
 that caches, prefetchers, and crawlers all rely on. *Taught in:
@@ -1700,6 +1849,11 @@ converts it to braille), relying on semantic HTML and correctly labeled
 form fields to announce structure and purpose accurately rather than
 guessing from visual styling alone. *Taught in: [Module 03, Lesson 01](module-03-html-css-javascript/lessons/01-html-structure-forms-and-accessibility.md).*
 
+**Secret (GitHub Actions)** — A value stored once in a repository's own
+Settings page that a workflow can read via `${{ secrets.NAME }}`, but
+whose value GitHub always masks as `***` in any log output, even if a
+step accidentally tries to print it directly. *Taught in: [Module 11, Lesson 02](module-11-cicd-cloud-production/lessons/02-github-actions-from-zero.md).*
+
 **Secrets management** — The discipline of treating configuration values
 that fall into three real categories (safe defaults, per-environment
 settings, and genuine secrets) differently — never committing a real
@@ -1717,6 +1871,11 @@ content actually *is* (e.g. `<nav>`, `<article>`) rather than generic,
 meaning-free containers (`<div>`) for everything, with real consequences
 for screen readers and search engines. *Taught in: [Module 03, Lesson 01](module-03-html-css-javascript/lessons/01-html-structure-forms-and-accessibility.md).*
 
+**Sentry** — A hosted error-tracking (above) service QuestLog optionally
+integrates on both backend and frontend, off by default unless a real
+DSN is configured; free Developer plan covers 5,000 errors/month.
+*Taught in: [Module 11, Lesson 06](module-11-cicd-cloud-production/lessons/06-monitoring-logging-and-error-tracking.md).*
+
 **Server** — Whichever side of an interaction listens for and responds to
 requests; a role, not a fixed identity — the same program can be a server
 in one interaction and a client in another. *Taught in: [Module 02,
@@ -1726,6 +1885,11 @@ Lesson 05](module-02-internet-and-web-fundamentals/lessons/05-clients-servers-ap
 runs component code fresh for each incoming request and sends back real,
 filled-in HTML, followed by hydration to make it interactive; good for
 personalized/per-request content. *Taught in: [Module 04, Lesson 09](module-04-react/lessons/09-nextjs-ssr-ssg-csr-concepts.md).*
+
+**Service (Kubernetes)** — An object giving a stable network name/address
+to a Deployment's own constantly-changing set of Pods, load-balancing
+across whichever are currently healthy at any given moment. *Taught in:
+[Module 11, Lesson 07](module-11-cicd-cloud-production/lessons/07-kubernetes-conceptually.md).*
 
 **Session (authentication)** — A server-side record ("user 42 is logged
 in") plus a session-id cookie the browser resends automatically;
@@ -1759,6 +1923,11 @@ a component's plain render body and run inside `useEffect` instead.
 once and uses JavaScript to change what's displayed, without the browser
 navigating to a new document for each "page" the user perceives. *Taught
 in: [Module 04, Lesson 08](module-04-react/lessons/08-react-router.md).*
+
+**Spin-down (Render)** — A free Render web service going to sleep after
+15 minutes with no inbound traffic, taking up to about a minute to wake
+back up on the next request — a real, accepted trade-off for a free,
+always-following-along deployment. *Taught in: [Module 11, Lesson 04](module-11-cicd-cloud-production/lessons/04-cloud-fundamentals-and-your-chosen-platform.md).*
 
 **Spread operator (`...`)** — JavaScript syntax that expands an array or
 object's contents into a new array/object literal, or into individual
@@ -1991,6 +2160,10 @@ create/update/delete happened to invalidate it sooner. *Taught in: [Module 10, L
 **Tuple** — An ordered, immutable sequence of values — like a list that
 can never be changed after creation. *Taught in: [Module 01, Lesson 03](module-01-python-properly/lessons/03-data-structures.md).*
 
+**TXT record** — A DNS record storing arbitrary text, most commonly used
+for domain-verification purposes — proving you control a domain's DNS,
+e.g. for an ACME DNS-01 challenge. *Taught in: [Module 11, Lesson 05](module-11-cicd-cloud-production/lessons/05-https-tls-domains-and-dns.md).*
+
 **Type annotation** — Explicit TypeScript syntax (`: string`, `: number`,
 etc.) stating a variable's, parameter's, or return value's intended type,
 checked by `tsc` before compilation. *Taught in: [Module 03, Lesson 09](module-03-html-css-javascript/lessons/09-typescript-introduction.md).*
@@ -2060,6 +2233,12 @@ fastest, most isolated, and most numerous layer of the testing pyramid
 **Upstream (Nginx)** — A named group of backend addresses Nginx can
 `proxy_pass` requests to and distribute across, the configuration
 mechanism underlying a load balancer, above. *Taught in: [Module 09, Lesson 06](module-09-linux-networking-servers/lessons/06-nginx-and-reverse-proxies.md).*
+
+**Uptime monitoring** — An external service periodically checking
+whether a deployment is reachable at all, from outside your own
+infrastructure — the simplest possible health signal, catching a total
+outage even if the server itself can no longer report its own logs.
+*Taught in: [Module 11, Lesson 06](module-11-cicd-cloud-production/lessons/06-monitoring-logging-and-error-tracking.md).*
 
 **URL (Uniform Resource Locator)** — The full address of a web resource,
 composed of a scheme, host, path, and optionally a query string and
@@ -2159,6 +2338,11 @@ inside your own machine's private network. *Taught in: [Module 09, Lesson 00](mo
 for a specific common service (`22` SSH, `80` HTTP, `443` HTTPS, `5432`
 PostgreSQL); a browser fills in the default for a scheme automatically
 when a URL omits a port. *Taught in: [Module 09, Lesson 04](module-09-linux-networking-servers/lessons/04-networking-ports-and-ips.md).*
+
+**Workflow (GitHub Actions)** — One `.github/workflows/*.yml` file
+describing an automated process: what should happen, and in response to
+which trigger (`on:`), made up of one or more jobs (above). *Taught in:
+[Module 11, Lesson 02](module-11-cicd-cloud-production/lessons/02-github-actions-from-zero.md).*
 
 **Working directory (filesystem sense)** — The folder you are currently
 "in" when using a shell; also called the current directory. *Taught in:

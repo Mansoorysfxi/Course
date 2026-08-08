@@ -1,0 +1,259 @@
+# QuestLog's CI/CD pipeline -- see
+# module-11-cicd-cloud-production/lessons/02-github-actions-from-zero.md
+# (workflow syntax explained line by line), lessons/03-a-real-ci-pipeline-for-questlog.md
+# (the two test jobs below), and lessons/08-deploying-questlog-with-ci-cd.md
+# (the build-and-deploy jobs below) for the full, line-by-line explanation
+# of every single thing in this file.
+#
+# IMPORTANT -- see lessons/00-setup.md's "which repo does this even run
+# in" box: GitHub only ever runs a `.github/workflows/*.yml` file for a
+# repository that file's own commit lives inside, on GitHub, for real.
+# This file is written as if `project/questlog/` -- not the whole
+# `module-11-cicd-cloud-production/` folder, and not this whole course's
+# own repo -- IS the root of your own, separate GitHub repository, the
+# same way module-09's own lessons/07 already treated `project/questlog/`
+# as a `git clone`-able unit. To actually run this for real: create a new,
+# empty GitHub repository, copy the CONTENTS of `project/questlog/` (not
+# the folder itself) into it, commit, push, and everything below runs
+# unmodified.
+#
+# Versions pinned below, verified via GitHub's own Marketplace/release
+# pages (August 2026): actions/checkout v7, actions/setup-python v6,
+# actions/setup-node v6, docker/setup-buildx-action v4, docker/login-action
+# v4, docker/build-push-action v7.
+
+name: QuestLog CI/CD
+
+# "on:" -- the trigger section (lessons/02). This pipeline runs on two
+# kinds of event: every push to main (the branch this course treats as
+# "production", per lessons/01), and every pull request targeting main
+# (so a broken change is caught BEFORE it merges, not after). Only a push
+# to main ever reaches this file's later build/deploy jobs -- see each
+# job's own `if:` condition below.
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  # ---------------------------------------------------------------------
+  # JOB 1 -- backend tests. Runs on EVERY push and EVERY pull request.
+  # This is the whole point of "tests run" in "push to main -> tests run
+  # -> image builds -> auto-deploys": nothing later in this file is even
+  # attempted if this job fails.
+  # ---------------------------------------------------------------------
+  backend-tests:
+    name: Backend tests (pytest)
+    runs-on: ubuntu-latest
+    steps:
+      # Every job starts with an empty virtual machine -- actions/checkout
+      # is what actually puts your repo's own files onto it. See
+      # lessons/02's "every job starts from nothing" section for why this
+      # step is not optional the way it might look.
+      - name: Check out the repo
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.14"
+          # Caches pip's own downloaded packages between runs, keyed on a
+          # hash of the file(s) named here -- see lessons/02's "caching in
+          # CI" box. This alone is often the single biggest speed-up a
+          # first-time CI pipeline is missing.
+          cache: "pip"
+          cache-dependency-path: |
+            backend/requirements.txt
+            backend/requirements-dev.txt
+
+      - name: Install dependencies
+        working-directory: backend
+        run: pip install -r requirements.txt -r requirements-dev.txt
+
+      - name: Run pytest
+        working-directory: backend
+        env:
+          # Exactly the same reasoning as tests/conftest.py's own
+          # os.environ.setdefault call (Module 08) -- app/config.py's
+          # `Settings.secret_key` has no default, so SOME value has to
+          # exist in the environment before `import app...` runs anywhere
+          # in this job. This value never signs a token anyone real ever
+          # sees.
+          SECRET_KEY: ci-test-secret-key-do-not-use-in-production
+        run: python -m pytest -v
+
+      - name: ruff lint
+        working-directory: backend
+        run: ruff check app tests
+
+      - name: ruff format check
+        working-directory: backend
+        run: ruff format --check app tests
+
+  # ---------------------------------------------------------------------
+  # JOB 2 -- frontend tests. Independent of Job 1 -- GitHub Actions runs
+  # jobs with no `needs:` relationship between them IN PARALLEL, on
+  # separate virtual machines, by default. See lessons/02's "jobs run in
+  # parallel unless you say otherwise" section.
+  # ---------------------------------------------------------------------
+  frontend-tests:
+    name: Frontend tests (vitest)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+          cache: "npm"
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: frontend
+        # npm ci, never npm install -- see
+        # module-10-docker-and-containers/lessons/08's own explanation of
+        # this exact distinction; the same reasoning that makes it the
+        # right choice inside a Dockerfile makes it the right choice in
+        # CI too.
+        run: npm ci
+
+      - name: Run vitest
+        working-directory: frontend
+        run: npm run test
+
+      - name: Type-check and build
+        working-directory: frontend
+        # `npm run build` runs `tsc -b && vite build` (see package.json)
+        # -- this single command proves BOTH that TypeScript's own type
+        # checker is satisfied AND that Vite can actually produce a real
+        # production build, using the exact `VITE_API_BASE_URL=""` this
+        # course has used since Module 09's own manual deploy. This build
+        # is thrown away -- Job 3, below, produces the real, shipped
+        # build, inside a container -- this step exists purely as a fast
+        # CI gate.
+        env:
+          VITE_API_BASE_URL: ""
+        run: npm run build
+
+  # ---------------------------------------------------------------------
+  # JOB 3 -- build both Docker images and push them to GitHub Container
+  # Registry (GHCR). `needs:` (lessons/02) makes this job wait for BOTH
+  # test jobs to succeed first -- this is "image builds" in the pipeline
+  # description, and it only ever happens for a real push to main, never
+  # for a pull request (a PR's whole point is review BEFORE anything is
+  # built/shipped).
+  # ---------------------------------------------------------------------
+  build-and-push-images:
+    name: Build & push images to GHCR
+    needs: [backend-tests, frontend-tests]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      # The default GITHUB_TOKEN this job automatically receives has NO
+      # write access to anything by default in a growing number of repo
+      # configurations -- these two lines explicitly grant it exactly
+      # what this job needs and nothing more: read the repo's own code,
+      # write to this repo's own GitHub Container Registry packages. See
+      # lessons/03's "the GITHUB_TOKEN you never created" section.
+      contents: read
+      packages: write
+    outputs:
+      # Makes the lowercase, normalized image owner available to Job 4
+      # below, which needs the exact same value to construct the deploy
+      # hook's `imgURL` parameter. See the "Normalize" step's own comment
+      # for why this exists at all.
+      image-owner: ${{ steps.normalize.outputs.owner }}
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v7
+
+      - name: Normalize image owner to lowercase
+        id: normalize
+        # A real, common gotcha (lessons/03's own "common mistakes"
+        # section): a Docker/OCI image name MUST be all-lowercase, but a
+        # GitHub username or org name is NOT guaranteed to be (GitHub
+        # itself allows mixed case). `${{ github.repository_owner }}`
+        # passes the account's name through EXACTLY as GitHub stores it.
+        # GitHub Actions' own expression language has no built-in
+        # lowercase() function (verified August 2026 -- still true), so
+        # this uses a plain bash parameter expansion (`${VAR,,}`) instead,
+        # writing the result to this step's own output so later steps
+        # can read it as `steps.normalize.outputs.owner`.
+        run: echo "owner=${OWNER,,}" >> "$GITHUB_OUTPUT"
+        env:
+          OWNER: ${{ github.repository_owner }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          # `github.actor` is whoever's push/merge triggered this run --
+          # GHCR accepts any authenticated GitHub identity here as long as
+          # the password is a valid token for THIS repo's own packages,
+          # which GITHUB_TOKEN (below) always is.
+          username: ${{ github.actor }}
+          # NEVER a real, long-lived password or personal access token --
+          # `secrets.GITHUB_TOKEN` is a short-lived token GitHub generates
+          # fresh for every single workflow run and revokes the moment it
+          # ends. See lessons/02's "secrets you didn't create yourself"
+          # box.
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build & push backend image
+        uses: docker/build-push-action@v7
+        with:
+          context: ./backend
+          push: true
+          tags: |
+            ghcr.io/${{ steps.normalize.outputs.owner }}/questlog-backend:latest
+            ghcr.io/${{ steps.normalize.outputs.owner }}/questlog-backend:${{ github.sha }}
+          # GitHub's own Actions cache, reused between runs -- the CI
+          # equivalent of Module 10's own Dockerfile layer caching, now
+          # persisted between entirely separate virtual machines instead
+          # of just your own laptop's local Docker cache.
+          cache-from: type=gha,scope=backend
+          cache-to: type=gha,mode=max,scope=backend
+
+      - name: Build & push frontend image
+        uses: docker/build-push-action@v7
+        with:
+          context: ./frontend
+          push: true
+          build-args: |
+            VITE_API_BASE_URL=
+            VITE_SENTRY_DSN=${{ secrets.VITE_SENTRY_DSN }}
+            VITE_ENVIRONMENT=production
+          tags: |
+            ghcr.io/${{ steps.normalize.outputs.owner }}/questlog-frontend:latest
+            ghcr.io/${{ steps.normalize.outputs.owner }}/questlog-frontend:${{ github.sha }}
+          cache-from: type=gha,scope=frontend
+          cache-to: type=gha,mode=max,scope=frontend
+
+  # ---------------------------------------------------------------------
+  # JOB 4 -- tell Render to deploy the images Job 3 just pushed. This is
+  # "auto-deploys" in the pipeline description. See
+  # lessons/08-deploying-questlog-with-ci-cd.md for exactly what a Render
+  # Deploy Hook is and why `imgURL` (not just hitting the hook plain) is
+  # what makes this deploy THIS commit's exact image, not whatever
+  # `:latest` happens to mean by the time Render gets around to checking.
+  # ---------------------------------------------------------------------
+  deploy:
+    name: Deploy to Render
+    needs: build-and-push-images
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger backend deploy
+        run: |
+          curl --fail --silent --show-error \
+            "${{ secrets.RENDER_BACKEND_DEPLOY_HOOK }}&imgURL=ghcr.io/${{ needs.build-and-push-images.outputs.image-owner }}/questlog-backend:${{ github.sha }}"
+
+      - name: Trigger frontend deploy
+        run: |
+          curl --fail --silent --show-error \
+            "${{ secrets.RENDER_FRONTEND_DEPLOY_HOOK }}&imgURL=ghcr.io/${{ needs.build-and-push-images.outputs.image-owner }}/questlog-frontend:${{ github.sha }}"

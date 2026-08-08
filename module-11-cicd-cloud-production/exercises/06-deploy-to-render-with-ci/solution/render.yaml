@@ -1,0 +1,20 @@
+# Render Blueprint for the toy CI/CD app -- see
+# lessons/08-deploying-questlog-with-ci-cd.md for the full-size,
+# multi-service version of this same pattern (QuestLog's own
+# render.yaml). REPLACE YOUR_GITHUB_USERNAME below (all lowercase).
+
+services:
+  - name: toy-ci-app
+    type: web
+    runtime: image
+    plan: free
+    image:
+      url: ghcr.io/YOUR_GITHUB_USERNAME/toy-ci-app:latest
+      # Delete this line entirely once you've made the GHCR package
+      # public (Lesson 08's own recommended simple path) -- no
+      # credential needed at all for a public image.
+      creds: ghcr-toy-ci-app
+    healthCheckPath: /health
+    envVars:
+      - key: GREETING
+        value: "Hello from Render!"
