@@ -129,6 +129,14 @@ Promise, instead of blocking; the same underlying idea as Python's
 `async`/`await` above, applied to JavaScript's Promise objects rather than
 Python's coroutines. *Taught in: [Module 03, Lesson 07](module-03-html-css-javascript/lessons/07-fetch-promises-and-async-await.md).*
 
+**Attention** — The mechanism inside a transformer that lets every token in
+a sequence "look at" every other token and compute how much each one
+should matter for understanding it, using a dot-product-based comparison
+between each token's query and every other token's key — comparable to a
+flocking (boids) algorithm, where each agent weighs nearby agents'
+positions rather than treating everyone as equally relevant. *Taught in:
+[Module 12, Lesson 05](module-12-ai-ml-foundations/lessons/05-attention-and-transformers-intuition.md).*
+
 **Attribute (HTML)** — Extra information carried inside an HTML element's
 opening tag, written as `name="value"` pairs (e.g. `href` on an `<a>` tag).
 *Taught in: [Module 03, Lesson 01](module-03-html-css-javascript/lessons/01-html-structure-forms-and-accessibility.md).*
@@ -174,6 +182,13 @@ HTTP response — letting a developer write application logic without
 reading raw network bytes by hand. FastAPI is this course's choice.
 *Taught in: [Module 05, Lesson 01](module-05-backend-fastapi/lessons/01-what-a-backend-does-and-your-first-routes.md).*
 
+**Backpropagation** — The algorithm that efficiently computes the gradient
+(see Gradient descent) for every weight in a neural network at once, by
+working backward from the loss through each layer — comparable to a
+post-mortem that traces a bad outcome back through the chain of decisions
+that caused it, assigning each one its share of the blame. *Taught in:
+[Module 12, Lesson 02](module-12-ai-ml-foundations/lessons/02-neural-networks-conceptually.md).*
+
 **bcrypt** — The password-hashing library this course uses directly (not
 through the now-unmaintained `passlib`), providing `gensalt()`/
 `hashpw()`/`checkpw()` functions whose output string embeds its own
@@ -206,6 +221,13 @@ margin — each affecting the element's true rendered size and spacing
 differently; `box-sizing: border-box` changes what an element's `width`
 actually measures, from content-only to content-plus-padding-plus-border.
 *Taught in: [Module 03, Lesson 02](module-03-html-css-javascript/lessons/02-css-the-box-model.md).*
+
+**BPE (Byte Pair Encoding)** — The tokenization algorithm real LLM
+tokenizers use: starting from individual characters, repeatedly merge the
+most frequently co-occurring adjacent pair into a single new token,
+building a fixed vocabulary of common subword pieces. Common whole words
+often end up as one token; rare or invented words split into several
+smaller pieces. *Taught in: [Module 12, Lesson 03](module-12-ai-ml-foundations/lessons/03-tokens-and-tokenization.md).*
 
 **Branch** — A movable, named pointer to a specific commit in a Git
 repository's history. Creating a branch is instant and cheap because it's
@@ -284,6 +306,12 @@ kernel features (alongside namespaces) a container actually is, under the
 hood: not a lightweight VM, just an ordinary Linux process with cgroups
 capping what it can consume and namespaces limiting what it can see.
 *Taught in: [Module 10, Lesson 01](module-10-docker-and-containers/lessons/01-containers-vs-vms-and-your-first-container.md).*
+
+**Chain-of-thought prompting** — Explicitly asking a model to reason
+through a problem step by step before stating its final answer, which
+works because every generated token becomes context for later tokens — the
+visible intermediate reasoning gives the model real material to draw its
+final answer from. *Taught in: [Module 12, Lesson 07](module-12-ai-ml-foundations/lessons/07-prompt-engineering-as-a-skill.md).*
 
 **chmod** — The Linux command that changes a file or directory's
 permissions, in letter form (`chmod u+x file`) or numeric/octal form
@@ -429,6 +457,12 @@ and [Lesson 10](module-01-python-properly/lessons/10-decorators-and-context-mana
 component, at any depth, without manually passing it through every
 intermediate component's props. Distinct from a Python context manager,
 above. *Taught in: [Module 04, Lesson 06](module-04-react/lessons/06-context.md).*
+
+**Context window** — The maximum number of tokens a model can consider at
+once — every system prompt, message, and generated token counted
+together. Anything genuinely outside it is mechanically absent from the
+model's computation, not just "hard to recall." *Taught in: [Module 12,
+Lesson 06](module-12-ai-ml-foundations/lessons/06-context-windows-hallucination-and-sampling.md).*
 
 **Continuous Delivery** — Every change that passes CI is automatically
 packaged into a deployable artifact, but a human still decides when (or
@@ -689,6 +723,11 @@ Unreal level's live scene graph vs. its saved `.umap` file. *Taught in:
 `pokeapi.co`), resolved to an IP address via DNS; one part of a full URL.
 *Taught in: [Module 02, Lesson 01](module-02-internet-and-web-fundamentals/lessons/01-networks-ip-addresses-and-dns.md).*
 
+**Dot product** — Multiplying two equal-length lists of numbers element by
+element and summing the results into a single number; the core operation
+inside a neuron's weighted sum, inside cosine similarity, and inside
+attention's query-key comparison. *Taught in: [Module 12, Lesson 01](module-12-ai-ml-foundations/lessons/01-what-machine-learning-actually-is.md).*
+
 **Dunder method** — A method named with leading and trailing double
 underscores (e.g. `__init__`, `__str__`, `__eq__`) that Python calls
 automatically in response to a built-in operation like printing, comparing,
@@ -709,6 +748,12 @@ and [Module 03, Lesson 05](module-03-html-css-javascript/lessons/05-javascript-f
 (OpenSSH's own `ssh-keygen` default since version 9.5, October 2023),
 chosen over RSA for its speed and small key size at an equivalent
 security level. *Taught in: [Module 09, Lesson 02](module-09-linux-networking-servers/lessons/02-ssh-and-key-based-auth.md).*
+
+**Embedding** — A list of numbers (a vector) that represents a piece of
+text's meaning as a location in a high-dimensional space, produced by a
+trained neural network specifically so that semantically similar text ends
+up at nearby coordinates, regardless of shared vocabulary. *Taught in:
+[Module 12, Lesson 04](module-12-ai-ml-foundations/lessons/04-embeddings-meaning-as-coordinates.md).*
 
 **Encryption** — A *reversible* transformation: something locked with a
 key can later be unlocked with that same (or a related) key to recover
@@ -792,6 +837,13 @@ soon as response headers arrive — including for HTTP error status codes,
 which is why `response.ok` must be checked explicitly rather than relying
 on the Promise to reject. Not to be confused with `git fetch`, above.
 *Taught in: [Module 03, Lesson 07](module-03-html-css-javascript/lessons/07-fetch-promises-and-async-await.md).*
+
+**Few-shot prompting** — Including a small number of worked input-output
+examples directly in a prompt before asking a model to handle a new case,
+so the model can match a concrete demonstrated pattern (both logic and
+output format) rather than inferring your intent from a description alone.
+The opposite, an instruction with no examples, is called zero-shot
+prompting. *Taught in: [Module 12, Lesson 07](module-12-ai-ml-foundations/lessons/07-prompt-engineering-as-a-skill.md).*
 
 **Firewall** — A checkpoint every network packet must pass before
 reaching any program on a machine, deciding, per port, whether incoming
@@ -915,10 +967,22 @@ match multiple filenames at once. `*` means "match anything." *Taught in:
 name should modify the module-level variable of that name rather than
 creating a new local one. *Taught in: [Module 01, Lesson 02](module-01-python-properly/lessons/02-functions-and-scope.md).*
 
+**Gradient descent** — The training algorithm that repeatedly nudges each
+of a model's weights a small step in the direction that reduces the loss,
+using that weight's gradient to decide which direction and how far.
+*Taught in: [Module 12, Lesson 01](module-12-ai-ml-foundations/lessons/01-what-machine-learning-actually-is.md).*
+
 **GROUP BY** — A SQL clause that collapses every row sharing the same
 value(s) in given column(s) into one summary row, meant to be used
 alongside aggregate functions computing across each group. *Taught in:
 [Module 06, Lesson 04](module-06-databases/lessons/04-joins-and-group-by.md).*
+
+**Hallucination (LLM)** — A confident-sounding but factually wrong
+statement produced by a language model, arising because the model's actual
+job (predict the statistically likely next token) has no built-in step
+that checks a candidate answer against verified facts — fluency and
+factual accuracy are not the same trained property. *Taught in: [Module
+12, Lesson 06](module-12-ai-ml-foundations/lessons/06-context-windows-hallucination-and-sampling.md).*
 
 **Hashable** — Describes a value that can be run through a hash function
 to produce a fixed lookup key, which is why only hashable (effectively
@@ -1049,6 +1113,12 @@ indexed column at the cost of slightly slower writes to that table.
 **Index route** — In React Router, the child route that renders when its
 parent's path matches exactly, with no further URL segment. *Taught in:
 [Module 04, Lesson 08](module-04-react/lessons/08-react-router.md).*
+
+**Inference (machine learning)** — Running an already-trained, fixed model
+forward on a new input to get an output; unlike training, nothing about
+the model's weights changes during inference. Every call to a deployed
+LLM, including every Claude API request, is inference. *Taught in: [Module
+12, Lesson 01](module-12-ai-ml-foundations/lessons/01-what-machine-learning-actually-is.md).*
 
 **Ingress (Kubernetes)** — An object that routes real, external internet
 traffic INTO a cluster, to the correct Service (below), based on
@@ -1221,6 +1291,11 @@ same machine," with no real network, router, or ISP involved. *Taught in:
 redirect status, stating the URL a client should go to next. *Taught in:
 [Module 02, Lesson 03](module-02-internet-and-web-fundamentals/lessons/03-http-methods-and-status-codes.md).*
 
+**Loss function** — A single number, computed automatically from a
+model's current output, that measures how wrong that output is compared to
+the desired one; training is entirely organized around minimizing it via
+gradient descent. *Taught in: [Module 12, Lesson 01](module-12-ai-ml-foundations/lessons/01-what-machine-learning-actually-is.md).*
+
 **Main axis** — In a Flexbox container, the axis `flex-direction` points
 along (horizontal for `row`, vertical for `column`); controlled primarily
 by `justify-content`. *Taught in: [Module 03, Lesson 03](module-03-html-css-javascript/lessons/03-css-flexbox.md).*
@@ -1333,6 +1408,16 @@ let many devices share one public IP address, rewriting outgoing packets
 and routing replies back to the right internal device; incidentally
 means a device behind NAT isn't directly reachable by an unsolicited
 inbound connection, unlike a VPS. *Taught in: [Module 09, Lesson 04](module-09-linux-networking-servers/lessons/04-networking-ports-and-ips.md).*
+
+**Neural network** — Many artificial neurons arranged in layers, where
+each neuron's output feeds forward as an input to the next layer; the
+structure that gradient descent and backpropagation train, and the
+architecture underneath every LLM. *Taught in: [Module 12, Lesson 02](module-12-ai-ml-foundations/lessons/02-neural-networks-conceptually.md).*
+
+**Neuron (artificial)** — A single computational unit that multiplies each
+of its inputs by a weight, sums them (a dot product) plus a bias, and
+passes the result through an activation function; the basic building
+block of a neural network. *Taught in: [Module 12, Lesson 02](module-12-ai-ml-foundations/lessons/02-neural-networks-conceptually.md).*
 
 **Node.js** — A standalone program that runs JavaScript (and, via
 TypeScript's compiler, TypeScript) directly on a machine, outside any
@@ -1548,6 +1633,12 @@ into either `fulfilled` (with a value) or `rejected` (with a reason);
 `async`/`await` (JavaScript) is a second, more convenient syntax for
 working with them — roughly analogous in role to a Python coroutine,
 though a distinct kind of object. *Taught in: [Module 03, Lesson 07](module-03-html-css-javascript/lessons/07-fetch-promises-and-async-await.md).*
+
+**Prompt engineering** — The real, teachable skill of deliberately shaping
+what's in a model's context window — via system prompts, few-shot
+examples, chain-of-thought, and structured-output requests — so its
+next-token predictions have better material to draw on. *Taught in:
+[Module 12, Lesson 07](module-12-ai-ml-foundations/lessons/07-prompt-engineering-as-a-skill.md).*
 
 **Prop** — A read-only input passed to a component from its parent,
 configuring one instance without letting the component itself reassign or
@@ -1828,6 +1919,12 @@ telling the browser not to send it along with requests originating from a
 different site; a standard defense against CSRF, above, for systems
 using cookie-based authentication. *Taught in: [Module 07, Lesson 09](module-07-auth-security/lessons/09-xss-and-csrf.md).*
 
+**Sampling (LLM output)** — The process of actually choosing the next
+token from the probability distribution a model computes, rather than
+always taking the single most likely one (greedy decoding); temperature
+and top-p are the two most common controls over how this choice is made.
+*Taught in: [Module 12, Lesson 06](module-12-ai-ml-foundations/lessons/06-context-windows-hallucination-and-sampling.md).*
+
 **Schema (database)** — The overall design of a database: which tables
 exist, their columns, and the relationships between them. *Taught in:
 [Module 06, Lesson 09](module-06-databases/lessons/09-normalization-and-schema-design.md)
@@ -2047,6 +2144,11 @@ one single backend is the only party that ever needs to do either job,
 which is why QuestLog uses one. Contrasted with an asymmetric algorithm,
 above. *Taught in: [Module 07, Lesson 04](module-07-auth-security/lessons/04-jwt-structure-in-depth.md).*
 
+**System prompt** — A separate instruction slot (distinct from the actual
+conversation) that shapes a model's overall behavior, tone, and persona
+for an entire conversation, treated as higher-priority and more persistent
+than a single user message. *Taught in: [Module 12, Lesson 07](module-12-ai-ml-foundations/lessons/07-prompt-engineering-as-a-skill.md).*
+
 **systemd** — Ubuntu's (and most modern Linux distributions') init
 system: the first process the kernel starts at boot (always PID 1),
 responsible for starting and supervising every other background program,
@@ -2061,6 +2163,13 @@ fixed header row. *Taught in: [Module 06, Lesson 01](module-06-databases/lessons
 follow to have a reliable, ordered, two-way conversation over an
 unreliable network, opened via a three-way handshake; what HTTP is built
 on top of. *Taught in: [Module 02, Lesson 02](module-02-internet-and-web-fundamentals/lessons/02-tcp-tls-and-the-request-response-journey.md).*
+
+**Temperature (LLM sampling)** — A parameter, typically ranging from 0.0
+to 1.0, that scales a model's next-token probability distribution before
+sampling; lower values sharpen the distribution toward the single most
+likely token, higher values flatten it, giving less-likely tokens a
+genuinely higher chance of being selected. *Taught in: [Module 12, Lesson
+06](module-12-ai-ml-foundations/lessons/06-context-windows-hallucination-and-sampling.md).*
 
 **Template literal** — A JavaScript string written with backticks
 (`` ` ``) instead of quotes, allowing multi-line text and embedded
@@ -2120,14 +2229,30 @@ opens, in which client and server agree on a TLS version/cipher, the
 server proves its identity via a certificate, and both sides establish a
 shared encryption key. *Taught in: [Module 02, Lesson 02](module-02-internet-and-web-fundamentals/lessons/02-tcp-tls-and-the-request-response-journey.md).*
 
+**Token** — A subword piece of text — sometimes a whole word, sometimes a
+fragment, sometimes a single punctuation mark — produced by tokenization
+(BPE); the actual unit a language model reads, is billed by, and is
+limited by (see Context window). *Taught in: [Module 12, Lesson 03](module-12-ai-ml-foundations/lessons/03-tokens-and-tokenization.md).*
+
 **`touch`** — Shell command that creates an empty file if it doesn't
 already exist (or updates its modified timestamp if it does). *Taught in:
 [Module 00, Lesson 01](module-00-developer-environment-and-tooling/lessons/01-shell-and-filesystem.md).*
+
+**Training (machine learning)** — The one-time (or occasional) process of
+repeatedly running a model forward, measuring its loss, and using gradient
+descent and backpropagation to nudge its weights toward smaller loss;
+distinct from inference, which uses the resulting fixed weights without
+changing them. *Taught in: [Module 12, Lesson 01](module-12-ai-ml-foundations/lessons/01-what-machine-learning-actually-is.md).*
 
 **Transaction** — A group of database operations treated as one
 all-or-nothing unit — either every operation inside it takes effect once
 committed, or none do if rolled back or interrupted; the mechanism behind
 Atomicity in ACID. *Taught in: [Module 06, Lesson 02](module-06-databases/lessons/02-indexes-transactions-and-acid.md).*
+
+**Transformer** — The neural network architecture behind every current
+frontier LLM: repeated blocks, each combining an attention step (letting
+every token draw on every other token's information) with an ordinary
+feed-forward layer, stacked many times. *Taught in: [Module 12, Lesson 05](module-12-ai-ml-foundations/lessons/05-attention-and-transformers-intuition.md).*
 
 **Truthiness** — The rule that every Python value is treated as `True` or
 `False` in a boolean context, even if it isn't literally `True`/`False` —
@@ -2334,6 +2459,11 @@ computer in a data center, running its own full Linux OS with a real
 public IP address anyone can reach — as opposed to WSL2, which runs
 inside your own machine's private network. *Taught in: [Module 09, Lesson 00](module-09-linux-networking-servers/lessons/00-setup.md).*
 
+**Weights (neural network)** — The numbers a neural network's training
+process adjusts; each one scales how much a given input matters to a
+given neuron. A trained model, mechanically, is just its weights plus a
+fixed procedure for using them. *Taught in: [Module 12, Lesson 01](module-12-ai-ml-foundations/lessons/01-what-machine-learning-actually-is.md).*
+
 **Well-known port** — A port number from 0–1023, reserved by convention
 for a specific common service (`22` SSH, `80` HTTP, `443` HTTPS, `5432`
 PostgreSQL); a browser fills in the default for a scheme automatically
@@ -2367,3 +2497,7 @@ above, is the one way to turn that protection off. *Taught in:
 **`yield`** — The keyword that turns a function into a generator function;
 each `yield` pauses execution, hands back a value, and remembers exactly
 where to resume on the next call. *Taught in: [Module 01, Lesson 04](module-01-python-properly/lessons/04-comprehensions-generators-and-iterators.md).*
+
+**Zero-shot prompting** — Asking a model to perform a task from an
+instruction alone, with no worked examples included in the prompt;
+contrast with few-shot prompting. *Taught in: [Module 12, Lesson 07](module-12-ai-ml-foundations/lessons/07-prompt-engineering-as-a-skill.md).*

@@ -7,14 +7,20 @@ don't repeat them. This file is about *generating the course*, not about
 the learner's progress — that's [PROGRESS.md](PROGRESS.md), a separate,
 still-empty file the learner's actual study sessions will fill in later.
 
-Last updated: after Module 11 completed and independently verified on disk
-(diffed against Module 10's questlog to confirm only the documented
-`/health` endpoint + Sentry wiring + CI/CD files changed, both backend
-pytest (39/39) and frontend vitest (17/17) suites actually re-run and
-passing, `npm run build` actually re-run and succeeding, glossary/
-RUNNING_PROJECT.md diffs checked as purely additive, all 9 lessons checked
-for Rule 5's 8 required sections, one stray `.ruff_cache` the agent left
-behind found and deleted during verification).
+Last updated: after Module 12 completed and independently verified on disk
+(its first generation attempt was interrupted mid-run with zero file
+output — resumed via `SendMessage` to the same agent per this file's own
+issue-1 pattern, rather than restarted from scratch; a stray `.tmp_m12_test/venv`
+left at the repo root by the interrupted attempt was found and deleted.
+On completion: independently re-ran both the tokenization exercise
+(`tiktoken`) and the embeddings exercise (`sentence-transformers`) myself
+from a clean venv — output was bit-for-bit identical to what the module's
+own lesson/solution files claim, confirming it was genuinely executed, not
+fabricated. Glossary diff checked as purely additive and correctly
+alphabetized; confirmed `RUNNING_PROJECT.md` untouched and no
+`project/questlog/` folder created, both per this module's intentionally
+different, concept-only shape; all 8 lessons checked for Rule 5's 8
+required sections; repo-wide stray-artifact sweep clean).
 
 ## Status at a glance
 
@@ -34,8 +40,8 @@ behind found and deleted during verification).
 | 09 — Linux, Networking & Servers | ✅ Fully generated and verified on disk |
 | 10 — Docker & Containers | ✅ Fully generated and verified on disk |
 | 11 — CI/CD, Cloud & Production Operations | ✅ Fully generated and verified on disk |
-| 12 — AI/ML Foundations | ❌ Not started — **next up** |
-| 13 — Building with LLM APIs | ❌ Not started |
+| 12 — AI/ML Foundations | ✅ Fully generated and verified on disk |
+| 13 — Building with LLM APIs | ❌ Not started — **next up** |
 | 14 — RAG | ❌ Not started |
 | 15 — Agents & Modern AI Workflows (Final Capstone) | ❌ Not started |
 
@@ -133,12 +139,31 @@ grep -c "Module XX" GLOSSARY.md              # did glossary entries actually lan
    during verification, remember to clean up the cache folders your own
    verification run creates too — don't assume only the agent can leave a
    mess.
+8. **A background agent can be interrupted by the harness session itself
+   exiting/restarting between conversation turns, not just by a connection
+   failure or usage limit** — this happened on Module 12's first attempt:
+   the task notification came back with `status: stopped` and no
+   completion result, and zero files had been written to disk at all (not
+   even a partial module folder), just a stray scratch venv
+   (`.tmp_m12_test/venv`) at the repo root from the agent's own research/
+   testing phase. **The same recovery pattern still applies**: verify
+   on-disk state first (here, that meant confirming the module folder
+   didn't exist yet and deleting the stray venv), then `SendMessage` the
+   *same* agent (not a fresh `Agent` call) with the precise on-disk state
+   and an instruction to proceed straight to writing files (reusing any
+   research already in its own context if still fresh, re-verifying only
+   if unsure) — it resumed cleanly and completed the entire module in one
+   further pass. **Lesson: "stopped with no result" is not the same as
+   "failed" or "made no progress on research/reasoning" — always check
+   disk state before deciding whether to resume or restart, and prefer
+   resuming even when zero files exist yet, since the agent's own context/
+   research may still be valuable.**
 
 ## The running project: QuestLog
 
 Full spec in [RUNNING_PROJECT.md](RUNNING_PROJECT.md) — read it before
 generating any further module. Quick recap of where the codebase actually
-stands after Module 11:
+stands after Module 12 (unchanged from Module 11 — see below for why):
 
 - **Frontend:** React 19 + TypeScript 7 + Vite 8 + Tailwind CSS 4 + React
   Router 8. Real login/signup flow, JWT stored and sent as a Bearer token,
@@ -306,70 +331,98 @@ stands after Module 11:
   independent verification**, despite the agent's self-audit explicitly
   claiming no stray artifacts remained — see "Known issues already hit"
   #7, added because of this.
-- **Latest finished reference codebase:**
+- **Module 12 (AI/ML Foundations) made zero QuestLog code changes**, per
+  the master plan's own explicit instruction and confirmed on disk (no
+  `project/questlog/` folder exists in `module-12-ai-ml-foundations/` at
+  all, and `RUNNING_PROJECT.md` is untouched). It's a standalone,
+  concept-only module: ML/neural-network fundamentals, tokens, embeddings,
+  attention, context windows/hallucination/sampling, and prompt
+  engineering, each with its own runnable Python scripts (not FastAPI/
+  React) — `exercises/01-hand-tokenization/` (`tiktoken`, no API key,
+  independently re-verified by me from a clean venv, bit-for-bit identical
+  output to what the lesson claims), `exercises/02-embedding-visualization/`
+  (`sentence-transformers` + the free local `all-MiniLM-L6-v2` model, no
+  API key, also independently re-verified bit-for-bit), and
+  `exercises/03-prompt-engineering-experiments/` (needs a real Anthropic
+  API key to run live; no key was available while generating this module,
+  so every example *response* in Lesson 07 and the exercise is explicitly,
+  honestly labeled "a response along these lines," never claimed as
+  observed — only the tokenization/embeddings scripts are claimed as
+  actually-run, and that claim held up under my own independent
+  re-execution).
+- **This module's first generation attempt was interrupted with zero file
+  output** (see "Known issues already hit" #8) and had to be resumed via
+  `SendMessage` rather than restarted — worth remembering if Module 13's
+  generation hits something similar.
+- **Latest finished reference codebase (unchanged since Module 11):**
   `module-11-cicd-cloud-production/project/questlog/` (app code identical
   to Module 10 except the documented `/health` + Sentry additions).
-  **Module 12 is concept-only per the master plan and makes no QuestLog
-  code changes at all** — see below — so this remains the reference
-  codebase until Module 13 touches QuestLog again.
+  **Module 13 must copy this exact folder forward** into
+  `module-13-building-with-llm-apis/project/questlog/` — do not regenerate
+  the app from scratch. This is the first time since Module 08 that two
+  consecutive modules share the exact same reference codebase (Module 12
+  deliberately didn't touch it).
 
-## Next up: Module 12 — AI/ML Foundations
+## Next up: Module 13 — Building with LLM APIs
 
-Per the master plan, this module is a deliberate change of shape from
-Modules 00–11: **concept-only, standalone exercises, zero QuestLog code
-changes.** `RUNNING_PROJECT.md`'s own table already says so explicitly —
-don't force QuestLog integration here just for consistency's sake; Module
-13 (Building with LLM APIs) is where QuestLog itself gains an AI feature.
-
-Curriculum per the master plan: what machine learning actually is
-(training vs. inference, minimal math — dot products/gradients
-conceptually, no heavy calculus); neural networks conceptually (neurons,
-weights, loss, backpropagation intuition); what an LLM is (tokens,
-embeddings — the "meaning as coordinates" analogy, in depth — attention/
-transformers at an intuition level, why LLMs hallucinate, context windows,
-temperature/sampling); prompt engineering as a real skill (system prompts,
-few-shot, chain-of-thought, structured outputs). Suggested exercises per
-the master plan: hand-tokenize text, visualize embeddings with a small
-script, systematic prompt experiments.
+Curriculum per the master plan: calling LLM APIs (the Anthropic API as the
+primary example, per `RUNNING_PROJECT.md`'s own fixed choice) — messages
+format, roles, streaming, token counting, cost management, error handling
+and retries; structured outputs (JSON mode / schema validation with
+Pydantic); tool use / function calling, explained minutely (the full
+round-trip: model → tool call → result → model); building a real AI
+feature into QuestLog itself (an AI assistant endpoint, streamed to the
+React frontend); evaluation basics (how do you know an AI feature works —
+simple eval harnesses). This is the first module since Module 04 to add a
+genuinely new *kind* of feature to QuestLog, not just change how it's
+built/run/deployed — treat it with the same care as a new capstone
+milestone.
 
 **Before generating it:**
-1. This module needs comparatively little QuestLog-codebase context —
-   skim `RUNNING_PROJECT.md`'s Module 12 row and "Fixed technology
-   decisions" (which already commits to the Anthropic API as this course's
-   primary LLM API for Modules 13–15) so this module's own exercises can
-   use Claude/the Anthropic API consistently with what's coming, without
-   actually building any agent/RAG/tool-use content yet (that's Modules
-   13–15's job) — Module 12 should stay conceptual and use the API only
-   for small, standalone illustrative exercises (e.g. a tokenization/
-   prompting playground script), if it uses a real API at all.
-2. Web-research (Rule 7): current tokenizer behavior/tooling worth
-   demonstrating (e.g. `tiktoken` or the current Anthropic tokenizer
-   approach — verify current recommended way to count/inspect tokens for
-   Claude models specifically, since this course's Modules 13–15 standardize
-   on Anthropic), current embedding-model examples worth a hands-on
-   visualization exercise (a small, currently-available, ideally free/cheap
-   embeddings API or a local small model — verify current options, don't
-   assume a specific model name is still current), and confirm current
-   terminology hasn't shifted (e.g. current common usage of "context
-   window" sizes for current frontier models, current framing of
-   temperature/sampling parameters) — this is a fast-moving field, don't
-   rely on memory for specific numbers.
-3. If any exercise calls a real LLM API, decide and document whether it
-   requires the learner to have their own API key (likely yes, per how
-   Module 13+ will need one anyway) — frame this the same "free tier where
-   possible, clearly optional/costed where not" way Modules 09/11 handled
-   real infrastructure, since API usage costs real (small) money.
-4. Use the same Agent-delegation process described above ("The process
+1. Skim `module-12-ai-ml-foundations/lessons/03` through `07` (tokens,
+   embeddings, context windows/sampling, prompt engineering) so Module
+   13's own lessons can build on that vocabulary rather than re-teach it —
+   Module 13 should assume the learner already knows what a token, a
+   context window, and a system prompt are, and focus on the *API
+   mechanics* (SDK calls, streaming, tool-use round-trips, structured
+   outputs) that Module 12 deliberately left out.
+2. Skim `module-11-cicd-cloud-production/project/questlog/backend/app/`
+   (especially `config.py`, `routers/quests.py`, `dependencies.py`) to
+   design the new AI-assistant endpoint consistently with existing
+   patterns (Pydantic settings, FastAPI dependency injection, per-user
+   auth scoping via `CurrentUser`).
+3. Web-research (Rule 7) heavily — Module 12 already verified current
+   `anthropic` Python SDK version (`0.121.0` as of Aug 8 2026), Claude
+   Haiku 4.5 pricing, and basic Messages API shape; re-verify these are
+   still current when Module 13 is generated (don't assume no time has
+   passed) and additionally verify: current streaming API syntax
+   (server-sent events / the SDK's streaming helper), current tool-use
+   (function-calling) request/response schema, current structured-output
+   approach (whether Anthropic has a native JSON-schema-constrained mode
+   or whether this course should show a Pydantic-validate-and-retry
+   pattern instead — verify, don't assume), and current recommended
+   approach for streaming a backend response through to a React frontend
+   (Server-Sent Events vs. a streaming fetch response — verify current
+   browser/fetch API support expectations).
+4. Decide, and document, a concrete, small, real, non-forced use case for
+   QuestLog's first AI feature (the master plan's own suggestion: "suggest
+   a quest breakdown" — e.g., given a vague quest title, the assistant
+   proposes 2-4 concrete sub-quests) — same "small, real, well-justified"
+   scoping discipline Module 10 applied to its Redis decision.
+5. This module needs the learner's own Anthropic API key to run live —
+   apply the same optional-but-recommended, cost-estimated, dry-run-
+   accepted framing Modules 09/11/12 all used for real infrastructure/API
+   costs, in `00-setup.md`.
+6. Use the same Agent-delegation process described above ("The process
    that's been working").
 
-## After Module 12
+## After Module 13
 
-Continue the same pattern through Modules 13–15, always copying the
+Continue the same pattern through Modules 14–15, always copying the
 previous module's `project/questlog/` forward per `RUNNING_PROJECT.md`'s
-table (Module 13 resumes touching QuestLog code — its own AI-assistant
-feature). Module 15 is worth flagging in advance: it's the course's
-**final capstone** — budget real care for it; it's the portfolio piece the
-entire course has been building toward.
+table. Module 15 is worth flagging in advance: it's the course's **final
+capstone** — budget real care for it; it's the portfolio piece the entire
+course has been building toward.
 
 ## Root-file maintenance as modules are added
 
