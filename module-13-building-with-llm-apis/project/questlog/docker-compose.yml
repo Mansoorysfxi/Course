@@ -1,0 +1,199 @@
+# QuestLog -- full stack, containerized. See
+# module-10-docker-and-containers/lessons/06-docker-compose-multi-service-apps.md
+# and lessons/08-containerizing-questlogs-frontend-and-full-compose.md for
+# the full, line-by-line walkthrough of this exact file.
+#
+# No top-level `version:` key. Verified via Docker's own documentation
+# (August 2026): the `version` key was only ever meaningful for Compose
+# V1 and early Compose V2 releases, is ignored by every current `docker
+# compose` (the built-in, Go-based CLI plugin -- notice the SPACE, not a
+# hyphen), and including it now only produces a harmless but noisy
+# "obsolete" warning. This file targets the Compose Specification
+# directly, the same living, versionless schema `docker compose` itself
+# already assumes by default. Run this whole stack with:
+#   docker compose up --build
+# never the old, standalone, hyphenated `docker-compose` binary --
+# Compose V1 -- which Docker's own documentation now marks deprecated
+# (security-fixes-only maintenance).
+
+services:
+  # --- PostgreSQL --------------------------------------------------------
+  # Compare this against everything module-09-linux-networking-servers's
+  # lessons/07 (Phase 3) did BY HAND on a real server: `sudo apt install
+  # postgresql`, manually creating a role and database via `psql`,
+  # manually confirming it's listening only on `127.0.0.1`. Every one of
+  # those steps is replaced by this one service block.
+  postgres:
+    image: postgres:18-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: questlog
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-questlog_dev_password}
+      POSTGRES_DB: questlog
+    volumes:
+      # A NAMED volume, not a bind mount -- see
+      # lessons/05-docker-volumes-and-persistence.md for the full
+      # distinction. Docker manages this volume's actual storage location
+      # on the host; it survives `docker compose down` (which stops and
+      # removes containers) and is only ever deleted by the explicit,
+      # separate `docker compose down -v` or `docker volume rm`. This is
+      # the entire mechanism by which QuestLog's quests survive a
+      # container being rebuilt or restarted -- the container itself is
+      # disposable, this volume is not.
+      - questlog_pgdata:/var/lib/postgresql/data
+    ports:
+      # Published to the host mainly so this module's lessons/exercises
+      # can `psql` in directly from Windows/WSL2 to inspect the database
+      # while learning -- see lessons/04-docker-networking.md's "published
+      # vs. exposed" section for why a stricter, more production-minded
+      # compose file would likely omit this line entirely (nothing except
+      # the `backend` service, reachable over the private Compose network
+      # either way, ever needs to reach Postgres from outside this
+      # stack).
+      - "5432:5432"
+    healthcheck:
+      # `pg_isready` is PostgreSQL's own official "is this instance ready
+      # to accept connections yet" command-line tool -- ships inside this
+      # exact image already. Without a healthcheck, Compose's own
+      # `depends_on` (below) only knows "the postgres container process
+      # has started," which is NOT the same moment as "Postgres has
+      # finished its own internal startup and is actually ready to accept
+      # a connection" -- a real, common source of a backend container
+      # crashing on its very first start with a connection-refused error,
+      # a fraction of a second before Postgres would have been ready. See
+      # lessons/06-docker-compose-multi-service-apps.md's "depends_on
+      # isn't enough by itself" section.
+      test: ["CMD-SHELL", "pg_isready -U questlog -d questlog"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # --- Redis --------------------------------------------------------------
+  # NEW in Module 10 -- see app/cache.py and
+  # lessons/06-docker-compose-multi-service-apps.md for what this actually
+  # caches (a signed-in user's own quest list, briefly) and why.
+  redis:
+    image: redis:8-alpine
+    restart: unless-stopped
+    volumes:
+      # Also a named volume -- Redis periodically saves its in-memory
+      # data to disk (a process it calls a "snapshot"); without a volume,
+      # that snapshot would live only inside the container's own
+      # writable layer and vanish the moment the container is removed.
+      # For QuestLog's specific use of Redis (a short-lived, 30-second
+      # cache -- see app/cache.py's QUEST_LIST_CACHE_TTL_SECONDS), losing
+      # this data on restart would barely be noticeable in practice (the
+      # cache would just start out empty and refill itself on the very
+      # next request) -- this volume is included anyway both for realism
+      # (a real Redis deployment almost always has one) and so
+      # lessons/05's volume exercises have a second, real example to
+      # practice against beyond Postgres.
+      - questlog_redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # --- Backend (FastAPI) ---------------------------------------------------
+  # Compare against module-09-linux-networking-servers/lessons/07's Phases
+  # 4-9 (creating a dedicated `questlog` system user, a Python venv,
+  # installing requirements.txt by hand, writing a systemd unit file) --
+  # this `build:`/`environment:`/`depends_on:` block is the Compose
+  # equivalent of all of it, and `backend/Dockerfile` (see its own,
+  # heavily-commented file) is the equivalent of that systemd unit file's
+  # own `ExecStart` plus the venv-creation steps combined.
+  backend:
+    build:
+      context: ./backend
+    restart: unless-stopped
+    environment:
+      # `postgres` and `redis` below are NOT placeholders -- they are the
+      # literal names of the two service blocks above, and Compose's own
+      # built-in DNS resolves each one to that service's container IP
+      # address on the private network Compose creates for this whole
+      # file. This is the single most important fact
+      # lessons/04-docker-networking.md teaches: containers on the same
+      # Compose network reach each other BY SERVICE NAME, never by
+      # `localhost` (each container has its own private `localhost`,
+      # exactly like Module 09's Nginx-vs-backend distinction, just
+      # one level more isolated).
+      DATABASE_URL: postgresql+asyncpg://questlog:${POSTGRES_PASSWORD:-questlog_dev_password}@postgres:5432/questlog
+      REDIS_URL: redis://redis:6379/0
+      SECRET_KEY: ${SECRET_KEY:?Set SECRET_KEY in a .env file next to this docker-compose.yml -- see .env.example}
+      CORS_ORIGINS: http://localhost:8080
+      # NEW in Module 11 -- optional. Both default to the empty string
+      # (Sentry OFF, see app/config.py) if you never set them in your own
+      # .env -- see lessons/06-monitoring-logging-and-error-tracking.md
+      # and .env.example.
+      SENTRY_DSN: ${SENTRY_DSN:-}
+      ENVIRONMENT: ${ENVIRONMENT:-development}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      # NEW in Module 11 -- reuses the exact same /health endpoint
+      # Render's own deploy process polls in production (see
+      # lessons/08-deploying-questlog-with-ci-cd.md and app/main.py's
+      # `health()`). No `curl` inside this image (Module 10's
+      # `python:3.14-slim` base doesn't ship it, and this course
+      # deliberately never added it just for this one check) -- Python's
+      # own standard-library `urllib.request` needs nothing extra
+      # installed and can make one real HTTP request just as well.
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=3)",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    ports:
+      # Published mainly so lessons/exercises can `curl` the backend
+      # directly (bypassing the frontend's Nginx) while learning how the
+      # pieces fit together. In production, exposing this at all is
+      # arguably unnecessary once the frontend's Nginx already proxies
+      # `/api/` to it over the private Compose network -- see
+      # lessons/08's own "what would a stricter compose file leave out"
+      # discussion, deliberately left in in this course's version for
+      # learning/debugging convenience.
+      - "8000:8000"
+
+  # --- Frontend (built React app, served by Nginx) -------------------------
+  # Compare against module-09-linux-networking-servers/lessons/08 in full
+  # -- building the frontend, shipping dist/ to a server, installing and
+  # configuring Nginx, removing the default site. Every one of those
+  # manual steps is now baked into frontend/Dockerfile and frontend/nginx.conf
+  # (see both files' own extensive comments) and reduced, here, to this
+  # one service block.
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        # See frontend/Dockerfile's own ARG/ENV explanation -- empty
+        # string, baked in at build time, is what makes this frontend's
+        # own compiled JavaScript issue same-origin, relative API
+        # requests (e.g. `/api/quests`) instead of absolute ones pointed
+        # at `localhost:8000` -- exactly Module 09 lessons/08 Step 1's
+        # `VITE_API_BASE_URL=` (empty) trick, just declared here instead
+        # of typed by hand before a build command.
+        VITE_API_BASE_URL: ""
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      # The only port a real user of this stack would ever need to know
+      # about -- everything else (`postgres`, `redis`, even `backend`'s
+      # own published port above) exists for this course's own learning
+      # convenience, not because a real client needs to reach them
+      # directly.
+      - "8080:80"
+
+volumes:
+  questlog_pgdata:
+  questlog_redisdata:

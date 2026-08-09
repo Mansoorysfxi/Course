@@ -129,6 +129,14 @@ Promise, instead of blocking; the same underlying idea as Python's
 `async`/`await` above, applied to JavaScript's Promise objects rather than
 Python's coroutines. *Taught in: [Module 03, Lesson 07](module-03-html-css-javascript/lessons/07-fetch-promises-and-async-await.md).*
 
+**Async generator** — A function combining `async def` with `yield`,
+letting calling code write `async for item in some_generator():` to
+consume a sequence of values that each may take real, awaited time to
+produce — the shape QuestLog's own `stream_quest_breakdown` uses to yield
+one streamed event at a time, and the shape its React frontend's
+`streamQuestBreakdown` mirrors on the browser side. *Taught in:
+[Module 13, Lesson 02](module-13-building-with-llm-apis/lessons/02-streaming-responses.md).*
+
 **Attention** — The mechanism inside a transformer that lets every token in
 a sequence "look at" every other token and compute how much each one
 should matter for understanding it, using a dot-product-based comparison
@@ -321,6 +329,11 @@ others digit). *Taught in: [Module 09, Lesson 01](module-09-linux-networking-ser
 **chown** — The Linux command that changes a file or directory's owner
 and/or group (`chown newowner:newgroup path`). *Taught in: [Module 09, Lesson 01](module-09-linux-networking-servers/lessons/01-linux-processes-and-permissions.md).*
 
+**Chunk / Chunking** — Splitting a long piece of text into smaller, more
+focused pieces before embedding and storing it, so retrieval can find the
+specific relevant part of a document instead of the whole thing at once.
+*Taught in: [Module 14, Lesson 02](module-14-rag/lessons/02-chunking-strategies.md).*
+
 **CI/CD** — Continuous Integration / Continuous Delivery (or Deployment)
 — see each individual term (below) for the precise distinction between
 them; together, the practice of automatically building, testing, and
@@ -509,6 +522,17 @@ CORS failure almost always means the server already processed the
 request fine; the browser just refused to hand your JavaScript the
 response. *Taught in: [Module 07, Lesson 10](module-07-auth-security/lessons/10-cors-in-depth.md).*
 
+**Cosine similarity** — A measure, between -1 and 1, of how similar two
+vectors' *directions* are, independent of their length; used to compare
+two embeddings' meaning, with 1 meaning identical direction and 0 meaning
+unrelated. *Taught in: [Module 12, Lesson 04](module-12-ai-ml-foundations/lessons/04-embeddings-meaning-as-coordinates.md).*
+
+**Cosine distance** — `1 - cosine similarity` (above): a value where 0
+means identical and larger values mean less similar, used by `pgvector`'s
+`<=>` operator so a database query can sort results with the same
+"smaller is better" convention every other distance function already
+uses. *Taught in: [Module 14, Lesson 05](module-14-rag/lessons/05-similarity-search-in-practice.md).*
+
 **Cost factor (bcrypt)** — The adjustable parameter (default `12`)
 controlling how many times bcrypt's internal algorithm repeats itself;
 doubling it roughly doubles how long one hash takes, deliberately, so
@@ -605,6 +629,12 @@ when the caller doesn't supply one. *Taught in: [Module 01, Lesson 02](module-01
 **DELETE (HTTP method)** — The HTTP method meaning "remove this resource";
 idempotent by contract, since deleting an already-deleted resource still
 leaves it deleted. *Taught in: [Module 02, Lesson 03](module-02-internet-and-web-fundamentals/lessons/03-http-methods-and-status-codes.md).*
+
+**Denormalization** — Deliberately storing a copy of a value that could
+otherwise be reached via a join, in exchange for a simpler or faster
+query — the honest opposite of normalization (below), justified only when
+the copy can't drift out of sync with its source and the query it speeds
+up runs often enough to matter. *Taught in: [Module 14, Lesson 04](module-14-rag/lessons/04-vector-databases-and-pgvector.md).*
 
 **Dependency array** — `useEffect`'s second argument, determining whether
 its effect runs after every render (no array), once on mount (`[]`), or
@@ -791,6 +821,14 @@ public surface — comparable to Python's own `import` system, but with
 non-exported names genuinely inaccessible rather than merely conventionally
 private. *Taught in: [Module 03, Lesson 08](module-03-html-css-javascript/lessons/08-es6-plus-features-and-modules.md).*
 
+**Eval harness** — A small, deliberately simple set of code that runs an
+AI feature against a golden set and checks its output for plain,
+checkable properties (right shape, no forbidden duplicate, within a
+length limit) — the honest, code-based answer to "how do you know an AI
+feature works," distinct from `pytest`'s "assert one exact expected
+output" model, which doesn't fit an LLM's variable wording. *Taught in:
+[Module 13, Lesson 06](module-13-building-with-llm-apis/lessons/06-evaluating-ai-features.md).*
+
 **Event (JavaScript)** — Something the browser notifies your code about as
 it happens — a click, a keystroke, a form submission — that a function
 attached via `addEventListener` can react to. *Taught in: [Module 03,
@@ -967,6 +1005,13 @@ match multiple filenames at once. `*` means "match anything." *Taught in:
 name should modify the module-level variable of that name rather than
 creating a new local one. *Taught in: [Module 01, Lesson 02](module-01-python-properly/lessons/02-functions-and-scope.md).*
 
+**Golden set** — A small, deliberately hand-picked collection of realistic
+test inputs for an AI feature, each one chosen because it exercises
+something specific worth checking (an ordinary case, a tricky edge case,
+a case that's caught a real problem before) — the AI-evaluation
+equivalent of a well-chosen set of unit test cases, rather than a random
+sample. *Taught in: [Module 13, Lesson 06](module-13-building-with-llm-apis/lessons/06-evaluating-ai-features.md).*
+
 **Gradient descent** — The training algorithm that repeatedly nudges each
 of a model's weights a small step in the direction that reduces the loss,
 using that weight's gradient to decide which direction and how far.
@@ -1041,6 +1086,12 @@ over some data using a secret key, such that anyone holding the key can
 verify it, but nobody lacking the key can forge a new, valid one for
 different data; the exact mechanism behind a JWT's own signature (`HS256`
 = HMAC using SHA-256). *Taught in: [Module 07, Lesson 04](module-07-auth-security/lessons/04-jwt-structure-in-depth.md).*
+
+**HNSW (Hierarchical Navigable Small World)** — A graph-based index
+structure `pgvector` (and other vector databases) uses for fast
+approximate nearest-neighbor search; unlike its alternative, IVFFlat, it
+can be built on an empty table with no representative sample of real data
+needed first. *Taught in: [Module 14, Lesson 04](module-14-rag/lessons/04-vector-databases-and-pgvector.md).*
 
 **Hook** — A specially-named function, starting with `use`, that lets a
 component tap into React features like state or effects (e.g. `useState`,
@@ -1196,6 +1247,13 @@ used constantly for file persistence and for data sent over the web.
 and [Module 02, Lesson 05](module-02-internet-and-web-fundamentals/lessons/05-clients-servers-apis-and-json.md)
 (its full grammar and why it displaced XML as the web's default format).*
 
+**JSON Schema** — A standard vocabulary (`type`, `properties`, `required`,
+`enum`, and more) for describing the exact shape a piece of JSON must
+have; the Anthropic API's structured-output support constrains a model's
+response to a JSON Schema you provide, though only a supported subset of
+the full vocabulary (no `minLength`/`maximum`/recursive schemas as of
+this course's own verification). *Taught in: [Module 13, Lesson 03](module-13-building-with-llm-apis/lessons/03-structured-outputs-with-pydantic.md).*
+
 **JSX** — An XML-like syntax extension to JavaScript/TypeScript that
 compiles to plain function calls (`jsx`/`createElement`) producing
 lightweight UI-description objects; it is not HTML, and no browser
@@ -1325,6 +1383,14 @@ fast-forward merge). *Taught in: [Module 00, Lesson 04](module-00-developer-envi
 were changed differently on two branches being merged, and Git can't
 automatically decide which version to keep. *Taught in: [Module 00,
 Lesson 04](module-00-developer-environment-and-tooling/lessons/04-git-branching-and-merging.md).*
+
+**Messages API** — Anthropic's one real HTTP endpoint (`POST /v1/messages`)
+behind every feature this course's AI modules teach — a plain call, a
+streamed call, a structured-output call, and a tool-use call are all the
+exact same endpoint with different parameters added, not different APIs.
+Completely stateless: it has no memory of a previous request unless the
+caller resends the whole conversation each time. *Taught in:
+[Module 13, Lesson 01](module-13-building-with-llm-apis/lessons/01-calling-the-anthropic-api.md).*
 
 **Migration** — A small, version-controlled file describing one specific
 database schema change, applied (and ideally un-applied) consistently
@@ -1551,6 +1617,11 @@ every file and directory, separately for its owner, its group, and
 everyone else, checked by the kernel on every access — displayed by
 `ls -l` as a 10-character string like `-rw-r--r--`. *Taught in: [Module 09, Lesson 01](module-09-linux-networking-servers/lessons/01-linux-processes-and-permissions.md).*
 
+**pgvector** — A real Postgres extension that adds a `vector` column
+type, distance operators (`<->`, `<#>`, `<=>`), and specialized index
+types (IVFFlat, HNSW, above) for fast similarity search over embeddings,
+directly inside Postgres. *Taught in: [Module 14, Lesson 04](module-14-rag/lessons/04-vector-databases-and-pgvector.md).*
+
 **PID (Process ID)** — A unique number the kernel assigns to a process
 the moment it starts; no two processes running at the same time ever
 share one. *Taught in: [Module 09, Lesson 01](module-09-linux-networking-servers/lessons/01-linux-processes-and-permissions.md).*
@@ -1768,6 +1839,13 @@ a user to log in again; QuestLog does not implement one, relying instead
 on a short access-token lifetime and requiring a fresh login after it
 expires. *Taught in: [Module 07, Lesson 05](module-07-auth-security/lessons/05-oauth2-conceptual.md).*
 
+**Refusal** — A normal, successful Messages API response
+(`stop_reason: "refusal"`) where the model itself declines to answer —
+not an exception the SDK raises, and not something worth retrying with
+the identical request, since the model already made a deliberate, final
+decision rather than hitting a transient failure. *Taught in:
+[Module 13, Lesson 05](module-13-building-with-llm-apis/lessons/05-error-handling-retries-and-cost-management.md).*
+
 **Registered claim** — A JWT claim (above) whose short name (`sub`,
 `iat`, `exp`, and others) is part of the official JWT specification
 itself, so any JWT library in any language understands it the same way.
@@ -1869,6 +1947,12 @@ constraints while only partially satisfying HATEOAS. *Taught in:
 
 **`rm`** — Shell command to delete files (`rm -r` for folders);
 permanent, with no undo or Recycle Bin. *Taught in: [Module 00, Lesson 01](module-00-developer-environment-and-tooling/lessons/01-shell-and-filesystem.md).*
+
+**Retrieval-Augmented Generation (RAG)** — An architecture where relevant
+information is retrieved from your own data *before* asking an LLM to
+answer, then added ("augmented") into the prompt, so the model generates
+a response grounded in real, current, retrieved text instead of relying
+only on what it learned during training. *Taught in: [Module 14, Lesson 01](module-14-rag/lessons/01-the-problem-rag-solves.md).*
 
 **Reverse proxy** — A program (Nginx, in this course) that sits in front
 of an application server, receiving all public traffic itself and
@@ -1977,6 +2061,13 @@ DSN is configured; free Developer plan covers 5,000 errors/month.
 requests; a role, not a fixed identity — the same program can be a server
 in one interaction and a client in another. *Taught in: [Module 02,
 Lesson 05](module-02-internet-and-web-fundamentals/lessons/05-clients-servers-apis-and-json.md).*
+
+**Server-Sent Events (SSE)** — A plain-text HTTP response format where a
+server sends a sequence of small, individually-labeled `event: <type>` /
+`data: <json>` messages down one long-lived connection, each pair
+terminated by a blank line — the real wire format underneath both the
+Anthropic SDK's streaming helper and QuestLog's own
+`/suggest-breakdown` endpoint. *Taught in: [Module 13, Lesson 02](module-13-building-with-llm-apis/lessons/02-streaming-responses.md).*
 
 **Server-Side Rendering (SSR)** — A rendering strategy where a server
 runs component code fresh for each incoming request and sends back real,
@@ -2101,6 +2192,13 @@ in: [Module 02, Lesson 03](module-02-internet-and-web-fundamentals/lessons/03-ht
 `__next__` to signal there are no more items left — the actual mechanism
 that ends every `for` loop. *Taught in: [Module 01, Lesson 04](module-01-python-properly/lessons/04-comprehensions-generators-and-iterators.md).*
 
+**Streaming (LLM API)** — Consuming a model's response as it's generated,
+piece by piece, instead of waiting for the entire thing to finish before
+seeing any of it — the same total work happens either way (streaming
+doesn't make a request faster or cheaper), but the caller sees partial
+results immediately rather than all at once. *Taught in:
+[Module 13, Lesson 02](module-13-building-with-llm-apis/lessons/02-streaming-responses.md).*
+
 **StrictMode** — A React component that renders nothing itself but turns
 on extra development-only checks for everything inside it — including,
 in React 19, deliberately double-invoking effects (mount → cleanup →
@@ -2116,6 +2214,13 @@ rather than completely replace it. *Taught in: [Module 01, Lesson 05](module-01-
 ids) rather than free-form sentences, so logs can later be queried rather
 than manually scanned — and, done right, deliberately excluding fields
 like passwords and full tokens. *Taught in: [Module 07, Lesson 11](module-07-auth-security/lessons/11-secrets-config-and-logging.md).*
+
+**Structured output** — Constraining a Messages API response, via
+`output_config.format`, to match a JSON Schema you provide — a real,
+API-level guarantee that the response text parses as valid, schema-
+conformant JSON, as opposed to merely prompting a model to "respond in
+JSON," which is a strong but non-guaranteed technique. *Taught in:
+[Module 13, Lesson 03](module-13-building-with-llm-apis/lessons/03-structured-outputs-with-pydantic.md).*
 
 **Sub-dependency** — A dependency (see Dependency injection, above) that
 itself depends on another dependency via its own `Depends(...)`; FastAPI
@@ -2233,6 +2338,13 @@ shared encryption key. *Taught in: [Module 02, Lesson 02](module-02-internet-and
 fragment, sometimes a single punctuation mark — produced by tokenization
 (BPE); the actual unit a language model reads, is billed by, and is
 limited by (see Context window). *Taught in: [Module 12, Lesson 03](module-12-ai-ml-foundations/lessons/03-tokens-and-tokenization.md).*
+
+**Tool use (function calling)** — A mechanism letting a model request
+that the calling application run a specific, real function with specific
+arguments and hand back the result, so the model can incorporate real,
+current, or external information it has no other way to know — the model
+never executes anything itself; it only asks, in a structured way, and
+waits for a `tool_result`. *Taught in: [Module 13, Lesson 04](module-13-building-with-llm-apis/lessons/04-tool-use-and-function-calling.md).*
 
 **`touch`** — Shell command that creates an empty file if it doesn't
 already exist (or updates its modified timestamp if it does). *Taught in:
@@ -2407,6 +2519,12 @@ Pydantic model or a typed path/query parameter, before the matching route
 function's own body ever runs — a `422` status with a `detail` list, each
 item giving a `type`, `loc` (location), `msg`, and `input`. *Taught in:
 [Module 05, Lesson 03](module-05-backend-fastapi/lessons/03-request-bodies-and-pydantic-validation.md).*
+
+**Vector database** — A database, or a database extension (like
+`pgvector`, above), built or extended specifically to store embedding
+vectors and answer "which stored vectors are closest to this one" queries
+efficiently, using specialized indexes rather than a full scan. *Taught
+in: [Module 14, Lesson 04](module-14-rag/lessons/04-vector-databases-and-pgvector.md).*
 
 **Version control** — A system for tracking the history of changes to
 files over time, enabling checkpoints, rollback, and merging contributions

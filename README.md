@@ -1,16 +1,17 @@
-# Unreal Engine Dev → Full Stack + AI Engineer
+# Full Stack + AI Engineering Course
 
 Welcome. This repository is a complete, self-paced course that takes you from
-"professional Unreal Engine developer, curious about web/AI dev" to "full
-stack engineer who can also build AI-powered applications and agents." It is
-generated and maintained by Claude Code according to the rules in
+a working knowledge of programming to "full stack engineer who can also build
+AI-powered applications and agents." It is generated and maintained by
+Claude Code according to the rules in
 [MASTER_LEARNING_PLAN.md](MASTER_LEARNING_PLAN.md) — that file is the
 specification this whole course follows. If anything here ever seems to
 contradict it, the master plan wins.
 
 You do not need to know anything about web development to start. You do need
-to be comfortable with programming logic, since that part transfers directly
-from your C++/Blueprint experience.
+to be comfortable with programming logic and debugging, since that's the part
+that transfers directly regardless of which language or engine you're coming
+from.
 
 ## How the course is organized
 

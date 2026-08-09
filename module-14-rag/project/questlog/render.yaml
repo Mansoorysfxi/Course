@@ -1,0 +1,127 @@
+# Render Blueprint -- declares QuestLog's whole production topology (two
+# image-backed web services, one Postgres database, one Redis-compatible
+# Key Value instance) as one file, instead of clicking through Render's
+# dashboard four separate times. See
+# module-11-cicd-cloud-production/lessons/04-cloud-fundamentals-and-your-chosen-platform.md
+# for why Render was this course's chosen platform, and
+# lessons/08-deploying-questlog-with-ci-cd.md for the full, line-by-line
+# walkthrough of this exact file and how to apply it (Render Dashboard ->
+# New -> Blueprint, pointing at your own GitHub repo containing this
+# file).
+#
+# Field names verified directly against Render's own documentation
+# (render.com/docs/blueprint-spec, render.com/docs/deploying-an-image,
+# render.com/docs/key-value), August 2026.
+#
+# REPLACE every "YOUR_GITHUB_USERNAME" below with your own GitHub
+# username or org name, ALL LOWERCASE (see the CI workflow's own
+# "Normalize image owner to lowercase" step for why case matters here).
+
+databases:
+  # Render's own free Postgres plan: 1 GB storage, expires 30 days after
+  # creation with a further 14-day grace period before deletion (verified
+  # via render.com/docs/free, August 2026) -- genuinely fine for working
+  # through this module's lessons/exercises and capstone, genuinely NOT a
+  # permanent home for real data without upgrading to a paid instance
+  # ($7/mo+ at the time of writing). See lessons/04's own honest
+  # accounting of this trade-off.
+  - name: questlog-db
+    plan: free
+    postgresMajorVersion: "18"
+
+services:
+  # --- Redis-compatible cache (Render calls this a "Key Value" instance,
+  # running Valkey 8 under the hood -- see
+  # lessons/04-cloud-fundamentals-and-your-chosen-platform.md for what
+  # Valkey is and why this doesn't change anything about QuestLog's own
+  # app/cache.py, which only ever speaks the Redis wire protocol, never
+  # "Redis the company's server binary" specifically) --------------------
+  - name: questlog-redis
+    type: keyvalue
+    plan: free
+    ipAllowList: []
+    # An empty allow list means "no external network access at all" --
+    # correct and sufficient here, because only questlog-backend (below),
+    # on the SAME Render workspace, ever needs to reach this instance,
+    # over Render's own private network. Render's free Key Value plan is
+    # also, itself, in-memory only -- data does not survive a restart.
+    # For QuestLog's own use (app/cache.py's 30-second TTL cache), this is
+    # a non-issue: the cache simply starts out empty and refills itself
+    # from Postgres on the very next request, exactly the same as it does
+    # locally after `docker compose down -v`.
+
+  # --- Backend (FastAPI), deployed as a prebuilt Docker image ------------
+  - name: questlog-backend
+    type: web
+    runtime: image
+    plan: free
+    image:
+      url: ghcr.io/YOUR_GITHUB_USERNAME/questlog-backend:latest
+      # Only needed if you keep this GHCR package PRIVATE (its default) --
+      # see lessons/08's "make the package public, or add a credential"
+      # section for both options and how to set this credential up once,
+      # by hand, in Render's dashboard (Render Blueprints cannot CREATE a
+      # registry credential themselves -- only reference one that already
+      # exists). Delete this whole `creds:` line entirely if you instead
+      # make the GHCR package public, which needs no credential at all.
+      creds: ghcr-questlog
+    healthCheckPath: /health
+    envVars:
+      # DATABASE_URL is deliberately `sync: false` here rather than wired
+      # automatically via `fromDatabase` -- see lessons/08's own dedicated
+      # section on exactly why: Render's own Postgres connection string
+      # uses a plain `postgresql://` scheme, but this app's SQLAlchemy
+      # engine (app/database.py) needs the ASYNC driver's own
+      # `postgresql+asyncpg://` scheme. `sync: false` makes Render prompt
+      # you to paste a value by hand instead of guessing wrong
+      # automatically -- copy questlog-db's own connection string from
+      # its Render dashboard page and change only its scheme prefix.
+      - key: DATABASE_URL
+        sync: false
+      # REDIS_URL, by contrast, wires up correctly fully automatically --
+      # Render's own Key Value connection string already uses the plain
+      # `redis://`/`rediss://` scheme this app's redis.asyncio client
+      # already expects natively, with no dialect mismatch to fix by
+      # hand. See lessons/08's side-by-side comparison of these two
+      # envVars for exactly why one needs manual intervention and the
+      # other doesn't.
+      - key: REDIS_URL
+        fromService:
+          name: questlog-redis
+          type: keyvalue
+          property: connectionString
+      # SECRET_KEY has no default anywhere in this app on purpose (see
+      # app/config.py) -- `sync: false` means Render will prompt for a
+      # real value the first time this Blueprint is applied. Generate one
+      # exactly the way every earlier module already has:
+      #   python -c "import secrets; print(secrets.token_hex(32))"
+      - key: SECRET_KEY
+        sync: false
+      - key: ENVIRONMENT
+        value: production
+      # Optional -- leave `sync: false` and simply skip filling it in if
+      # you're not using Sentry for this deploy; app/config.py's
+      # `sentry_dsn` default of None means Sentry stays off either way.
+      - key: SENTRY_DSN
+        sync: false
+      # Update this once you know your actual frontend URL (Render
+      # assigns one automatically the first time questlog-frontend
+      # deploys, of the shape https://questlog-frontend-XXXX.onrender.com)
+      # -- see lessons/05-https-tls-domains-and-dns.md for exactly why
+      # this needs to be the frontend's OWN origin, not the backend's.
+      - key: CORS_ORIGINS
+        value: https://questlog-frontend.onrender.com
+
+  # --- Frontend (built React app served by Nginx), also a prebuilt
+  # Docker image --------------------------------------------------------
+  - name: questlog-frontend
+    type: web
+    runtime: image
+    plan: free
+    image:
+      url: ghcr.io/YOUR_GITHUB_USERNAME/questlog-frontend:latest
+      creds: ghcr-questlog
+    # No healthCheckPath override -- Render's own default (a plain "did
+    # this container start and respond to a TCP connection on its
+    # declared port at all" check) is sufficient for a static-file-serving
+    # Nginx container with no database/cache of its own to verify.

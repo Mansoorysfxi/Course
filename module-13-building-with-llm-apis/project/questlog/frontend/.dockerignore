@@ -1,0 +1,22 @@
+# Never sent to the Docker daemon as part of this image's build context.
+# See lessons/02-dockerfiles-layers-and-caching.md's ".dockerignore"
+# section.
+
+# The single most important line in this file: a locally-installed
+# node_modules can be tens or hundreds of megabytes, is host-OS-specific
+# (some packages here compile or select native binaries per platform --
+# see the Dockerfile's own explanation of the win32 binding packages),
+# and gets reinstalled fresh, correctly, for Linux, inside the build
+# anyway. Sending it as part of the build context would be slow and
+# pointless at best, and could ship the wrong platform's native binaries
+# into the image at worst.
+node_modules
+
+# A previous local build's output -- this image produces its own dist/
+# fresh, inside the build; an old one lying around locally has no
+# business being copied in.
+dist
+
+.git/
+.gitignore
+*.log

@@ -1,0 +1,16 @@
+# Testing and linting tools -- installed *in addition to* requirements.txt,
+# never instead of it. See lessons/00-setup.md for why this course keeps
+# these in a separate file from the app's own runtime dependencies: a
+# deployed copy of this API (Module 09 onward) never needs pytest or ruff
+# installed at all, only what requirements.txt lists.
+#
+# Every version below was actually installed and resolved (`pip install`,
+# then `pip freeze`) while writing this module (August 2026), not copied
+# from memory -- see lessons/00-setup.md's header for the exact PyPI
+# confirmation of each.
+pytest==9.1.1
+pytest-asyncio==1.4.0
+pytest-cov==7.1.0
+httpx==0.28.1
+aiosqlite==0.22.1
+ruff==0.16.1
