@@ -6,7 +6,6 @@ check here first before asking — it's probably already defined in plain
 language with a pointer back to where it was taught.
 
 ---
-
 **A / AAAA record** — The simplest kind of DNS record: a domain name
 mapped directly to an IPv4 (`A`) or IPv6 (`AAAA`) address, as opposed to
 a `CNAME` record (below), which points at another domain name instead.
@@ -47,6 +46,14 @@ temporary challenge (an HTTP-01 challenge, serving a specific file at a
 specific URL; or a DNS-01 challenge, adding a specific `TXT` record).
 *Taught in: [Module 11, Lesson 05](module-11-cicd-cloud-production/lessons/05-https-tls-domains-and-dns.md).*
 
+**Agent (AI agent)** — A system built around a loop — decide, act,
+observe, repeat — in which an LLM decides whether to produce a final
+answer or call one of the tools it's been given, your own code executes
+any requested tool, and the result becomes new context for the model's
+next decision, continuing until the model stops requesting tools or a
+guardrail (see Guardrail (agent)) ends the loop. *Taught in:
+[Module 15, Lesson 01](module-15-agents-and-modern-ai-workflows/lessons/01-what-an-agent-is-the-loop.md).*
+
 **Aggregate function** — A SQL function (e.g. `COUNT`, `SUM`) that computes
 one result across every row *within* a `GROUP BY` group, rather than one
 row at a time. *Taught in: [Module 06, Lesson 04](module-06-databases/lessons/04-joins-and-group-by.md).*
@@ -77,15 +84,15 @@ manager, installing whole programs (Nginx, PostgreSQL) for the entire
 machine, as opposed to `pip`/`npm`, which install libraries scoped to
 one project. *Taught in: [Module 09, Lesson 01](module-09-linux-networking-servers/lessons/01-linux-processes-and-permissions.md).*
 
-**`*args`** — A parameter prefixed with a single `*` that collects any
-number of extra positional arguments a function is called with into a
-tuple. *Taught in: [Module 01, Lesson 02](module-01-python-properly/lessons/02-functions-and-scope.md).*
-
 **Argon2** — A newer password-hashing algorithm that OWASP and FastAPI's
 own current documentation lead with ahead of bcrypt; this course teaches
 bcrypt specifically because its embedded, directly inspectable salt makes
 an unusually clear first example of what a salt is, while noting Argon2
 as the current state of the art. *Taught in: [Module 07, Lesson 02](module-07-auth-security/lessons/02-password-hashing.md).*
+
+**`*args`** — A parameter prefixed with a single `*` that collects any
+number of extra positional arguments a function is called with into a
+tuple. *Taught in: [Module 01, Lesson 02](module-01-python-properly/lessons/02-functions-and-scope.md).*
 
 **Arrow function** — A shorter JavaScript syntax for writing a function
 expression, using `=>` instead of the `function` keyword (e.g.
@@ -256,6 +263,10 @@ the same answer can skip redoing the expensive work — QuestLog caches a
 signed-in user's own quest list in Redis rather than re-querying Postgres
 on every page load. *Taught in: [Module 10, Lesson 06](module-10-docker-and-containers/lessons/06-docker-compose-multi-service-apps.md).*
 
+**Cache-Control header** — An HTTP response header stating whether, and
+for how long, a response may be cached and reused instead of re-fetched.
+*Taught in: [Module 02, Lesson 04](module-02-internet-and-web-fundamentals/lessons/04-headers-cookies-and-statelessness.md).*
+
 **Cache hit / cache miss** — A "hit" is a request answered directly from a
 cache, without touching the original, slower data source; a "miss" is a
 request the cache couldn't answer (because nothing was cached yet, or a
@@ -271,10 +282,6 @@ deletes a quest. Famously one of the two hardest problems in computer
 science (alongside naming things), because it's easy to invalidate too
 little (stale data lingers) or too much (a cache that's cleared so often
 it stops helping). *Taught in: [Module 10, Lesson 06](module-10-docker-and-containers/lessons/06-docker-compose-multi-service-apps.md).*
-
-**Cache-Control header** — An HTTP response header stating whether, and
-for how long, a response may be cached and reused instead of re-fetched.
-*Taught in: [Module 02, Lesson 04](module-02-internet-and-web-fundamentals/lessons/04-headers-cookies-and-statelessness.md).*
 
 **Caching** — Keeping a copy of an expensive-to-compute or
 expensive-to-fetch result somewhere fast to read (often a key-value store
@@ -348,16 +355,16 @@ three-letter name is part of the official JWT specification itself.
 methods every instance built from it will have. *Taught in: [Module 01,
 Lesson 05](module-01-python-properly/lessons/05-oop-classes-and-dunders.md).*
 
-**Class attribute** — A value defined directly in a class's body (not
-inside `__init__`) that is shared by every instance of that class, rather
-than belonging to one instance individually. *Taught in: [Module 01,
-Lesson 05](module-01-python-properly/lessons/05-oop-classes-and-dunders.md).*
-
 **Class (CSS)** — A reusable label (`class="..."` in HTML, targeted with a
 leading `.` in CSS) that many elements can share at once, used as the
 primary hook for applying CSS rules and, later, for JavaScript to select
 elements. Distinct from a Python class, above. *Taught in: [Module 03,
 Lesson 02](module-03-html-css-javascript/lessons/02-css-the-box-model.md).*
+
+**Class attribute** — A value defined directly in a class's body (not
+inside `__init__`) that is shared by every instance of that class, rather
+than belonging to one instance individually. *Taught in: [Module 01,
+Lesson 05](module-01-python-properly/lessons/05-oop-classes-and-dunders.md).*
 
 **Cleanup function** — The function returned from a React `useEffect`
 callback; React calls it right before running that effect again (if its
@@ -459,17 +466,17 @@ unless configured otherwise. *Taught in: [Module 10, Lesson 02](module-10-docker
 body (e.g. `application/json`), telling the receiving side how to
 interpret the bytes that follow. *Taught in: [Module 02, Lesson 04](module-02-internet-and-web-fundamentals/lessons/04-headers-cookies-and-statelessness.md).*
 
-**Context manager** — An object usable after Python's `with` keyword,
-implementing `__enter__` (setup) and `__exit__` (guaranteed cleanup), so
-risky code always gets cleaned up even if it raises an exception. *Taught
-in: [Module 01, Lesson 08](module-01-python-properly/lessons/08-file-io-and-json.md)
-and [Lesson 10](module-01-python-properly/lessons/10-decorators-and-context-managers.md).*
-
 **Context (React)** — A built-in React feature (`createContext`, a
 `Provider`, `useContext`) for making a value available to any descendant
 component, at any depth, without manually passing it through every
 intermediate component's props. Distinct from a Python context manager,
 above. *Taught in: [Module 04, Lesson 06](module-04-react/lessons/06-context.md).*
+
+**Context manager** — An object usable after Python's `with` keyword,
+implementing `__enter__` (setup) and `__exit__` (guaranteed cleanup), so
+risky code always gets cleaned up even if it raises an exception. *Taught
+in: [Module 01, Lesson 08](module-01-python-properly/lessons/08-file-io-and-json.md)
+and [Lesson 10](module-01-python-properly/lessons/10-decorators-and-context-managers.md).*
 
 **Context window** — The maximum number of tokens a model can consider at
 once — every system prompt, message, and generated token counted
@@ -496,11 +503,6 @@ state (`value` + `onChange`) rather than in the browser's own internal DOM
 state; contrasted with an **uncontrolled component**, below. *Taught in:
 [Module 04, Lesson 05](module-04-react/lessons/05-forms-controlled-components-and-lifting-state.md).*
 
-**`createContext`** — The function that creates a Context object — a
-named "channel" a value can be broadcast into (via a `Provider`) and read
-from (via `useContext`) by any descendant. *Taught in: [Module 04,
-Lesson 06](module-04-react/lessons/06-context.md).*
-
 **Cookie** — A small piece of data a server asks a client to store (via a
 `Set-Cookie` response header) and automatically resend (via a `Cookie`
 request header) on every future request to that site. *Taught in:
@@ -522,16 +524,16 @@ CORS failure almost always means the server already processed the
 request fine; the browser just refused to hand your JavaScript the
 response. *Taught in: [Module 07, Lesson 10](module-07-auth-security/lessons/10-cors-in-depth.md).*
 
-**Cosine similarity** — A measure, between -1 and 1, of how similar two
-vectors' *directions* are, independent of their length; used to compare
-two embeddings' meaning, with 1 meaning identical direction and 0 meaning
-unrelated. *Taught in: [Module 12, Lesson 04](module-12-ai-ml-foundations/lessons/04-embeddings-meaning-as-coordinates.md).*
-
 **Cosine distance** — `1 - cosine similarity` (above): a value where 0
 means identical and larger values mean less similar, used by `pgvector`'s
 `<=>` operator so a database query can sort results with the same
 "smaller is better" convention every other distance function already
 uses. *Taught in: [Module 14, Lesson 05](module-14-rag/lessons/05-similarity-search-in-practice.md).*
+
+**Cosine similarity** — A measure, between -1 and 1, of how similar two
+vectors' *directions* are, independent of their length; used to compare
+two embeddings' meaning, with 1 meaning identical direction and 0 meaning
+unrelated. *Taught in: [Module 12, Lesson 04](module-12-ai-ml-foundations/lessons/04-embeddings-meaning-as-coordinates.md).*
 
 **Cost factor (bcrypt)** — The adjustable parameter (default `12`)
 controlling how many times bcrypt's internal algorithm repeats itself;
@@ -546,9 +548,18 @@ all, but it says nothing about whether the tests that *do* exist checked
 the right thing — 100% coverage is not, by itself, a goal worth chasing.
 *Taught in: [Module 08, Lesson 02](module-08-testing-and-quality/lessons/02-pytest-fundamentals-and-fixtures.md).*
 
+**`createContext`** — The function that creates a Context object — a
+named "channel" a value can be broadcast into (via a `Provider`) and read
+from (via `useContext`) by any descendant. *Taught in: [Module 04,
+Lesson 06](module-04-react/lessons/06-context.md).*
+
 **Credential** — Proof of a claimed identity presented on a request — a
 password at login, or the token/cookie presented afterward to avoid
 re-proving it every time. *Taught in: [Module 07, Lesson 01](module-07-auth-security/lessons/01-authentication-vs-authorization.md).*
+
+**Cross axis** — In a Flexbox container, the axis perpendicular to
+whichever direction `flex-direction` points; controlled primarily by
+`align-items`. *Taught in: [Module 03, Lesson 03](module-03-html-css-javascript/lessons/03-css-flexbox.md).*
 
 **CRUD** — A shorthand for the four basic operations almost any "manage a
 collection of things" API needs: **C**reate, **R**ead, **U**pdate,
@@ -577,10 +588,6 @@ an explicit two-dimensional grid of rows and columns, with items placeable
 into specific cells and able to span multiple rows/columns; the tool of
 choice when items must align across both dimensions, unlike one-dimensional
 Flexbox. *Taught in: [Module 03, Lesson 04](module-03-html-css-javascript/lessons/04-css-grid-and-responsive-design.md).*
-
-**Cross axis** — In a Flexbox container, the axis perpendicular to
-whichever direction `flex-direction` points; controlled primarily by
-`align-items`. *Taught in: [Module 03, Lesson 03](module-03-html-css-javascript/lessons/03-css-flexbox.md).*
 
 **Custom exception** — A programmer-defined exception class, typically
 inheriting from `Exception` (directly or through another custom
@@ -855,6 +862,10 @@ completely empty. *Taught in: [Module 03, Lesson 05](module-03-html-css-javascri
 wrong, immediately interrupting normal execution and propagating upward
 until something catches it. *Taught in: [Module 01, Lesson 06](module-01-python-properly/lessons/06-error-handling.md).*
 
+**f-string** — A string literal prefixed with `f`, allowing Python
+expressions inside `{curly braces}` to be evaluated and inserted directly
+into the text. *Taught in: [Module 01, Lesson 01](module-01-python-properly/lessons/01-variables-types-and-control-flow.md).*
+
 **Factory fixture** — A `pytest` fixture whose value is itself a
 function, so a test can call it more than once, with different
 arguments each time, rather than receiving one fixed, pre-built value.
@@ -865,16 +876,16 @@ since the branch being merged split off, so Git can just slide the
 pointer forward with nothing to actually combine. *Taught in: [Module 00,
 Lesson 04](module-00-developer-environment-and-tooling/lessons/04-git-branching-and-merging.md).*
 
-**Fetch (`git fetch`)** — Downloads new commits from a remote without
-merging them into your current branch (unlike `git pull`, which does
-both). *Taught in: [Module 00, Lesson 05](module-00-developer-environment-and-tooling/lessons/05-github-and-pull-requests.md).*
-
 **`fetch` (Fetch API)** — The built-in browser/JavaScript function for
 making an HTTP request from code, returning a Promise that fulfills as
 soon as response headers arrive — including for HTTP error status codes,
 which is why `response.ok` must be checked explicitly rather than relying
 on the Promise to reject. Not to be confused with `git fetch`, above.
 *Taught in: [Module 03, Lesson 07](module-03-html-css-javascript/lessons/07-fetch-promises-and-async-await.md).*
+
+**Fetch (`git fetch`)** — Downloads new commits from a remote without
+merging them into your current branch (unlike `git pull`, which does
+both). *Taught in: [Module 00, Lesson 05](module-00-developer-environment-and-tooling/lessons/05-github-and-pull-requests.md).*
 
 **Few-shot prompting** — Including a small number of worked input-output
 examples directly in a prompt before asking a model to handle a new case,
@@ -912,25 +923,21 @@ Horizontal/Vertical Box. *Taught in: [Module 03, Lesson 03](module-03-html-css-j
 nearest whole number, discarding the remainder. *Taught in: [Module 01,
 Lesson 01](module-01-python-properly/lessons/01-variables-types-and-control-flow.md).*
 
+**Foreign key** — A column storing another table's primary key value,
+creating a real, enforced reference between two rows instead of copying
+data between them; the mechanism behind every table relationship. *Taught
+in: [Module 06, Lesson 01](module-06-databases/lessons/01-why-a-database-and-the-relational-model.md).*
+
 **Formatter** — A tool that rewrites a source file's whitespace, quote
 style, and line breaks into one consistent shape, with no opinion about
 whether the code's actual logic is correct; this course uses `ruff
 format` (Python) and `prettier` (JS/TS). *Taught in: [Module 08, Lesson
 08](module-08-testing-and-quality/lessons/08-linters-and-formatters.md).*
 
-**f-string** — A string literal prefixed with `f`, allowing Python
-expressions inside `{curly braces}` to be evaluated and inserted directly
-into the text. *Taught in: [Module 01, Lesson 01](module-01-python-properly/lessons/01-variables-types-and-control-flow.md).*
-
 **`fr` unit** — A CSS Grid track-sizing unit meaning "one share of
 whatever space remains" after fixed-size tracks are accounted for, directly
 comparable to Flexbox's `flex-grow` ratio. *Taught in: [Module 03,
 Lesson 04](module-03-html-css-javascript/lessons/04-css-grid-and-responsive-design.md).*
-
-**Foreign key** — A column storing another table's primary key value,
-creating a real, enforced reference between two rows instead of copying
-data between them; the mechanism behind every table relationship. *Taught
-in: [Module 06, Lesson 01](module-06-databases/lessons/01-why-a-database-and-the-relational-model.md).*
 
 **Fragment** — JSX's `<>...</>` syntax for grouping multiple sibling
 elements into one return value without adding a real wrapping element to
@@ -974,10 +981,6 @@ that handles authenticating you to services like GitHub (e.g. via a
 browser login popup) so you don't have to manually manage credentials.
 *Taught in: [Module 00, Lesson 00](module-00-developer-environment-and-tooling/lessons/00-setup.md).*
 
-**`.gitignore`** — A plain text file, one pattern per line, listing files
-Git should never track, even if they exist in the project folder. *Taught
-in: [Module 00, Lesson 03](module-00-developer-environment-and-tooling/lessons/03-git-fundamentals.md).*
-
 **GitHub** — A website that hosts Git repositories online and adds
 collaboration features (Pull Requests, issues, etc.) on top of plain Git.
 *Taught in: [Module 00, Lesson 00](module-00-developer-environment-and-tooling/lessons/00-setup.md)
@@ -996,6 +999,10 @@ GitHub (creating repos, opening PRs, etc.) without leaving the terminal.
 automatically for every single workflow run and revokes the moment that
 run ends, scoped via a job's own `permissions:` key — no manual account
 or password needed to push to GHCR (above). *Taught in: [Module 11, Lesson 02](module-11-cicd-cloud-production/lessons/02-github-actions-from-zero.md).*
+
+**`.gitignore`** — A plain text file, one pattern per line, listing files
+Git should never track, even if they exist in the project folder. *Taught
+in: [Module 00, Lesson 03](module-00-developer-environment-and-tooling/lessons/03-git-fundamentals.md).*
 
 **Glob / wildcard** — A pattern (e.g. `*.txt`) used by shell commands to
 match multiple filenames at once. `*` means "match anything." *Taught in:
@@ -1022,6 +1029,13 @@ value(s) in given column(s) into one summary row, meant to be used
 alongside aggregate functions computing across each group. *Taught in:
 [Module 06, Lesson 04](module-06-databases/lessons/04-joins-and-group-by.md).*
 
+**Guardrail (agent)** — A limit on an agent's own behavior enforced in
+code the agent's own loop cannot bypass — a hard cap on iterations per
+turn, an action deliberately left with no corresponding tool, an
+ownership check on every tool call, or validated tool inputs — as opposed
+to a system-prompt instruction alone, which a model can fail to follow.
+*Taught in: [Module 15, Lesson 08](module-15-agents-and-modern-ai-workflows/lessons/08-agent-safety-guardrails-and-evals.md).*
+
 **Hallucination (LLM)** — A confident-sounding but factually wrong
 statement produced by a language model, arising because the model's actual
 job (predict the statistically likely next token) has no built-in step
@@ -1029,15 +1043,15 @@ that checks a candidate answer against verified facts — fluency and
 factual accuracy are not the same trained property. *Taught in: [Module
 12, Lesson 06](module-12-ai-ml-foundations/lessons/06-context-windows-hallucination-and-sampling.md).*
 
-**Hashable** — Describes a value that can be run through a hash function
-to produce a fixed lookup key, which is why only hashable (effectively
-immutable) objects can be dict keys or set elements. *Taught in:
-[Module 01, Lesson 03](module-01-python-properly/lessons/03-data-structures.md).*
-
 **Hash table** — The underlying data structure behind Python's `dict` and
 `set`, which uses a hash function to locate entries directly rather than
 scanning them one by one, giving roughly constant-time lookups. *Taught
 in: [Module 01, Lesson 03](module-01-python-properly/lessons/03-data-structures.md).*
+
+**Hashable** — Describes a value that can be run through a hash function
+to produce a fixed lookup key, which is why only hashable (effectively
+immutable) objects can be dict keys or set elements. *Taught in:
+[Module 01, Lesson 03](module-01-python-properly/lessons/03-data-structures.md).*
 
 **Hashing** — A one-way transformation: running data through a hash
 function produces a fixed-size, scrambled result with no operation that
@@ -1123,6 +1137,13 @@ Lesson 03](module-02-internet-and-web-fundamentals/lessons/03-http-methods-and-s
 **HTTPS** — Plain HTTP sent over a connection TLS has already encrypted;
 not a separate protocol or request/response format, just HTTP wrapped in
 TLS, conventionally on port 443. *Taught in: [Module 02, Lesson 02](module-02-internet-and-web-fundamentals/lessons/02-tcp-tls-and-the-request-response-journey.md).*
+
+**Human-in-the-loop** — An agent design pattern where the loop pauses
+immediately before a specific, flagged tool executes and waits for a real
+person to approve or deny it, rather than letting the model's own
+decision proceed unchecked — a denial produces a normal, recoverable
+`tool_result` (with `is_error: true`) the agent can react to, not a
+crash. *Taught in: [Module 15, Lesson 06](module-15-agents-and-modern-ai-workflows/lessons/06-multi-agent-patterns-and-orchestration.md).*
 
 **Hydration** — The process where React attaches event handlers and live
 state to already-present, server-rendered HTML, making static markup
@@ -1277,15 +1298,15 @@ speed; commonly used as a cache in front of a relational database.
 naming its parameter (e.g. `greet(name="Aria")`) rather than by position.
 *Taught in: [Module 01, Lesson 02](module-01-python-properly/lessons/02-functions-and-scope.md).*
 
-**`**kwargs`** — A parameter prefixed with `**` that collects any number
-of extra keyword arguments a function is called with into a dict. *Taught
-in: [Module 01, Lesson 02](module-01-python-properly/lessons/02-functions-and-scope.md).*
-
 **Kubernetes** — A fleet manager for containers across many machines at
 once, automatically restarting failed instances, scaling replica count,
 and routing traffic to healthy ones — see Pod, Deployment, Service, and
 Ingress (each below) for its four core object types. *Taught in:
 [Module 11, Lesson 07](module-11-cicd-cloud-production/lessons/07-kubernetes-conceptually.md).*
+
+**`**kwargs`** — A parameter prefixed with `**` that collects any number
+of extra keyword arguments a function is called with into a dict. *Taught
+in: [Module 01, Lesson 02](module-01-python-properly/lessons/02-functions-and-scope.md).*
 
 **Label (HTML)** — A `<label>` element paired with a form field via
 matching `for`/`id` attributes, making the field's purpose available to
@@ -1349,6 +1370,14 @@ same machine," with no real network, router, or ISP involved. *Taught in:
 redirect status, stating the URL a client should go to next. *Taught in:
 [Module 02, Lesson 03](module-02-internet-and-web-fundamentals/lessons/03-http-methods-and-status-codes.md).*
 
+**Long-term memory (agent)** — Recall that survives across separate,
+otherwise-unrelated agent conversations, requiring durable storage (a
+database, a dedicated memory tool's own files) plus a retrieval decision
+made fresh on every new conversation — a genuinely different engineering
+problem from short-term memory, which needs no storage beyond the current
+conversation's own message list. *Taught in:
+[Module 15, Lesson 04](module-15-agents-and-modern-ai-workflows/lessons/04-memory-and-planning.md).*
+
 **Loss function** — A single number, computed automatically from a
 model's current output, that measures how wrong that output is compared to
 the desired one; training is entirely organized around minimizing it via
@@ -1367,6 +1396,14 @@ Module 09's manual VPS deploy did. *Taught in: [Module 11, Lesson 04](module-11-
 logic, used to wrap plain text in tags that describe what each piece of
 content *is*, rather than to compute anything. *Taught in: [Module 03,
 Lesson 01](module-03-html-css-javascript/lessons/01-html-structure-forms-and-accessibility.md).*
+
+**MCP (Model Context Protocol)** — A standardized protocol letting any
+compliant client (an AI product, a custom agent) discover and call tools
+exposed by any compliant server, over a fixed transport (`stdio` for a
+local server; Streamable HTTP for a remote one) — the same "write it
+once, any compliant caller can use it" benefit a standardized plugin
+interface gives a game engine, applied to AI tools. *Taught in:
+[Module 15, Lesson 05](module-15-agents-and-modern-ai-workflows/lessons/05-model-context-protocol-mcp.md).*
 
 **Media query** — A CSS block (`@media (...) { ... }`) whose rules only
 apply when a stated condition — most commonly a minimum/maximum viewport
@@ -1392,6 +1429,14 @@ Completely stateless: it has no memory of a previous request unless the
 caller resends the whole conversation each time. *Taught in:
 [Module 13, Lesson 01](module-13-building-with-llm-apis/lessons/01-calling-the-anthropic-api.md).*
 
+**Middleware** — Code that runs on every request/response passing through
+a web application, unconditionally, before/after routing decides which
+specific route applies — comparable to a component in an Unreal Actor's
+tick chain that every actor passes through, rather than something a
+specific piece of gameplay code opts into (contrast with a dependency,
+above, which a specific route chooses to use). *Taught in: [Module 05,
+Lesson 05](module-05-backend-fastapi/lessons/05-middleware.md).*
+
 **Migration** — A small, version-controlled file describing one specific
 database schema change, applied (and ideally un-applied) consistently
 across every environment, the way a Git commit is a small, ordered,
@@ -1400,14 +1445,6 @@ migration tool. *Taught in: [Module 06, Lesson 07](module-06-databases/lessons/0
 
 **`mkdir`** — Shell command to create a new directory/folder. *Taught in:
 [Module 00, Lesson 01](module-00-developer-environment-and-tooling/lessons/01-shell-and-filesystem.md).*
-
-**Middleware** — Code that runs on every request/response passing through
-a web application, unconditionally, before/after routing decides which
-specific route applies — comparable to a component in an Unreal Actor's
-tick chain that every actor passes through, rather than something a
-specific piece of gameplay code opts into (contrast with a dependency,
-above, which a specific route chooses to use). *Taught in: [Module 05,
-Lesson 05](module-05-backend-fastapi/lessons/05-middleware.md).*
 
 **Mobile-first (responsive design)** — A responsive-design convention
 where the unconditional, default CSS describes the narrowest (typically
@@ -1435,6 +1472,15 @@ straightforward substitutions. *Taught in: [Module 08, Lesson 03](module-08-test
 **Mount / Unmount** — The moment a component first appears in the page
 (mount) or is removed from it (unmount); an empty `useEffect` dependency
 array (`[]`) means "run only on mount." *Taught in: [Module 04, Lesson 03](module-04-react/lessons/03-useeffect-the-dependency-array-in-depth.md).*
+
+**Multi-agent orchestration** — Coordinating more than one agent on a
+single task, in one of two common shapes: **coordinator/worker** (one
+agent delegates sub-tasks to other, more narrowly-tooled agents and
+combines their finished reports — from the coordinator's own loop, a
+worker is indistinguishable from any other tool call) or **handoff**
+(one agent transfers an entire, ongoing conversation to a different,
+better-suited agent, which takes over completely). *Taught in:
+[Module 15, Lesson 06](module-15-agents-and-modern-ai-workflows/lessons/06-multi-agent-patterns-and-orchestration.md).*
 
 **Multi-stage build** — A Dockerfile with more than one `FROM` instruction,
 each starting a fresh, separate build "stage"; later stages can selectively
@@ -1730,12 +1776,6 @@ internet, assigned to a real server like a VPS; contrasted with a
 private IP address, above, meaningful only inside one local network.
 *Taught in: [Module 09, Lesson 04](module-09-linux-networking-servers/lessons/04-networking-ports-and-ips.md).*
 
-**Pydantic model** — A Python class inheriting from Pydantic's `BaseModel`,
-describing a data shape as type-hinted class attributes; simultaneously a
-description of what's expected (feeding OpenAPI, above), the real code
-that validates incoming data against that shape, and a real Python object
-a route function can then use directly. *Taught in: [Module 05, Lesson 03](module-05-backend-fastapi/lessons/03-request-bodies-and-pydantic-validation.md).*
-
 **Pull (`git pull`)** — Downloads new commits from a remote and merges
 them into your current branch in one step (fetch + merge). *Taught in:
 [Module 00, Lesson 05](module-00-developer-environment-and-tooling/lessons/05-github-and-pull-requests.md).*
@@ -1759,6 +1799,12 @@ repeating it leaves the resource in the same end state. *Taught in:
 installer that finds and runs a specific installed Python version
 regardless of `PATH`, used as `py` (optionally with a version like
 `py -3.14`). *Taught in: [Module 01, Lesson 00](module-01-python-properly/lessons/00-setup.md).*
+
+**Pydantic model** — A Python class inheriting from Pydantic's `BaseModel`,
+describing a data shape as type-hinted class attributes; simultaneously a
+description of what's expected (feeding OpenAPI, above), the real code
+that validates incoming data against that shape, and a real Python object
+a route function can then use directly. *Taught in: [Module 05, Lesson 03](module-05-backend-fastapi/lessons/03-request-bodies-and-pydantic-validation.md).*
 
 **pydantic-settings** — A separate package (since Pydantic v2 split
 settings out of core Pydantic) providing `BaseSettings`, a typed way to
@@ -1885,16 +1931,16 @@ again"/refetch button). *Taught in: [Module 04, Lesson 07](module-04-react/lesso
 repository, most commonly one hosted on GitHub. *Taught in: [Module 00,
 Lesson 05](module-00-developer-environment-and-tooling/lessons/05-github-and-pull-requests.md).*
 
-**Render / Re-render** — React calling a component function again and
-getting back a new description of UI; not the same thing as the browser
-physically repainting the screen. *Taught in: [Module 04, Lesson 02](module-04-react/lessons/02-state-and-the-rendering-model.md).*
-
 **Render (cloud platform)** — This course's chosen container platform for
 Module 11's capstone: free Docker-image-backed web services, free
 managed Postgres, a free Redis-compatible cache, and fully automatic
 TLS — chosen over Fly.io/Railway specifically because both discontinued
 their own real free tiers by 2026. Not to be confused with "render" the
 React verb, above. *Taught in: [Module 11, Lesson 04](module-11-cicd-cloud-production/lessons/04-cloud-fundamentals-and-your-chosen-platform.md).*
+
+**Render / Re-render** — React calling a component function again and
+getting back a new description of UI; not the same thing as the browser
+physically repainting the screen. *Taught in: [Module 04, Lesson 02](module-04-react/lessons/02-state-and-the-rendering-model.md).*
 
 **Repository (repo)** — A project folder whose history of changes Git is
 tracking, backed by a hidden `.git` folder. *Taught in: [Module 00,
@@ -1945,9 +1991,6 @@ practice, most real-world "REST APIs" satisfy the majority of the
 constraints while only partially satisfying HATEOAS. *Taught in:
 [Module 02, Lesson 06](module-02-internet-and-web-fundamentals/lessons/06-rest-from-first-principles.md).*
 
-**`rm`** — Shell command to delete files (`rm -r` for folders);
-permanent, with no undo or Recycle Bin. *Taught in: [Module 00, Lesson 01](module-00-developer-environment-and-tooling/lessons/01-shell-and-filesystem.md).*
-
 **Retrieval-Augmented Generation (RAG)** — An architecture where relevant
 information is retrieved from your own data *before* asking an LLM to
 answer, then added ("augmented") into the prompt, so the model generates
@@ -1960,6 +2003,9 @@ forwarding requests to the real backend on the same machine's internal
 address, relaying the response back — letting one public address serve
 a static frontend, an API, and other cross-cutting concerns (TLS,
 logging) from one place. *Taught in: [Module 09, Lesson 06](module-09-linux-networking-servers/lessons/06-nginx-and-reverse-proxies.md).*
+
+**`rm`** — Shell command to delete files (`rm -r` for folders);
+permanent, with no undo or Recycle Bin. *Taught in: [Module 00, Lesson 01](module-00-developer-environment-and-tooling/lessons/01-shell-and-filesystem.md).*
 
 **Root user** — Linux's special superuser account (UID `0`) that bypasses
 permission checks entirely; `sudo` (below) is the standard, safer way to
@@ -2102,6 +2148,13 @@ store a cookie and resend it on future requests to that site. *Taught in:
 runs it, and prints the result — the mechanism behind every command-line
 tool. *Taught in: [Module 00, Lesson 01](module-00-developer-environment-and-tooling/lessons/01-shell-and-filesystem.md).*
 
+**Short-term memory (agent)** — Everything an agent "remembers" that
+lives entirely inside the current conversation's own growing message
+list, resent in full on every call per the Messages API's own stateless
+design — gone the moment the process or browser tab holding that list
+ends, with no separate storage mechanism required to make it work at
+all. *Taught in: [Module 15, Lesson 04](module-15-agents-and-modern-ai-workflows/lessons/04-memory-and-planning.md).*
+
 **Side effect** — Code that reaches outside React's own rendering — a
 network call, a timer, a subscription, or manual DOM access — kept out of
 a component's plain render body and run inside `useEffect` instead.
@@ -2149,14 +2202,14 @@ public key is placed in a server's `authorized_keys` file; login proves
 possession of the private key without ever transmitting it. *Taught in:
 [Module 09, Lesson 02](module-09-linux-networking-servers/lessons/02-ssh-and-key-based-auth.md).*
 
+**Stack trace / traceback** — A list showing the chain of function calls
+active at the moment an error occurred, used to trace how execution
+reached the point of failure. *Taught in: [Module 00, Lesson 02](module-00-developer-environment-and-tooling/lessons/02-reading-docs-and-errors.md).*
+
 **Staging area (index)** — A holding area in Git where you place exactly
 the changes you want included in your next commit, distinct from both the
 working directory and the permanent commit history. *Taught in:
 [Module 00, Lesson 03](module-00-developer-environment-and-tooling/lessons/03-git-fundamentals.md).*
-
-**Stack trace / traceback** — A list showing the chain of function calls
-active at the moment an error occurred, used to trace how execution
-reached the point of failure. *Taught in: [Module 00, Lesson 02](module-00-developer-environment-and-tooling/lessons/02-reading-docs-and-errors.md).*
 
 **Stale closure** — A React bug where an effect (or other) function
 created on an earlier render keeps running with the variable values it
@@ -2205,10 +2258,6 @@ in React 19, deliberately double-invoking effects (mount → cleanup →
 mount) to surface missing-cleanup bugs; it has no effect on a production
 build. *Taught in: [Module 04, Lesson 03](module-04-react/lessons/03-useeffect-the-dependency-array-in-depth.md).*
 
-**`super()`** — Inside a subclass, gives access to the parent class's own
-version of a method (most commonly `__init__`), letting a subclass extend
-rather than completely replace it. *Taught in: [Module 01, Lesson 05](module-01-python-properly/lessons/05-oop-classes-and-dunders.md).*
-
 **Structured logging** — Writing log entries as machine-parseable data
 (commonly JSON) with consistent fields (timestamp, level, event, relevant
 ids) rather than free-form sentences, so logs can later be queried rather
@@ -2236,6 +2285,10 @@ statement (e.g. inside an `INSERT`'s `VALUES` or a `WHERE` clause).
 elevated permissions, then immediately drops back to the normal user —
 the standard, safer alternative to logging in as root directly. *Taught
 in: [Module 09, Lesson 01](module-09-linux-networking-servers/lessons/01-linux-processes-and-permissions.md).*
+
+**`super()`** — Inside a subclass, gives access to the parent class's own
+version of a method (most commonly `__init__`), letting a subclass extend
+rather than completely replace it. *Taught in: [Module 01, Lesson 05](module-01-python-properly/lessons/05-oop-classes-and-dunders.md).*
 
 **Swagger UI** — A separate, open-source tool (bundled and auto-configured
 by FastAPI, served at `/docs`) that reads a project's OpenAPI document and
@@ -2356,6 +2409,14 @@ descent and backpropagation to nudge its weights toward smaller loss;
 distinct from inference, which uses the resulting fixed weights without
 changing them. *Taught in: [Module 12, Lesson 01](module-12-ai-ml-foundations/lessons/01-what-machine-learning-actually-is.md).*
 
+**Trajectory-level evaluation** — Evaluating an agent by the *path* it
+took (which tools it called, in what order, with what arguments) rather
+than only whether its final answer was correct — current practice prefers
+a deterministic, plain-code check over an LLM judge specifically for
+tool-call correctness, since "was the right tool called with valid
+arguments" has one checkable right answer. *Taught in:
+[Module 15, Lesson 08](module-15-agents-and-modern-ai-workflows/lessons/08-agent-safety-guardrails-and-evals.md).*
+
 **Transaction** — A group of database operations treated as one
 all-or-nothing unit — either every operation inside it takes effect once
 committed, or none do if rolled back or interrupted; the mechanism behind
@@ -2452,15 +2513,15 @@ Python's own union type hints above, but a distinct language feature
 enforced by `tsc` rather than Python's optional external type checkers.
 *Taught in: [Module 03, Lesson 09](module-03-html-css-javascript/lessons/09-typescript-introduction.md).*
 
-**Unit file** — A small, plain-text configuration file telling `systemd`
-about one thing it should manage (most relevantly, a service), with
-`[Unit]`/`[Service]`/`[Install]` sections controlling metadata, how to
-run it, and when to auto-start it. *Taught in: [Module 09, Lesson 03](module-09-linux-networking-servers/lessons/03-systemd-and-services.md).*
-
 **Unique constraint** — A database rule rejecting any row that would
 duplicate an existing value in a given column (or set of columns), used
 in QuestLog to guarantee each quest line name has exactly one authoritative
 row. *Taught in: [Module 06, Lesson 05](module-06-databases/lessons/05-orms-and-sqlalchemy-basics.md).*
+
+**Unit file** — A small, plain-text configuration file telling `systemd`
+about one thing it should manage (most relevantly, a service), with
+`[Unit]`/`[Service]`/`[Install]` sections controlling metadata, how to
+run it, and when to auto-start it. *Taught in: [Module 09, Lesson 03](module-09-linux-networking-servers/lessons/03-systemd-and-services.md).*
 
 **Unit test** — A test that exercises one small, isolated piece of code
 (often a single function), with nothing real set up around it — the
@@ -2490,6 +2551,10 @@ current value being broadcast on a Context, with no props involved.
 rendered, controlled by its dependency array. *Taught in: [Module 04,
 Lesson 03](module-04-react/lessons/03-useeffect-the-dependency-array-in-depth.md).*
 
+**User-Agent header** — An HTTP request header identifying which software
+(browser, `curl`, etc.) is making the request. *Taught in: [Module 02,
+Lesson 04](module-02-internet-and-web-fundamentals/lessons/04-headers-cookies-and-statelessness.md).*
+
 **`useRef`** — A React hook that returns a mutable object with a
 `.current` property that persists across re-renders without ever causing
 one when changed. *Taught in: [Module 04, Lesson 04](module-04-react/lessons/04-useref-and-custom-hooks.md).*
@@ -2497,10 +2562,6 @@ one when changed. *Taught in: [Module 04, Lesson 04](module-04-react/lessons/04-
 **`useState`** — The hook that returns a `[value, setter]` pair and is the
 mechanism that tells React "something changed, please re-render." *Taught
 in: [Module 04, Lesson 02](module-04-react/lessons/02-state-and-the-rendering-model.md).*
-
-**User-Agent header** — An HTTP request header identifying which software
-(browser, `curl`, etc.) is making the request. *Taught in: [Module 02,
-Lesson 04](module-02-internet-and-web-fundamentals/lessons/04-headers-cookies-and-statelessness.md).*
 
 **Utility-first CSS** — Styling elements primarily by composing many
 small, single-purpose classes directly in markup (each mapping to one CSS

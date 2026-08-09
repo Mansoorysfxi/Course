@@ -14,7 +14,7 @@ pairs in `Dockerfile` so a real DSN can be baked in at build time when
 this module's CI/CD pipeline builds a production image. **Every actual
 page/component under `src/pages/`, `src/components/`, `src/context/`,
 and `src/api/` is byte-for-byte unchanged since Module 08.** See
-[`../../../lessons/06-monitoring-logging-and-error-tracking.md`](../../../lessons/06-monitoring-logging-and-error-tracking.md)
+[`../../../lessons/06-monitoring-logging-and-error-tracking.md`](../../../../module-11-cicd-cloud-production/lessons/06-monitoring-logging-and-error-tracking.md)
 for the full explanation. For the testing
 material taught in Module 08, see
 [`module-08-testing-and-quality/lessons/07-frontend-testing-with-vitest-and-rtl.md`](../../../../module-08-testing-and-quality/lessons/07-frontend-testing-with-vitest-and-rtl.md).
@@ -42,7 +42,7 @@ JWT, or the backend rejects it outright.
 - **`src/monitoring.ts` (new)** — calls `Sentry.init(...)` only if
   `import.meta.env.VITE_SENTRY_DSN` is actually set; a no-op import
   otherwise. See
-  [`../../../lessons/06-monitoring-logging-and-error-tracking.md`](../../../lessons/06-monitoring-logging-and-error-tracking.md).
+  [`../../../lessons/06-monitoring-logging-and-error-tracking.md`](../../../../module-11-cicd-cloud-production/lessons/06-monitoring-logging-and-error-tracking.md).
 - **`src/main.tsx`** — one added line: `import "./monitoring.ts";`, first,
   before anything else, so Sentry (if configured) is watching from the
   very first render.

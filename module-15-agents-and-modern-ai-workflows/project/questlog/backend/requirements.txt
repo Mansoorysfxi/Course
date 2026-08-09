@@ -1,0 +1,36 @@
+fastapi==0.141.1
+uvicorn[standard]==0.52.1
+sqlalchemy[asyncio]==2.0.51
+alembic==1.19.0
+asyncpg==0.31.0
+bcrypt==5.0.0
+pyjwt==2.13.0
+pydantic-settings==2.14.2
+python-multipart==0.0.32
+email-validator==2.3.0
+redis==8.1.0
+sentry-sdk[fastapi]==2.62.0
+anthropic==0.121.0
+# NEW in Module 14 -- see lessons/04-vector-databases-and-pgvector.md.
+# `pgvector` (the PyPI package, distinct from the Postgres *extension* of
+# the same name) is the SQLAlchemy 2.0 integration: `from pgvector.sqlalchemy
+# import Vector`, used by app/db_models.py's `NoteChunk.embedding` column.
+pgvector==0.5.0
+# The free, local embedding model this module's RAG feature reuses from
+# Module 12 (`all-MiniLM-L6-v2`) -- see lessons/00-setup.md's "the
+# embedding-model decision" section for the full reasoning, and
+# app/embeddings.py for why importing this package is deliberately deferred
+# to inside a function, never at module load time. This is a genuinely
+# heavy dependency -- it pulls in `torch` transitively, meaningfully
+# growing this backend's install size and Docker image -- an honest,
+# one-time cost this module accepts in exchange for needing zero new API
+# key or paid account beyond the ANTHROPIC_API_KEY already required since
+# Module 13.
+sentence-transformers==5.7.0
+# app/rag.py imports this directly (`import numpy as np`) for
+# `cosine_similarity` -- listed explicitly here rather than relied on as a
+# transitive dependency of sentence-transformers/torch above, because this
+# codebase's own convention (see every other line in this file) is that
+# anything a module of this app imports directly gets its own pinned,
+# explicit entry. Verified current stable release on PyPI, August 9, 2026.
+numpy==2.5.1

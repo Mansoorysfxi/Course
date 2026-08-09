@@ -1,0 +1,14 @@
+# Optional -- installed *in addition to* requirements.txt, and only if you
+# want to run app/mcp_server.py (see that file's own module docstring and
+# lessons/11-building-questlogs-agent-frontend-and-going-live.md's own "MCP
+# tie-back" section). Never required for the production app, for
+# `uvicorn app.main:app`, or for this backend's own test suite (`pytest -q`)
+# to run -- exactly the same "installed in addition to, never instead of"
+# boundary this course already draws for requirements-dev.txt.
+#
+# Verified live on August 9, 2026: installed into a throwaway virtual
+# environment, and its API (MCPServer, @mcp.tool(), list_tools(),
+# call_tool()) called directly and confirmed working -- see
+# lessons/00-setup.md and lessons/05-model-context-protocol-mcp.md for the
+# full verification.
+mcp[cli]==2.0.0

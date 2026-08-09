@@ -3,10 +3,10 @@
 The FastAPI backend gains real **signup, login, and JWT-based
 authentication**, and every quest route now requires a valid token and is
 scoped to the token's own user. See
-[`../../../lessons/06-building-signup-login.md`](../../../lessons/06-building-signup-login.md)
+[`../../../lessons/06-building-signup-login.md`](../../../../lessons/06-building-signup-login.md)
 and
-[`../../../lessons/07-protecting-routes-with-dependencies.md`](../../../lessons/07-protecting-routes-with-dependencies.md)
-for the full walkthrough, and [`../../BRIEF.md`](../../BRIEF.md) for this
+[`../../../lessons/07-protecting-routes-with-dependencies.md`](../../../../lessons/07-protecting-routes-with-dependencies.md)
+for the full walkthrough, and [`../../BRIEF.md`](../../../../project/BRIEF.md) for this
 module's complete capstone brief.
 
 ## Stack (verified while writing this module, August 2026)
@@ -53,7 +53,7 @@ requirements.txt
 ## Running this project
 
 **1. PostgreSQL running, with a fresh `questlog` database** — this
-module's [`lessons/00-setup.md`](../../../lessons/00-setup.md) has you
+module's [`lessons/00-setup.md`](../../../../lessons/00-setup.md) has you
 drop and recreate the database from Module 06, specifically so this
 module's new "add a NOT NULL column" migration can stay simple (see that
 migration file's own docstring for why).

@@ -7,31 +7,85 @@ don't repeat them. This file is about *generating the course*, not about
 the learner's progress — that's [PROGRESS.md](PROGRESS.md), a separate,
 still-empty file the learner's actual study sessions will fill in later.
 
-Last updated: after Module 14 completed — this one had the messiest
-generation process of any module so far (see "Known issues already hit"
-#9 for the full story, including a follow-up incident where the resumed
-agent itself mistook this file's own legitimate, previously-verified
-Module 14 update for an unauthorized change and reverted it — it was
-restored here from the same independent verification, not from the
-agent's own account of events). Despite the chaos, the actual finished
-content held up well under thorough, skeptical, from-clean-installs
-re-verification, repeated twice: backend pytest **72 passed / 2 skipped**
-(real, correctly-documented pgvector-integration tests skipped for lack of
-a live Postgres+pgvector instance) + ruff/format clean; frontend vitest
-**28/28 passed**, build clean. All 10 lessons checked for Rule 5's 8
-required sections, glossary/`RUNNING_PROJECT.md` diffs confirmed purely
-additive/confined, and the RAG implementation itself (chunking, local
-embeddings, `pgvector` similarity search, and a genuinely well-reasoned
-"send citations before generation, never ask the model to self-report
-them" design) read as correct and consistent with established codebase
-conventions.
+Last updated: after **the final root-file maintenance pass — the last
+item on this file's own list — was completed.** The course is now
+entirely finished: all 16 modules generated and independently verified,
+and the whole-repo consistency pass done. What that pass found and fixed,
+concretely: `GLOSSARY.md`'s ~503 entries were checked programmatically for
+alphabetical order (not by eye — a script, since 16 separate agent
+sessions had each inserted terms independently over the life of this
+project); it found real misorderings but also several false positives
+worth knowing about if you ever re-run this check (naive raw-string
+comparison mishandles markdown backticks and treats "SQL (Structured
+Query Language)" as out of order relative to "SQL injection" when it
+isn't — trailing parentheticals need to be treated as non-sorting
+annotations, and a term's *primary* text, not its full annotated text,
+is the real sort key). After correcting for that, 37 genuine adjacent-pair
+swaps remained and were fixed via a bubble-sort-to-convergence pass
+(safe because it only ever swaps immediately-adjacent inverted entries,
+never reorders anything across a larger span) — zero ordering issues
+remain, entry count unchanged (503), content of every entry untouched by
+construction. Separately, an automated check of all 1060 internal markdown
+links repo-wide found 52 broken links, all following two systematic,
+explainable patterns: (1) several early modules' `project/questlog/README.md`
+files were originally written one directory level too shallow (`../lessons/`
+instead of `../../lessons/`) and every later module inherited the same bug
+by copying the file forward; (2) `backend/README.md`/`frontend/README.md`/
+`DEPLOY_RUNBOOK.md` files that describe cumulative history ("Dockerized in
+Module 10," "monitoring added in Module 11") kept same-module-relative
+links to lessons that only exist in the *earlier* module that actually
+taught them, breaking every time the file got copied forward into a new
+module. All 52 were fixed by locating each link's real target file and
+computing the correct relative (or cross-module) path — verified
+afterward with a full repo-wide re-scan: **zero broken internal links
+remain**. Only `.md` files were touched (confirmed via `git status` — no
+code changed, so no test suites needed re-running), and `PROGRESS.md`/
+root `README.md`/`MASTER_LEARNING_PLAN.md`/`GRADING_PROTOCOL.md` were
+confirmed untouched, exactly as intended (root `README.md`'s checkbox
+table and module-count structure needed no changes — it already listed
+all 16 modules correctly).
 
-Also this session (before Module 14): removed the Unreal-Engine-specific
-framing from the root `README.md`'s title/intro (the user found it looked
-bad) — the course now reads as a general full-stack + AI engineering
-course; the game-dev analogies inside actual lesson content were
-deliberately left alone since they're pedagogically useful and weren't
-what was flagged.
+There is no further module to generate and no further standing task in
+this file. If you are an AI session reading this because the user wants
+something new done with this course (adding a Module 16, revising an
+existing module, responding to real learner feedback), that's a fresh
+task — read `MASTER_LEARNING_PLAN.md` and `RUNNING_PROJECT.md` for context
+first, and treat everything above as history, not a to-do list.
+
+---
+
+Earlier in this same session — Module 15's own generation, and before
+that, Module 14's:
+
+Module 15 was completed and independently verified on disk first. Its own
+generation was, refreshingly, clean — a single
+agent, one real final report, explicit confirmation it never touched this
+file and never delegated to a sub-agent (both independently confirmed:
+`git diff HANDOVER.md` was empty before I made this edit). I still
+independently re-verified everything rather than trust the report at face
+value: backend pytest **85 passed / 2 skipped** (same real
+pgvector-integration skips established since Module 14) — I found and
+fixed two files `ruff format --check` flagged as unformatted (the agent's
+own check had apparently missed this; trivial line-wrapping only, tests
+re-confirmed passing after); frontend vitest **34/34 passed**, build
+clean. All 12 lessons checked for Rule 5's 8 required sections, glossary/
+`RUNNING_PROJECT.md` diffs confirmed purely additive/confined, the actual
+agent implementation (`app/agent.py`, six tools, a hand-built loop, real
+guardrails including a deliberate no-`delete_quest` decision) read as
+correct and consistent with every established codebase convention, and I
+independently spot-verified the two riskiest Rule 7 claims (the MCP Python
+SDK's current `MCPServer`/`@mcp.tool()` API shape) via a live doc fetch —
+confirmed real and current, not hallucinated.
+
+Earlier this session: Module 14 had the messiest generation process of
+any module in the course (see "Known issues already hit" #9 for the full
+two-part story — an unauthorized sub-agent delegation, followed by the
+resumed agent mistakenly reverting this file's own legitimate update).
+Also earlier: removed the Unreal-Engine-specific framing from the root
+`README.md`'s title/intro (the user found it looked bad) — the course now
+reads as a general full-stack + AI engineering course; the game-dev
+analogies inside actual lesson content were deliberately left alone since
+they're pedagogically useful and weren't what was flagged.
 
 ## Status at a glance
 
@@ -54,7 +108,8 @@ what was flagged.
 | 12 — AI/ML Foundations | ✅ Fully generated and verified on disk |
 | 13 — Building with LLM APIs | ✅ Fully generated and verified on disk |
 | 14 — RAG | ✅ Fully generated and verified on disk (messy generation, see "Known issues" #9 — content itself is solid) |
-| 15 — Agents & Modern AI Workflows (Final Capstone) | ❌ Not started — **next up** |
+| 15 — Agents & Modern AI Workflows (Final Capstone) | ✅ Fully generated and verified on disk |
+| Final root-file maintenance pass (glossary ordering + repo-wide link check) | ✅ Done — **the course is entirely finished** |
 
 The root `README.md`'s checkbox progress table and `PROGRESS.md` are the
 **learner's** trackers — they intentionally still show everything
@@ -229,7 +284,8 @@ grep -c "Module XX" GLOSSARY.md              # did glossary entries actually lan
 
 Full spec in [RUNNING_PROJECT.md](RUNNING_PROJECT.md) — read it before
 generating any further module. Quick recap of where the codebase actually
-stands after Module 14:
+stands after Module 15 — the final state of the course's own running
+project:
 
 - **Frontend:** React 19 + TypeScript 7 + Vite 8 + Tailwind CSS 4 + React
   Router 8. Real login/signup flow, JWT stored and sent as a Bearer token,
@@ -562,94 +618,79 @@ stands after Module 14:
   directly and skeptically, restore/correct from your own independent
   verification, and resume with precise, itemized instructions rather than
   restarting from scratch.
-- **Latest finished reference codebase:**
-  `module-14-rag/project/questlog/` (app code identical to Module 13 plus
-  the documented notes/RAG feature). **Module 15 must copy this exact
-  folder forward** into
-  `module-15-agents-and-modern-ai-workflows/project/questlog/` (or
-  whatever exact folder name matches this course's established naming
-  convention — check first) — do not regenerate the app from scratch.
+- **New in Module 15: QuestLog's final capstone feature — a real,
+  autonomous, tool-using agent.** `POST /api/agent/chat`
+  (`backend/app/agent.py` + `backend/app/routers/agent.py`) — a hand-built
+  loop (`run_agent_turn`, no framework, per the master plan's own explicit
+  instruction) giving the player a chat panel that can list, create,
+  update, and complete quests, search a quest's own notes with citations,
+  and suggest a quest breakdown, via **six tools**, every one a thin
+  wrapper around code Modules 06/13/14 already wrote and tested — nothing
+  reimplemented. **Real, stated guardrails**: `MAX_AGENT_ITERATIONS = 8`
+  (the same pattern as Module 13's `MAX_TOOL_ITERATIONS`, sized larger for
+  a genuinely open-ended job); **deliberately no `delete_quest` tool at
+  all** (the honest reasoning: QuestLog's own delete has no undo, so
+  removing the capability entirely is simpler and safer than building a
+  confirm-before-destructive-action flow this course's scope doesn't need
+  to prove); ownership scoping on every quest-touching tool via the same
+  `get_quest(..., owner_id=...)` pattern every route in this app has used
+  since Module 07 (a quest belonging to someone else produces the same
+  "not found" tool result as one that doesn't exist — the same
+  404-not-403 reasoning Module 07 taught, now applied to a tool result);
+  Pydantic-validated tool inputs through the exact same `QuestCreate`/
+  `QuestUpdate` models the real HTTP routes already validate against; and
+  full tool-call transparency plus a `usage` event surfacing real
+  iteration/tool-call counts to the player, so cost is never hidden.
+  **Memory scope, stated plainly**: short-term only, held entirely in the
+  frontend's own React state and resent in full each request — nothing
+  persists across a reload or session, and even one turn's own internal
+  tool-calling scratch work never survives past that turn's finished
+  answer.
+- **A small, honestly-scoped MCP server** (`backend/app/mcp_server.py`,
+  built on the current official `mcp` Python SDK v2 — `MCPServer`/
+  `@mcp.tool()`, which I independently verified via a live fetch of the
+  SDK's own docs is real and current, not hallucinated) exposes two
+  read-only QuestLog capabilities to any MCP-compliant client. Deliberately
+  **not** part of the production FastAPI app, **not** in `requirements.txt`
+  (a separate optional `requirements-mcp.txt`), read-only, and scoped to
+  one hard-coded seeded demo account — every one of those a stated,
+  reasoned scope decision (documented in the file's own docstring) rather
+  than a silently-accepted shortcut.
+- **This module's own agent-tool-set/guardrail/memory-scope decisions are
+  recorded in `RUNNING_PROJECT.md`'s "Fixed technology decisions"**, the
+  same confined-paragraph pattern every AI-feature module since Module 10
+  has used.
+- **No real Anthropic API key was available while generating this
+  module**, stated honestly throughout — every Claude-calling code path is
+  illustrative/mocked in the lessons and tests, consistent with Modules
+  12–14's own practice.
+- **Testing, independently re-verified by me, not just taken from the
+  report**: backend pytest **85 passed / 2 skipped** (same real
+  pgvector-integration skips established since Module 14) — I found and
+  fixed two files `ruff format --check` flagged as needing reformatting
+  (trivial line-wrapping only; re-confirmed 85/2 after); frontend vitest
+  **34/34 passed**, build clean. Repo-wide stray-artifact sweep clean, and
+  — unlike Module 14 — no nested duplicates, no leftover venvs, no
+  confusing multi-agent status messages. This generation went the way
+  every module before Module 14 did.
+- **`HANDOVER.md` was never touched by this module's agent** — confirmed
+  independently (`git diff HANDOVER.md` was empty before I made this very
+  edit), and the agent's own final report explicitly confirmed the same,
+  for what that's worth after Module 14.
+- **Course content generation is complete**, and the final root-file
+  maintenance pass (glossary ordering + repo-wide link audit, both
+  described in full at the top of this file) has also been done. There is
+  nothing left on this file's own list.
 
-## Next up: Module 15 — Agents & Modern AI Workflows (FINAL CAPSTONE)
+## The course is finished — there is no further module to generate
 
-This is the last module. Per the master plan, budget real care for it — it's
-explicitly the portfolio piece the entire course has been building toward,
-and its own capstone is a **production-grade AI application**, not just
-another incremental QuestLog feature.
-
-Curriculum per the master plan: what an agent is (the loop — LLM decides →
-calls tool → observes → repeats); build a minimal agent from scratch in
-raw Python, no framework, so the learner truly understands it; tool design
-for agents, multi-step reasoning, memory patterns (short-term vs.
-long-term), planning; MCP (Model Context Protocol) — what it is, building
-a simple MCP server; multi-agent patterns, orchestration, human-in-the-loop;
-agent frameworks overview *after* the fundamentals, so choices are
-informed, not cargo-culted; safety/reliability (guardrails, sandboxing
-tool execution, cost/loop limits, evals for agents); using AI in the dev
-workflow itself (effective Claude Code/AI pair-programming use, reviewing
-AI output critically, avoiding skill atrophy). **Final capstone**, per the
-master plan and `RUNNING_PROJECT.md`: QuestLog gains an autonomous agent
-that can create/update/complete quests via real tool calls, combined with
-Module 14's RAG (the agent can consult quest notes) and real guardrails —
-full stack (React + FastAPI + Postgres), auth, streaming UI, tests,
-containerized, CI/CD-deployed, with monitoring. Every earlier module's
-work converges here.
-
-**Before generating it:**
-1. Skim `module-14-rag/project/questlog/backend/app/` in full —
-   `ai_assistant.py` (tool use/streaming), `rag.py` (retrieval + citations),
-   `dependencies.py` (the `AiClient`/`RedisClient`/`DbSession` pattern) —
-   this module's own agent should reuse and compose these existing pieces
-   (quest tools, note retrieval) as the *tools* its own agent loop calls,
-   not reinvent quest/note access from scratch.
-2. Web-research (Rule 7) heavily: current MCP (Model Context Protocol)
-   spec/SDK state (this moves fast — verify current protocol version,
-   current Python SDK for building a server, current transport
-   options), current framing of "agent frameworks" worth mentioning
-   conceptually (verify current positioning — this space has moved even
-   since Module 14's LangChain/LlamaIndex research), current best-practice
-   guardrail patterns (cost caps, loop/iteration caps — Module 13's
-   `MAX_TOOL_ITERATIONS` is a real precedent already in this codebase to
-   build on and reference), and current thinking on agent evaluation
-   (harder than Module 13's simple eval harness — verify current
-   approaches rather than improvising).
-3. Decide, and document, the concrete shape of QuestLog's agent: which
-   real tools it gets (creating/updating/completing quests via
-   `repository.py`, consulting notes via Module 14's retrieval, possibly
-   more), what its memory/planning scope actually is (keep it honestly
-   scoped — this is a course capstone, not an open-ended autonomous
-   system), and what concrete guardrails it has (a loop cap at minimum,
-   per the master plan's own "cost/loop limits" requirement) — same
-   "small, real, well-justified decision, recorded in RUNNING_PROJECT.md"
-   discipline every prior AI-feature module (10, 11, 13, 14) has followed.
-4. This module needs the same Anthropic API key already required since
-   Module 13 — no new cost category, but real agent loops can call the API
-   many times per session, so the cost-honesty framing in `00-setup.md`
-   should say so explicitly (a loop cap protects against runaway cost, not
-   just runaway time).
-5. Given Module 14's generation process was unusually chaotic (see "Known
-   issues already hit" #9) and this is the final, most important module,
-   explicitly re-state in the generation prompt that delegating to a
-   sub-agent is not authorized and not a shortcut, and that `HANDOVER.md`
-   must never be touched or "corrected" by the generating agent under any
-   circumstances — the orchestrating session owns that file exclusively.
-6. Use the same Agent-delegation process described above ("The process
-   that's been working").
-
-## After Module 15
-
-There is no Module 16. Once Module 15 is generated and verified, the
-course's actual content generation is done. What remains is the "Root-file
-maintenance" pass described below — updating the root `README.md` if
-needed and a final cross-module consistency spot-check — which has not
-happened yet as of this writing.
-
-## Root-file maintenance as modules are added
-
-Each new module's agent is told to update only `GLOSSARY.md`. After
-Module 15 is eventually done, someone (agent or you) still needs to do a
-final pass — listed already in the standing todo list at the time of this
-handover — to update the root `README.md`'s checkbox table's *structure*
-if needed (it already lists all 16 modules correctly, so likely no change
-needed there) and to spot-check cross-module links/consistency across the
-whole repo. That final pass has not happened yet.
+All 16 modules (00–15) are generated and independently verified, and the
+final maintenance pass is done (see the top of this file for exactly what
+it found and fixed). If you're reading this file to figure out "what's
+next" the way every earlier module's completion note here did: there
+isn't a next module. If the user asks for something new — a Module 16, a
+revision to existing content, a response to real learner feedback once
+someone actually studies this — that's a fresh task with its own scope;
+read `MASTER_LEARNING_PLAN.md` and `RUNNING_PROJECT.md` first, the same as
+you would have before generating any module, and treat this file's history
+above as background, not instructions to continue.

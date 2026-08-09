@@ -6,7 +6,7 @@ password or JWT anywhere) so you can independently build the exact same
 auth system the real `project/questlog/backend/` already has, **before**
 looking at how the course built it.
 
-See [`../INSTRUCTIONS.md`](../INSTRUCTIONS.md) for the full task,
+See [`../INSTRUCTIONS.md`](../../INSTRUCTIONS.md) for the full task,
 acceptance criteria, and hints. Do not read
 `module-07-auth-security/project/questlog/backend/` until you've made a
 real attempt — that folder **is** the reference solution for this

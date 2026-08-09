@@ -35,7 +35,7 @@ ruff format --check app tests # expect: N files already formatted
 
 No real Redis server is needed to run these tests — see
 `tests/conftest.py`'s `FakeRedis` and this module's
-[`lessons/07-containerizing-questlogs-backend.md`](../../../lessons/07-containerizing-questlogs-backend.md).
+[`lessons/07-containerizing-questlogs-backend.md`](../../../../module-10-docker-and-containers/lessons/07-containerizing-questlogs-backend.md).
 
 ## Stack (verified while writing this module, August 2026)
 

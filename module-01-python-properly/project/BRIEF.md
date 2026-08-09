@@ -171,7 +171,7 @@ When you're ready, tell your AI session *"Review my capstone for Module
 01"* and point it at (or paste) your `questlog-cli/` project — specifically
 `questlog/models.py`, `questlog/manager.py`, `questlog/decorators.py`,
 `questlog/cli.py`, and a sample of your saved JSON file. The AI will grade
-this per [GRADING_PROTOCOL.md](../../../GRADING_PROTOCOL.md), the same
+this per [GRADING_PROTOCOL.md](../../GRADING_PROTOCOL.md), the same
 rubric used for every exercise, applied to the whole project as one
 submission.
 

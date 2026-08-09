@@ -10,7 +10,7 @@ Module 11, which adds exactly two things: a real `/health` endpoint
 all passing) and optional Sentry error tracking (`app/config.py`'s
 `sentry_dsn`/`environment` fields, `app/main.py`'s conditional
 `sentry_sdk.init(...)`, off by default — see
-[`../../../lessons/06-monitoring-logging-and-error-tracking.md`](../../../lessons/06-monitoring-logging-and-error-tracking.md)).
+[`../../../lessons/06-monitoring-logging-and-error-tracking.md`](../../../../module-11-cicd-cloud-production/lessons/06-monitoring-logging-and-error-tracking.md)).
 `app/repository.py`, `app/routers/`, and every other file are untouched.
 For the testing material itself, taught in Module 08, see
 [`module-08-testing-and-quality/lessons/`](../../../../module-08-testing-and-quality/lessons/)
@@ -35,7 +35,7 @@ ruff format --check app tests # expect: N files already formatted
 
 No real Redis server is needed to run these tests — see
 `tests/conftest.py`'s `FakeRedis` and this module's
-[`lessons/07-containerizing-questlogs-backend.md`](../../../lessons/07-containerizing-questlogs-backend.md).
+[`lessons/07-containerizing-questlogs-backend.md`](../../../../module-10-docker-and-containers/lessons/07-containerizing-questlogs-backend.md).
 
 ## Stack (verified while writing this module, August 2026)
 

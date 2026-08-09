@@ -24,7 +24,7 @@ Exactly as in Module 05 — `frontend/` makes real HTTP requests to
 `backend/`, which must be running separately on `http://localhost:8000`.
 **What's different this module:** `backend/` now also needs a running
 PostgreSQL server and an applied migration before it can serve a single
-request — see [`lessons/00-setup.md`](../lessons/00-setup.md) and
+request — see [`lessons/00-setup.md`](../../lessons/00-setup.md) and
 [`backend/README.md`](./backend/README.md)'s "Running this project" section
 for the exact new steps (`alembic upgrade head` before `uvicorn`).
 
@@ -35,7 +35,7 @@ service, not something you keep a terminal open for, but is listed for
 clarity):
 
 **0 — PostgreSQL running** (as a Windows service or however
-[`lessons/00-setup.md`](../lessons/00-setup.md) had you install it — no
+[`lessons/00-setup.md`](../../lessons/00-setup.md) had you install it — no
 terminal needed if it's running as a service).
 
 **Terminal 1 — backend:**
@@ -78,7 +78,7 @@ method, status code, and JSON shape is byte-for-byte identical to Module
 
 ## Verified while writing this module
 
-See this module's root [`README.md`](../README.md) for the full, honest
+See this module's root [`README.md`](../../README.md) for the full, honest
 account of what was verified against a real running PostgreSQL instance
 versus hand-verified, including the specific routes and migration commands
 that were actually exercised.

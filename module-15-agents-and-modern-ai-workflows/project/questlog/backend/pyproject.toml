@@ -1,0 +1,41 @@
+# Tool configuration for this backend -- pytest and ruff both read this
+# file automatically (no separate pytest.ini or ruff.toml needed). This
+# file is NOT a build system config -- QuestLog's backend is still
+# installed the plain `pip install -r requirements.txt` way, unchanged
+# since Module 05 -- it exists purely to hold the two `[tool.*]` sections
+# below. See lessons/00-setup.md and lessons/08-linters-and-formatters.md.
+
+[tool.pytest.ini_options]
+# "auto" mode -- see lessons/02-pytest-fundamentals-and-fixtures.md and
+# lessons/05-testing-fastapi-endpoints.md for what this actually changes.
+# In short: every `async def test_...` function and every `async def`
+# fixture is automatically treated as asyncio-flavored, with no need to
+# hand-write `@pytest.mark.asyncio` above every single one. Verified as
+# pytest-asyncio's own officially "recommended default" for a project
+# (like this one) that only ever uses asyncio, never trio, for async code.
+asyncio_mode = "auto"
+
+# Every test file lives under tests/ -- pytest would also find test files
+# anywhere named test_*.py by default, but being explicit here means
+# running plain `pytest` from this folder never accidentally picks up
+# stray files elsewhere (e.g. inside .venv/ if a package happens to ship
+# its own test_*.py files).
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+# Start small and explicit rather than reaching for ruff's "ALL" -- see
+# lessons/08-linters-and-formatters.md's "which rules, and why" section for
+# the reasoning (this is Ruff's own documented recommendation: prefer
+# `select` over `extend-select`/`ALL`, and add one category at a time).
+# E/F = pycodestyle + Pyflakes (the same checks Flake8 has always run).
+# I = isort (import sorting/grouping). UP = pyupgrade (flags old-style
+# syntax a newer Python version has a better spelling for). B = flake8-
+# bugbear (catches common real bugs, not just style).
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.ruff.format]
+quote-style = "double"

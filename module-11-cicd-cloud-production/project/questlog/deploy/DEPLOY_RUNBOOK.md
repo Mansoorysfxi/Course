@@ -3,9 +3,9 @@
 A condensed, copy-paste-in-order checklist for deploying this exact
 `project/questlog/` to a fresh Ubuntu 24.04 server. **This file is a
 quick-reference companion, not a substitute for actually reading
-[`../../lessons/07-deploying-questlog-part1-server-and-backend.md`](../../lessons/07-deploying-questlog-part1-server-and-backend.md)
+[`../../lessons/07-deploying-questlog-part1-server-and-backend.md`](../../../../module-09-linux-networking-servers/lessons/07-deploying-questlog-part1-server-and-backend.md)
 and
-[`../../lessons/08-deploying-questlog-part2-frontend-and-going-live.md`](../../lessons/08-deploying-questlog-part2-frontend-and-going-live.md)**
+[`../../lessons/08-deploying-questlog-part2-frontend-and-going-live.md`](../../../../module-09-linux-networking-servers/lessons/08-deploying-questlog-part2-frontend-and-going-live.md)**
 — those two lessons explain *why* every command below exists and what
 each one does; this file exists purely so that once you've read them
 once, you're not hunting back through prose to find the next command

@@ -31,7 +31,7 @@ client/server separation Module 02 taught from first principles, now real.
 
 ## Running both together
 
-Two terminals, per this module's [`lessons/00-setup.md`](../lessons/00-setup.md), Step 6:
+Two terminals, per this module's [`lessons/00-setup.md`](../../lessons/00-setup.md), Step 6:
 
 **Terminal 1 — backend:**
 ```bash

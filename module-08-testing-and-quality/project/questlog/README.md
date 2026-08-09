@@ -29,7 +29,7 @@ always is laid out.
 separately on `http://localhost:8000`. **What's different this module:**
 every request the frontend makes to `/api/quests/*` now carries an
 `Authorization: Bearer <token>` header, obtained by first calling
-`POST /api/auth/login` — see [`lessons/00-setup.md`](../lessons/00-setup.md)
+`POST /api/auth/login` — see [`lessons/00-setup.md`](../../lessons/00-setup.md)
 and both READMEs' "Running this project" sections for the exact steps.
 
 ## Running both together
@@ -83,7 +83,7 @@ added.
 
 Every number in this file was produced by actually running the command
 shown, not estimated — see this module's root
-[`README.md`](../README.md) and `project/BRIEF.md` for the full, honest
+[`README.md`](../../README.md) and `project/BRIEF.md` for the full, honest
 account, including which parts (the backend test database, specifically)
 deliberately use SQLite instead of a real running PostgreSQL instance,
 and why (`lessons/06-testing-with-a-database.md`).

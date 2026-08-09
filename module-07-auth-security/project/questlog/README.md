@@ -26,7 +26,7 @@ always is laid out.
 separately on `http://localhost:8000`. **What's different this module:**
 every request the frontend makes to `/api/quests/*` now carries an
 `Authorization: Bearer <token>` header, obtained by first calling
-`POST /api/auth/login` — see [`lessons/00-setup.md`](../lessons/00-setup.md)
+`POST /api/auth/login` — see [`lessons/00-setup.md`](../../lessons/00-setup.md)
 and both READMEs' "Running this project" sections for the exact steps.
 
 ## Running both together
@@ -74,6 +74,6 @@ the frontend gained an `AuthContext`, a login/signup UI, and a
 
 ## Verified while writing this module
 
-See this module's root [`README.md`](../README.md) for the full, honest
+See this module's root [`README.md`](../../README.md) for the full, honest
 account of what was verified against a real running PostgreSQL instance
 versus hand-verified.

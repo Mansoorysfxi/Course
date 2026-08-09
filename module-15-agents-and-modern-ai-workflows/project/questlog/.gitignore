@@ -1,0 +1,22 @@
+# Root-level .gitignore for the whole QuestLog project (covers both
+# backend/ and frontend/ -- each also keeps its own, narrower .gitignore
+# from earlier modules; this one exists so tools run from this folder,
+# like `git init` + `pre-commit run --all-files` while writing/verifying
+# this module, never see build artifacts or dependency folders at all).
+backend/.venv/
+backend/.venv-check/
+backend/__pycache__/
+backend/**/__pycache__/
+backend/.pytest_cache/
+backend/.ruff_cache/
+backend/htmlcov/
+backend/.coverage
+frontend/node_modules/
+frontend/dist/
+frontend/coverage/
+
+# NEW in Module 10 -- the compose-level .env (docker-compose.yml's own
+# ${SECRET_KEY}/${POSTGRES_PASSWORD} substitutions), never the committed
+# .env.example template. See .env.example's own header for why this is a
+# different file from backend/.env.
+/.env
