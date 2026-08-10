@@ -1,0 +1,14 @@
+# Course website build tooling (see build_docs.sh) -- generated/ephemeral,
+# never commit these. Each module's own project/ folders have their own
+# .gitignore for their app-specific build artifacts (node_modules, venvs,
+# __pycache__, etc.) -- this file is only for repo-root-level tooling.
+.venv-docs/
+.docs_src/
+site/
+
+# Just in case a stray venv/cache ever gets created at the repo root
+# instead of inside a module's own project folder.
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/

@@ -1,0 +1,75 @@
+site_name: Full Stack + AI Engineering Course
+site_description: A complete, self-paced course from programming fundamentals to full stack + AI engineering, built around one evolving app (QuestLog).
+repo_url: https://github.com/Mansoorysfxi/Course
+repo_name: Mansoorysfxi/Course
+edit_uri: edit/main/
+
+# .docs_src is an ephemeral, gitignored copy of the repo created by
+# build_docs.sh (MkDocs 1.6+ won't allow docs_dir to be "." / an ancestor
+# of this file -- see that script's header comment for why).
+docs_dir: .docs_src
+site_dir: site
+
+exclude_docs: |
+  *.pyc
+  package-lock.json
+  # Vite's raw HTML entry point -- under directory URLs it collides with
+  # README.md's generated index.html in the same folder, and it's useless
+  # as a static asset on this site anyway (its script tag only resolves
+  # after a real `vite build`, which this site doesn't run).
+  **/index.html
+
+theme:
+  name: material
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.sections
+    - navigation.top
+    - navigation.footer
+    - navigation.indexes
+    - toc.follow
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.action.edit
+
+plugins:
+  - search
+  - awesome-pages
+
+markdown_extensions:
+  - toc:
+      permalink: true
+  - tables
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - attr_list
+  - md_in_html
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/Mansoorysfxi/Course

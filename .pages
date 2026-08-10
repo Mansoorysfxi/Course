@@ -1,0 +1,24 @@
+nav:
+  - Course Home: README.md
+  - The Running Project (QuestLog): RUNNING_PROJECT.md
+  - Master Learning Plan: MASTER_LEARNING_PLAN.md
+  - Grading Protocol: GRADING_PROTOCOL.md
+  - Glossary: GLOSSARY.md
+  - module-00-developer-environment-and-tooling
+  - module-01-python-properly
+  - module-02-internet-and-web-fundamentals
+  - module-03-html-css-javascript
+  - module-04-react
+  - module-05-backend-fastapi
+  - module-06-databases
+  - module-07-auth-security
+  - module-08-testing-and-quality
+  - module-09-linux-networking-servers
+  - module-10-docker-and-containers
+  - module-11-cicd-cloud-production
+  - module-12-ai-ml-foundations
+  - module-13-building-with-llm-apis
+  - module-14-rag
+  - module-15-agents-and-modern-ai-workflows
+  - Your Progress: PROGRESS.md
+  - Generation Handover (internal): HANDOVER.md

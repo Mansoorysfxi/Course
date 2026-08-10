@@ -111,6 +111,32 @@ below is the simple at-a-glance version; the AI keeps both in sync.
 - [GLOSSARY.md](GLOSSARY.md) — every term defined anywhere in the course, alphabetical, growing as modules are added.
 - [PROGRESS.md](PROGRESS.md) — your living progress record.
 
+## Reading this course as a website
+
+This repo also builds into a browsable website (MkDocs Material) with
+search and a proper sidebar, deployed automatically to GitHub Pages on
+every push to `main` (see `.github/workflows/deploy-docs.yml`).
+
+**One-time setup** (only needed once, by a repo admin): in this repo's
+GitHub **Settings → Pages → Build and deployment**, set **Source** to
+**"GitHub Actions"** (not "Deploy from a branch"). After that, every push
+to `main` redeploys the site automatically.
+
+**To build/preview it locally:**
+```bash
+python -m venv .venv-docs
+source .venv-docs/Scripts/activate   # Windows Git Bash
+pip install -r requirements-docs.txt
+source .venv-docs/Scripts/activate && mkdocs serve   # live-reloading preview at http://127.0.0.1:8000
+# or, for a one-shot build into ./site:
+bash build_docs.sh
+```
+See `build_docs.sh`'s header comment for why it copies the repo into a
+throwaway `.docs_src/` folder before building (MkDocs 1.6+ won't allow
+`docs_dir` to be the same directory as `mkdocs.yml` itself, and moving the
+actual course content into a `docs/` subfolder would break the relative
+links already used throughout every module).
+
 ## A note on pacing
 
 This is meant to run at roughly 10–15 hours/week. Lessons are intentionally
