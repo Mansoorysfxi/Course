@@ -1,0 +1,148 @@
+/* ============================================================
+   Course progress bar (rendered in the "announce" slot -- see
+   overrides/main.html; content filled by progress-tracker.js)
+   ============================================================ */
+
+#course-progress-bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 2rem;
+  overflow: hidden;
+  background-color: #1b2733;
+  color: #cfd8e3;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+#course-progress-bar__fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 0%;
+  background: linear-gradient(90deg, #5c6bc0, #7e57c2);
+  transition: width 0.4s ease;
+  z-index: 0;
+}
+
+#course-progress-bar__label {
+  position: relative;
+  z-index: 1;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+/* Mark-module-complete toggle button, injected at the top of a module's
+   own overview page by progress-tracker.js. */
+.course-progress-toggle {
+  margin: 0 0 1.2rem;
+}
+
+.course-progress-toggle button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--md-default-fg-color--lighter);
+  border-radius: 2rem;
+  background-color: var(--md-default-bg-color);
+  color: var(--md-default-fg-color);
+  font-weight: 600;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.course-progress-toggle button:hover {
+  border-color: var(--md-accent-fg-color);
+  color: var(--md-accent-fg-color);
+}
+
+.course-progress-toggle.is-complete button {
+  background-color: #2e7d32;
+  border-color: #2e7d32;
+  color: #fff;
+}
+
+.course-progress-toggle.is-complete button:hover {
+  background-color: #256427;
+  border-color: #256427;
+  color: #fff;
+}
+
+/* ============================================================
+   Sidebar: distinct panel color from the reading content area
+   ============================================================ */
+
+.md-sidebar__scrollwrap {
+  background-color: #eef1f8;
+}
+
+[data-md-color-scheme="slate"] .md-sidebar__scrollwrap {
+  background-color: #1b1f2b;
+}
+
+/* ============================================================
+   Color-code Lessons / Exercises / Project links in the nav so
+   the three content types are distinguishable at a glance.
+   ============================================================ */
+
+:root {
+  --course-color-lesson: #3f6fd1;
+  --course-color-exercise: #d9822b;
+  --course-color-project: #2e8b57;
+  --course-color-checklist: #8e5fd1;
+}
+
+[data-md-color-scheme="slate"] {
+  --course-color-lesson: #7aa2f7;
+  --course-color-exercise: #f2a65a;
+  --course-color-project: #6fcf97;
+  --course-color-checklist: #b39ddb;
+}
+
+.md-nav__link[href*="/lessons/"] {
+  border-left: 3px solid var(--course-color-lesson);
+  padding-left: 0.5rem;
+}
+
+.md-nav__link[href*="/exercises/"] {
+  border-left: 3px solid var(--course-color-exercise);
+  padding-left: 0.5rem;
+}
+
+.md-nav__link[href*="/project/"] {
+  border-left: 3px solid var(--course-color-project);
+  padding-left: 0.5rem;
+}
+
+.md-nav__link[href*="CHECKLIST"] {
+  border-left: 3px solid var(--course-color-checklist);
+  padding-left: 0.5rem;
+}
+
+.md-nav__link[href*="/lessons/"]:hover,
+.md-nav__link[href*="/lessons/"].md-nav__link--active {
+  color: var(--course-color-lesson);
+}
+
+.md-nav__link[href*="/exercises/"]:hover,
+.md-nav__link[href*="/exercises/"].md-nav__link--active {
+  color: var(--course-color-exercise);
+}
+
+.md-nav__link[href*="/project/"]:hover,
+.md-nav__link[href*="/project/"].md-nav__link--active {
+  color: var(--course-color-project);
+}
+
+/* Give each section's parent folder label (Lessons / Exercises / Project)
+   a matching left-accent too, so the grouping reads clearly even before
+   it's expanded. These are rendered as non-link toggle labels by the
+   awesome-pages plugin (no page of their own), so they're targeted by
+   position (nth-of-type within a module) rather than by href. */
+.md-nav__item--section > .md-nav__link {
+  font-weight: 700;
+}

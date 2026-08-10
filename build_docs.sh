@@ -33,6 +33,7 @@ tar \
   --exclude='./mkdocs.yml' \
   --exclude='./requirements-docs.txt' \
   --exclude='./build_docs.sh' \
+  --exclude='./overrides' \
   -cf - . | tar -xf - -C .docs_src
 
 mkdocs build --clean "$@"

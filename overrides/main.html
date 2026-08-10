@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{# Material's official extension point for a bar above the header -- using
+   it (rather than a hand-rolled fixed-position div) means Material's own
+   CSS automatically reserves the right amount of space for it, so it
+   doesn't overlap the header/sidebar on scroll. Content is empty here;
+   docs-assets/js/progress-tracker.js fills it in after the page loads. #}
+{% block announce %}
+<div id="course-progress-bar" aria-label="Course completion progress">
+  <div id="course-progress-bar__fill"></div>
+  <span id="course-progress-bar__label">Loading progress…</span>
+</div>
+{% endblock %}
