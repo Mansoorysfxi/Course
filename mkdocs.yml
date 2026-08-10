@@ -1,5 +1,10 @@
 site_name: Full Stack + AI Engineering Course
 site_description: A complete, self-paced course from programming fundamentals to full stack + AI engineering, built around one evolving app (QuestLog).
+# Required for a GitHub Pages *project* site (served at a subpath, not the
+# domain root) -- without this, several theme asset/JS paths resolve
+# incorrectly once deployed even though everything looks fine locally at
+# "/", which is exactly why the sidebar/styling broke only on the live site.
+site_url: https://mansoorysfxi.github.io/Course/
 repo_url: https://github.com/Mansoorysfxi/Course
 repo_name: Mansoorysfxi/Course
 edit_uri: edit/main/
@@ -21,6 +26,8 @@ exclude_docs: |
 
 theme:
   name: material
+  icon:
+    logo: material/map-marker-path
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default
@@ -38,16 +45,20 @@ theme:
         name: Switch to light mode
   features:
     - navigation.instant
+    - navigation.instant.progress
     - navigation.tracking
     - navigation.sections
     - navigation.top
     - navigation.footer
     - navigation.indexes
+    - navigation.path
     - toc.follow
     - search.suggest
     - search.highlight
+    - header.autohide
     - content.code.copy
     - content.action.edit
+    - content.tooltips
 
 plugins:
   - search
@@ -68,6 +79,9 @@ markdown_extensions:
       alternate_style: true
   - attr_list
   - md_in_html
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
 
 extra:
   social:

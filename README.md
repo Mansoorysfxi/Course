@@ -8,22 +8,61 @@ Claude Code according to the rules in
 specification this whole course follows. If anything here ever seems to
 contradict it, the master plan wins.
 
-You do not need to know anything about web development to start. You do need
-to be comfortable with programming logic and debugging, since that's the part
-that transfers directly regardless of which language or engine you're coming
-from.
+!!! tip "You do not need a web development background"
+    You do need to be comfortable with programming logic and debugging —
+    that's the part that transfers directly regardless of which language
+    or engine you're coming from. Everything else (HTTP, HTML/CSS/JS,
+    frameworks, databases) is taught from zero.
 
 ## How the course is organized
 
-The course is split into 16 modules across 4 phases:
+The course is split into 16 modules across 4 phases, all built around one
+continuous app — **QuestLog** — that grows a little more capable every
+module (see [RUNNING_PROJECT.md](RUNNING_PROJECT.md)):
 
-| Phase | Modules | Theme |
-|---|---|---|
-| 0 | 00–01 | Foundations & environment (tooling, Git, Python) |
-| 1 | 02–04 | How the web works, HTML/CSS/JS, React |
-| 2 | 05–08 | Backend engineering (FastAPI, databases, auth, testing) |
-| 3 | 09–11 | DevOps & deployment (Linux, Docker, CI/CD, cloud) |
-| 4 | 12–15 | AI engineering & agents (LLMs, RAG, agents, MCP) |
+<div class="grid cards" markdown>
+
+-   :material-hammer-wrench:{ .lg .middle } **Phase 0 — Foundations**
+
+    ---
+
+    **Modules 00–01**
+
+    Shell, Git, and modern Python — the ground floor everything else stands on.
+
+-   :material-web:{ .lg .middle } **Phase 1 — The Web & Frontend**
+
+    ---
+
+    **Modules 02–04**
+
+    HTTP from first principles, then HTML/CSS/JS, then React. QuestLog's UI is born here.
+
+-   :material-server:{ .lg .middle } **Phase 2 — Backend Engineering**
+
+    ---
+
+    **Modules 05–08**
+
+    FastAPI, real databases, auth, and a real test suite. QuestLog becomes a full stack app.
+
+-   :material-cloud-outline:{ .lg .middle } **Phase 3 — DevOps & Deployment**
+
+    ---
+
+    **Modules 09–11**
+
+    Linux, Docker, CI/CD. QuestLog goes from "runs on my machine" to deployed, with HTTPS.
+
+-   :material-robot-outline:{ .lg .middle } **Phase 4 — AI Engineering & Agents**
+
+    ---
+
+    **Modules 12–15**
+
+    LLM APIs, RAG, and a real autonomous agent. QuestLog's final capstone form.
+
+</div>
 
 Each `module-XX-name/` folder contains:
 
