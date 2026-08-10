@@ -44,6 +44,12 @@ jobs:
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
+        with:
+          # Auto-creates/enables the Pages site via the API if it doesn't
+          # exist yet, instead of failing with "Get Pages site failed"
+          # when the Settings -> Pages -> Source toggle hasn't been (or
+          # wasn't successfully) set to "GitHub Actions" beforehand.
+          enablement: true
 
       - name: Upload site artifact
         uses: actions/upload-pages-artifact@v4
